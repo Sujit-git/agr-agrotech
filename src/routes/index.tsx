@@ -1,24 +1,214 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { Leaf, Sprout, Snowflake, ShieldCheck, Recycle, FlaskConical } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { SiteLayout } from "@/components/site/SiteLayout";
+import { ProductCard } from "@/components/site/ProductCard";
+import { Button } from "@/components/ui/button";
+import { categoriesQuery, productsQuery } from "@/lib/catalog";
+import heroImage from "@/assets/hero-agr.jpg";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "AGR \u2014 Agrotech | Natural Agricultural & Food Products" },
+      {
+        name: "description",
+        content:
+          "AGR \u2014 Agrotech offers vermicompost, dehydrated fruits and freeze-dried fruits. Thoughtfully processed agricultural and natural products from Indian farms.",
+      },
+      { property: "og:title", content: "AGR \u2014 Agrotech | Naturally Better. Thoughtfully Made." },
+      {
+        property: "og:description",
+        content:
+          "Vermicompost, dehydrated fruits and freeze-dried fruits from AGR \u2014 Agrotech.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+const categoryIcons = [Sprout, Leaf, Snowflake];
+
+const whyPoints = [
+  {
+    icon: ShieldCheck,
+    title: "Quality Focus",
+    text: "Every batch is checked for consistency before it is packed and dispatched.",
+  },
+  {
+    icon: Leaf,
+    title: "Natural Products",
+    text: "Agricultural and food products built around what the farm already gives us.",
+  },
+  {
+    icon: FlaskConical,
+    title: "Thoughtful Processing",
+    text: "Dehydration and freeze-drying done with care to protect taste and texture.",
+  },
+  {
+    icon: Recycle,
+    title: "Sustainable Approach",
+    text: "Composting and low-waste practices sit at the centre of how we work.",
+  },
+];
+
+function Home() {
+  const { data: products = [] } = useQuery(productsQuery);
+  const { data: categories = [] } = useQuery(categoriesQuery);
+
+  const featured = products.filter((p) => p.featured).slice(0, 4);
+  const shown = featured.length ? featured : products.slice(0, 4);
+  const categoryById = new Map(categories.map((c) => [c.id, c]));
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <SiteLayout>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border bg-secondary/40">
+        <div className="container-page grid items-center gap-10 py-14 md:grid-cols-2 md:py-24">
+          <div className="rise-in">
+            <p className="eyebrow">AGR &mdash; Agrotech</p>
+            <h1 className="mt-4 font-display text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
+              Naturally Better.
+              <br />
+              Thoughtfully Made.
+            </h1>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+              From soil to shelf, AGR works with Indian agriculture to create natural and
+              value-added products &mdash; compost that feeds the soil, and fruit preserved with
+              modern, careful processing.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link to="/products">Explore Products</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/about">Know Our Story</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <img
+              src={heroImage}
+              alt="Dried fruit and rich compost on a farm at golden hour"
+              width={1600}
+              height={1104}
+              fetchPriority="high"
+              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lift"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="container-page py-16 md:py-24">
+        <div className="max-w-2xl">
+          <p className="eyebrow">What we make</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">Our product ranges</h2>
+        </div>
+
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((category, i) => {
+            const Icon = categoryIcons[i % categoryIcons.length];
+            const count = products.filter((p) => p.category_id === category.id).length;
+            return (
+              <Link
+                key={category.id}
+                to="/products/$category"
+                params={{ category: category.slug }}
+                className="group rounded-2xl border border-border bg-card p-7 shadow-soft transition-shadow hover:shadow-lift"
+              >
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
+                <h3 className="mt-5 font-display text-xl">{category.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {category.description}
+                </p>
+                <p className="mt-5 text-sm font-medium text-primary underline-offset-4 group-hover:underline">
+                  {count} {count === 1 ? "product" : "products"} &rarr;
+                </p>
+              </Link>
+            );
+          })}
+          {categories.length === 0 && (
+            <p className="text-sm text-muted-foreground">Product ranges will appear here soon.</p>
+          )}
+        </div>
+      </section>
+
+      {/* Featured */}
+      <section className="border-y border-border bg-secondary/40 py-16 md:py-24">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Selected for you</p>
+              <h2 className="mt-3 font-display text-3xl sm:text-4xl">Featured products</h2>
+            </div>
+            <Link
+              to="/products"
+              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              View all products &rarr;
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {shown.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                category={
+                  product.category_id ? categoryById.get(product.category_id) : undefined
+                }
+              />
+            ))}
+            {shown.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                No products have been published yet.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Why AGR */}
+      <section className="container-page py-16 md:py-24">
+        <div className="max-w-2xl">
+          <p className="eyebrow">Why AGR</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">
+            A careful approach, from farm to pack
+          </h2>
+        </div>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {whyPoints.map((point) => (
+            <div key={point.title} className="rounded-2xl border border-border bg-card p-6">
+              <point.icon className="h-5 w-5 text-primary" aria-hidden />
+              <h3 className="mt-4 font-display text-lg">{point.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{point.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="container-page pb-4">
+        <div className="rounded-3xl bg-primary px-6 py-14 text-center text-primary-foreground sm:px-12">
+          <h2 className="font-display text-3xl sm:text-4xl">Looking for bulk or trade enquiries?</h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed opacity-90 sm:text-base">
+            Tell us what you need and we will get back to you with availability, pack sizes and
+            pricing.
+          </p>
+          <div className="mt-8">
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/contact">Contact AGR</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </SiteLayout>
   );
 }
