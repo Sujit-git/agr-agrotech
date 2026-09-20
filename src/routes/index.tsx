@@ -112,7 +112,7 @@ function Home() {
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category, i) => {
-            const Icon = categoryIcons[i % categoryIcons.length];
+            const Icon = categoryIcons[i % categoryIcons.length] ?? Sprout;
             const count = products.filter((p) => p.category_id === category.id).length;
             return (
               <Link

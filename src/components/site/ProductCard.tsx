@@ -23,7 +23,13 @@ function AvailabilityBadge({ value }: { value: string }) {
   );
 }
 
-export function ProductCard({ product, category }: { product: Product; category?: Category }) {
+export function ProductCard({
+  product,
+  category,
+}: {
+  product: Product;
+  category?: Category | undefined;
+}) {
   const image = productImage(product);
 
   return (
