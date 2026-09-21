@@ -48,12 +48,12 @@ function Contact() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
-    if (!form.name.trim()) next.name = "Please tell us your name.";
-    if (!form.message.trim()) next.message = "Please add a short message.";
+    if (!form.name.trim()) next["name"] = "Please tell us your name.";
+    if (!form.message.trim()) next["message"] = "Please add a short message.";
     if (!form.email.trim() && !form.phone.trim())
-      next.email = "Add an email or a phone number so we can reply.";
+      next["email"] = "Add an email or a phone number so we can reply.";
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      next.email = "That email address doesn't look right.";
+      next["email"] = "That email address doesn't look right.";
     setErrors(next);
     if (Object.keys(next).length) return;
 
