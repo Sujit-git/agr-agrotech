@@ -203,7 +203,7 @@ function ProductsAdmin() {
         Add product
       </Button>
 
-      {isLoading && <p className="mt-6 text-sm text-muted-foreground">Loading products\u2026</p>}
+      {isLoading && <p className="mt-6 text-sm text-muted-foreground">Loading products…</p>}
       {isError && (
         <p className="mt-6 text-sm text-destructive">
           We couldn't load your products. Please check your connection and refresh.
