@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { settingsQuery, fallbackSettings, telLink, whatsappLink } from "@/lib/site";
+import { settingsQuery, fallbackSettings, phoneNumbers, telLink, whatsappLink } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -166,18 +166,19 @@ function Contact() {
         </div>
 
         <aside className="space-y-4">
-          {s.phone && (
+          {phoneNumbers(s.phone).map((number) => (
             <a
-              href={telLink(s.phone)}
+              key={number}
+              href={telLink(number)}
               className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:bg-accent/40"
             >
               <Phone className="mt-1 h-5 w-5 text-primary" aria-hidden />
               <span>
                 <span className="block font-medium">Call us</span>
-                <span className="block text-sm text-muted-foreground">{s.phone}</span>
+                <span className="block text-sm text-muted-foreground">{number}</span>
               </span>
             </a>
-          )}
+          ))}
           {s.whatsapp && (
             <a
               href={whatsappLink(s.whatsapp, "Hi AGR, I'd like to know more about your products.")}
@@ -209,7 +210,7 @@ function Contact() {
               <MapPin className="mt-1 h-5 w-5 text-primary" aria-hidden />
               <span>
                 <span className="block font-medium">Address</span>
-                <span className="block text-sm text-muted-foreground">{s.address}</span>
+                <span className="block whitespace-pre-line text-sm text-muted-foreground">{s.address}</span>
               </span>
             </div>
           )}

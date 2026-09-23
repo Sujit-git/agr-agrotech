@@ -11,12 +11,12 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "AGR \u2014 Agrotech is an agriculture and food-products brand focused on natural, sustainable and value-added products from Indian farms.",
+          "Discover AGR Agrotech, building a sustainable value chain from Indian agriculture to natural nutrition through responsible sourcing and modern processing.",
       },
       { property: "og:title", content: "About AGR \u2014 Agrotech" },
       {
         property: "og:description",
-        content: "Our purpose, our approach to processing, and where AGR is headed next.",
+        content: "Our business, approach and vision: from agriculture to nutrition, naturally.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -31,85 +31,101 @@ function About() {
       <section className="border-b border-border bg-secondary/40">
         <div className="container-page py-12 md:py-16">
           <p className="eyebrow">About us</p>
-          <h1 className="mt-3 max-w-2xl font-display text-4xl sm:text-5xl">
-            An agriculture brand built around care
-          </h1>
+          <h1 className="mt-3 font-display text-4xl sm:text-5xl">About AGR Agrotech</h1>
+          <p className="mt-4 font-display text-xl text-primary sm:text-2xl">
+            Growing Agriculture. Advancing Nutrition. Creating Value.
+          </p>
         </div>
       </section>
 
-      <div className="container-page grid gap-12 py-14 lg:grid-cols-[1.1fr_1fr] lg:gap-16 md:py-20">
-        <div className="space-y-10">
-          <section>
-            <h2 className="font-display text-2xl">Our purpose</h2>
-            <p className="mt-3 leading-relaxed text-muted-foreground">
-              AGR &mdash; Agrotech works at the meeting point of agriculture and thoughtful
-              processing. We take what the farm produces and turn it into products that keep well,
-              travel well and stay close to their natural character &mdash; from compost that
-              returns nutrition to the soil, to fruit preserved through dehydration and
-              freeze-drying.
-            </p>
-            <p className="mt-3 leading-relaxed text-muted-foreground">[Add AGR company story here]</p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-2xl">Our approach</h2>
-            <ul className="mt-4 space-y-4">
-              <li>
-                <h3 className="font-display text-lg">Agriculture first</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  We start with the crop and the soil, not with a shelf. [Add sourcing details here]
-                </p>
-              </li>
-              <li>
-                <h3 className="font-display text-lg">Modern processing</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Dehydration and freeze-drying are used to reduce moisture while protecting taste
-                  and texture. [Add processing details here]
-                </p>
-              </li>
-              <li>
-                <h3 className="font-display text-lg">Sustainability</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Composting and low-waste practices are part of how we work day to day. [Add
-                  sustainability details here]
-                </p>
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="font-display text-2xl">Where we are headed</h2>
-            <p className="mt-3 leading-relaxed text-muted-foreground">
-              Our catalogue starts with vermicompost, dehydrated fruits and freeze-dried fruits.
-              Fruit bars, fruit powders and vegetable powders are on the roadmap, and the range will
-              grow as our processing capacity does.
-            </p>
-            <Button asChild className="mt-6">
-              <Link to="/products">See what we make today</Link>
-            </Button>
-          </section>
+      <section className="container-page grid gap-10 py-14 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16 md:py-20">
+        <div className="max-w-2xl space-y-5 leading-relaxed text-muted-foreground">
+          <p>
+            AGR Agrotech is an emerging agri-business focused on building a sustainable value chain
+            from agriculture to nutrition. We combine responsible sourcing, modern processing
+            technologies, and quality-driven practices to develop products for both domestic and
+            global markets.
+          </p>
+          <p>
+            Our business spans sustainable agricultural inputs, dehydrated and freeze-dried fruits,
+            and plant-based nutrition ingredients, with a focus on delivering consistent quality,
+            natural value, and scalable solutions.
+          </p>
         </div>
+        <img
+          src={farmImage}
+          alt="Farmland in India at early morning light"
+          loading="lazy"
+          width={1408}
+          height={912}
+          className="w-full max-h-[28rem] rounded-lg object-cover"
+        />
+      </section>
 
-        <div>
-          <img
-            src={farmImage}
-            alt="Farmland in India at early morning light"
-            loading="lazy"
-            width={1408}
-            height={912}
-            className="w-full rounded-3xl object-cover shadow-soft"
-          />
-          <div className="mt-6 rounded-2xl border border-border bg-card p-6">
-            <h2 className="font-display text-lg">Talk to us</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Questions about a product, pack size or a bulk requirement? We&apos;re happy to help.
-            </p>
-            <Button asChild variant="outline" className="mt-4">
-              <Link to="/contact">Contact AGR</Link>
-            </Button>
+      <section className="border-y border-border bg-secondary/40 py-14 md:py-20">
+        <div className="container-page">
+          <p className="eyebrow">What we do</p>
+          <h2 className="mt-3 font-display text-3xl">Our Business</h2>
+          <div className="mt-9 grid gap-8 md:grid-cols-3">
+            <div className="border-t border-primary pt-5">
+              <h3 className="font-display text-xl">Sustainable Agriculture</h3>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                We develop organic soil-enrichment products, including vermicompost and organic
+                manure, supporting healthier soil and more sustainable farming practices.
+              </p>
+            </div>
+            <div className="border-t border-primary pt-5">
+              <h3 className="font-display text-xl">Dehydrated &amp; Freeze-Dried Fruits</h3>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                Using advanced preservation technologies, we transform quality fruits into
+                convenient, shelf-stable ingredients while maintaining their natural taste, color,
+                and nutritional characteristics.
+              </p>
+            </div>
+            <div className="border-t border-primary pt-5">
+              <h3 className="font-display text-xl">Plant-Based Nutrition</h3>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                Our expanding portfolio will include fruit, vegetable, and superfood powders
+                designed for food, wellness, and functional nutrition applications.
+              </p>
+            </div>
           </div>
         </div>
+      </section>
+
+      <div className="container-page grid gap-12 py-14 md:grid-cols-2 md:gap-16 md:py-20">
+        <section>
+          <h2 className="font-display text-2xl">Our Approach</h2>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            At AGR Agrotech, we focus on building reliable, quality-driven and scalable agricultural
+            value chains. From sourcing and processing to packaging and delivery, we emphasize
+            consistency, traceability, food safety, and responsible production.
+          </p>
+        </section>
+        <section>
+          <h2 className="font-display text-2xl">Our Vision</h2>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            To build a trusted, globally recognized agri-nutrition company that connects Indian
+            agricultural potential with growing global demand for natural, nutritious, and
+            value-added products.
+          </p>
+        </section>
       </div>
+
+      <section className="border-t border-border bg-secondary/40 py-14 md:py-20">
+        <div className="container-page max-w-4xl">
+          <h2 className="font-display text-2xl">Our Commitment</h2>
+          <p className="mt-4 font-display text-xl text-primary">Quality • Innovation • Sustainability • Integrity</p>
+          <p className="mt-5 leading-relaxed text-muted-foreground">
+            We are committed to creating long-term value for farmers, business partners, customers,
+            and stakeholders while contributing to a more sustainable and nutrition-conscious future.
+          </p>
+          <p className="mt-8 font-display text-xl">AGR Agrotech — From Agriculture to Nutrition, Naturally.</p>
+          <Button asChild className="mt-7">
+            <Link to="/contact">Contact AGR</Link>
+          </Button>
+        </div>
+      </section>
     </SiteLayout>
   );
 }

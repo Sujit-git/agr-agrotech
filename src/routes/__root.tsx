@@ -78,17 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AGR \u2014 Agrotech | Naturally Better. Thoughtfully Made." },
+      { title: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
       {
         name: "description",
         content:
-          "AGR \u2014 Agrotech crafts thoughtfully made agricultural and natural food products, from premium vermicompost to dehydrated and freeze-dried fruits.",
+          "AGR Agrotech connects Indian agriculture with nutrition through sustainable soil inputs, preserved fruits and plant-based ingredients.",
       },
-      { name: "author", content: "AGR \u2014 Agrotech" },
-      { property: "og:title", content: "AGR \u2014 Agrotech" },
+      { name: "author", content: "AGR Agrotech" },
+      { property: "og:title", content: "AGR Agrotech" },
       {
         property: "og:description",
-        content: "Thoughtfully made agricultural and natural food products from AGR \u2014 Agrotech.",
+        content: "From agriculture to nutrition, naturally. Sustainable agricultural inputs, preserved fruits and plant-based ingredients.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -104,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
