@@ -80,9 +80,9 @@ export function Footer() {
           <h2 className="text-sm font-semibold">Get in touch</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             {phoneNumbers(s.phone).map((number) => (
-              <li className="flex items-start gap-2">
+              <li key={number} className="flex items-start gap-2">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                <a key={number} href={telLink(number)} className="hover:text-foreground">
+                <a href={telLink(number)} className="hover:text-foreground">
                   {number}
                 </a>
               </li>

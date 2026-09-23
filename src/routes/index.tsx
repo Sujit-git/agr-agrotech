@@ -11,17 +11,17 @@ import heroImage from "@/assets/hero-agr.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AGR \u2014 Agrotech | Natural Agricultural & Food Products" },
+      { title: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
       {
         name: "description",
         content:
-          "AGR \u2014 Agrotech offers vermicompost, dehydrated fruits and freeze-dried fruits. Thoughtfully processed agricultural and natural products from Indian farms.",
+          "AGR Agrotech connects Indian agriculture to nutrition through sustainable soil inputs, dehydrated and freeze-dried fruits, and plant-based ingredients.",
       },
-      { property: "og:title", content: "AGR \u2014 Agrotech | Naturally Better. Thoughtfully Made." },
+      { property: "og:title", content: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
       {
         property: "og:description",
         content:
-          "Vermicompost, dehydrated fruits and freeze-dried fruits from AGR \u2014 Agrotech.",
+          "Sustainable agricultural inputs, preserved fruits and plant-based nutrition ingredients from AGR Agrotech.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -69,16 +69,15 @@ function Home() {
       <section className="relative overflow-hidden border-b border-border bg-secondary/40">
         <div className="container-page grid items-center gap-10 py-14 md:grid-cols-2 md:py-24">
           <div className="rise-in">
-            <p className="eyebrow">AGR &mdash; Agrotech</p>
+            <p className="eyebrow">AGR Agrotech</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-              Naturally Better.
+              Growing Agriculture.
               <br />
-              Thoughtfully Made.
+              Advancing Nutrition.
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-              From soil to shelf, AGR works with Indian agriculture to create natural and
-              value-added products &mdash; compost that feeds the soil, and fruit preserved with
-              modern, careful processing.
+              Creating value from agriculture to nutrition through sustainable soil inputs,
+              dehydrated and freeze-dried fruits, and an expanding range of plant-based ingredients.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -180,7 +179,7 @@ function Home() {
         <div className="max-w-2xl">
           <p className="eyebrow">Why AGR</p>
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-            A careful approach, from farm to pack
+            From agriculture to nutrition, naturally
           </h2>
         </div>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
