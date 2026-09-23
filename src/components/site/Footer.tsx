@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
 
-import { settingsQuery, fallbackSettings, telLink } from "@/lib/site";
+import { settingsQuery, fallbackSettings, phoneNumbers, telLink } from "@/lib/site";
 import { Logo } from "./Logo";
 
 export function Footer() {
@@ -79,14 +79,14 @@ export function Footer() {
         <div>
           <h2 className="text-sm font-semibold">Get in touch</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {s.phone && (
+            {phoneNumbers(s.phone).map((number) => (
               <li className="flex items-start gap-2">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                <a href={telLink(s.phone)} className="hover:text-foreground">
-                  {s.phone}
+                <a key={number} href={telLink(number)} className="hover:text-foreground">
+                  {number}
                 </a>
               </li>
-            )}
+            ))}
             {s.email && (
               <li className="flex items-start gap-2">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
@@ -98,7 +98,7 @@ export function Footer() {
             {s.address && (
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                <span>{s.address}</span>
+                <span className="whitespace-pre-line">{s.address}</span>
               </li>
             )}
           </ul>

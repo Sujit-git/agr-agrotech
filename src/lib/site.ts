@@ -14,13 +14,13 @@ export type SiteSettings = {
 
 /** Single source of truth used before the database settings load. */
 export const fallbackSettings: SiteSettings = {
-  brand_name: "AGR",
+  brand_name: "AGR Agrotech",
   business_description:
-    "AGR \u2014 Agrotech brings thoughtfully processed agricultural and natural products from Indian farms.",
-  email: "agrotech@agr.com",
-  phone: "9860256598",
-  whatsapp: "919860256598",
-  address: "[Add AGR address here]",
+    "From agriculture to nutrition, naturally. AGR Agrotech develops sustainable agricultural inputs, preserved fruits, and plant-based nutrition ingredients.",
+  email: "agragrotech@gmail.com",
+  phone: "7758055691 / 9423861690",
+  whatsapp: "917758055691",
+  address: "AGR AGROTECH PVT. LTD.\nGSTN: 27ABECA3291P1Z6\nGat No. 89, Jadhav Nagar,\nPhaltan–Uplave Road,\nTahasil Phaltan, District Satara, Maharashtra, India. Pin code – 412355",
   instagram: "",
   facebook: "",
   site_url: "",
@@ -47,4 +47,8 @@ export function whatsappLink(number: string | null | undefined, message: string)
 
 export function telLink(phone: string | null | undefined): string {
   return `tel:${(phone || "").replace(/[^\d+]/g, "")}`;
+}
+
+export function phoneNumbers(phone: string | null | undefined): string[] {
+  return (phone || "").split(/\s*\/\s*/).map((number) => number.trim()).filter(Boolean);
 }

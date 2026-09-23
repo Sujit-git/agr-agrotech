@@ -31,11 +31,11 @@ const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?
   { key: "brand_name", label: "Brand name" },
   { key: "business_description", label: "Business description", textarea: true },
   { key: "email", label: "Email" },
-  { key: "phone", label: "Phone" },
+  { key: "phone", label: "Phone numbers", hint: "Separate multiple numbers with /" },
   {
     key: "whatsapp",
     label: "WhatsApp number",
-    hint: "Include the country code, e.g. 919860256598",
+    hint: "Include the country code, e.g. 917758055691",
   },
   { key: "address", label: "Address", textarea: true },
   { key: "instagram", label: "Instagram link" },
