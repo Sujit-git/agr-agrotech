@@ -23,12 +23,42 @@ export const Route = createFileRoute("/privacy-policy")({
 });
 
 const sections = [
-  { title: "Information we collect", body: "[Add the information AGR collects here]" },
-  { title: "How we use information", body: "[Add how AGR uses the information here]" },
-  { title: "Sharing information", body: "[Add information-sharing details here]" },
-  { title: "Data retention", body: "[Add retention period here]" },
-  { title: "Your choices", body: "[Add how visitors can request changes or deletion here]" },
-  { title: "Contact", body: "[Add the contact point for privacy questions here]" },
+  {
+    title: "Who we are",
+    body: "This website is operated by AGR Agrotech Pvt. Ltd., Gat No. 89, Jadhav Nagar, Phaltan–Uplave Road, Tahasil Phaltan, District Satara, Maharashtra, India – 412355. This policy explains how we handle information you share with us through this website.",
+  },
+  {
+    title: "Information we collect",
+    body: "We do not require you to create an account to use this website. We only collect the details you choose to send us through the contact form — your name, email address, phone number and message. If you contact us via WhatsApp, phone or email, we receive the details you share through those channels.",
+  },
+  {
+    title: "How we use information",
+    body: "We use your information only to respond to your enquiry, share product details and quotations, and communicate with you about your request. We do not use it for unrelated purposes and we do not sell it.",
+  },
+  {
+    title: "Sharing information",
+    body: "We do not sell, rent or trade your personal information. It is accessible only to authorised AGR Agrotech staff and to trusted service providers who host and operate this website on our behalf, or where disclosure is required by law.",
+  },
+  {
+    title: "Cookies and analytics",
+    body: "This website does not use advertising or tracking cookies. Only essential browser storage needed for the website to function may be used.",
+  },
+  {
+    title: "Data security and retention",
+    body: "We use reasonable technical and organisational measures to protect your information. Enquiry details are kept only as long as needed to respond to you and for legitimate business or legal record-keeping, after which they are deleted.",
+  },
+  {
+    title: "Your choices",
+    body: "You may ask us to access, correct or delete the personal information you have shared with us at any time by contacting us using the details below.",
+  },
+  {
+    title: "Changes to this policy",
+    body: "We may update this Privacy Policy from time to time. Any changes will be posted on this page.",
+  },
+  {
+    title: "Contact",
+    body: "For privacy questions or requests, email agragrotech@gmail.com or call 7758055691 / 9423861690.",
+  },
 ];
 
 function Privacy() {
@@ -38,7 +68,7 @@ function Privacy() {
         <p className="eyebrow">Legal</p>
         <h1 className="mt-3 font-display text-4xl">Privacy Policy</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          This page is a placeholder structure. The final policy text will be added by AGR.
+          Your privacy matters to us. This policy describes how AGR Agrotech handles your information.
         </p>
         <div className="mt-10 space-y-8">
           {sections.map((section) => (
