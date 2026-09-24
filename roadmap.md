@@ -1,0 +1,4 @@
+- [x] Replace company story and related homepage wording.
+- [x] Use transparent AGR Agrotech logo and matching site icon.
+- [x] Update company address, GSTN, email, and both phone contacts across public pages and settings.
+- [x] Check desktop and mobile presentation and live contact details.
