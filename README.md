@@ -86,9 +86,10 @@ Per-page titles, descriptions and Open Graph tags, semantic headings, alt text, 
 
 ## Content notes
 
-Sample products, prices and the About/Legal pages contain clearly marked placeholders. Replace
-them with real AGR content before launch — no certifications, awards or nutritional claims are
-asserted anywhere.
+The About page and contact details reflect AGR's supplied company information. Sample products,
+prices, images and the legal pages still contain placeholders; replace those with verified AGR
+content before launch. The first supplied contact number is currently used for WhatsApp; confirm
+which number accepts WhatsApp enquiries.
 
 ## Future e-commerce
 

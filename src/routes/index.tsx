@@ -36,7 +36,7 @@ const whyPoints = [
   {
     icon: ShieldCheck,
     title: "Quality Focus",
-    text: "Every batch is checked for consistency before it is packed and dispatched.",
+    text: "Quality-driven practices guide sourcing, processing, packaging and delivery.",
   },
   {
     icon: Leaf,
@@ -46,12 +46,12 @@ const whyPoints = [
   {
     icon: FlaskConical,
     title: "Thoughtful Processing",
-    text: "Dehydration and freeze-drying done with care to protect taste and texture.",
+    text: "Modern preservation processes help maintain fruits’ natural taste, color and nutritional characteristics.",
   },
   {
     icon: Recycle,
     title: "Sustainable Approach",
-    text: "Composting and low-waste practices sit at the centre of how we work.",
+    text: "Soil-enrichment products support healthier soil and more sustainable farming practices.",
   },
 ];
 
