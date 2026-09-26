@@ -1,0 +1,9 @@
+[build]
+  # Vite writes the deployable client assets directly to dist. Keeping this in
+  # the repository overrides the stale dist/client setting from the site UI.
+  publish = "dist"
+
+[build.environment]
+  # These values are public Supabase identifiers intentionally embedded in the
+  # browser bundle. Server-only credentials remain covered by secrets scanning.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_PROJECT_ID,SUPABASE_PUBLISHABLE_KEY,SUPABASE_URL,VITE_SUPABASE_PROJECT_ID,VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_URL"
