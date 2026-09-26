@@ -108,9 +108,6 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; AGR &mdash; Agrotech. All rights reserved.</p>
-          <Link to="/admin/login" className="hover:text-foreground">
-            Admin
-          </Link>
         </div>
       </div>
     </footer>
