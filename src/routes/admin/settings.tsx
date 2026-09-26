@@ -98,6 +98,98 @@ function SettingsAdmin() {
           {busy ? "Saving\u2026" : "Save changes"}
         </Button>
       </form>
+
+      <ChangePasswordCard />
     </AdminShell>
+  );
+}
+
+function ChangePasswordCard() {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (next.length < 8) {
+      toast.error("Your new password must be at least 8 characters long.");
+      return;
+    }
+    if (next !== confirm) {
+      toast.error("The new passwords do not match. Please re-enter them.");
+      return;
+    }
+    setBusy(true);
+    const { error } = await supabase.auth.updateUser({
+      password: next,
+      current_password: current,
+    });
+    setBusy(false);
+    if (error) {
+      toast.error(
+        "Your password could not be changed. Please check your current password and try again.",
+      );
+      return;
+    }
+    toast.success("Your admin password has been changed.");
+    setCurrent("");
+    setNext("");
+    setConfirm("");
+  };
+
+  return (
+    <form
+      onSubmit={changePassword}
+      className="mt-8 max-w-2xl space-y-5 rounded-2xl border border-border bg-card p-6"
+    >
+      <div>
+        <h2 className="text-lg font-semibold">Change admin password</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Choose a strong password you do not use anywhere else.
+        </p>
+      </div>
+      <div>
+        <Label htmlFor="current-password">Current password</Label>
+        <Input
+          id="current-password"
+          type="password"
+          autoComplete="current-password"
+          required
+          value={current}
+          onChange={(e) => setCurrent(e.target.value)}
+          className="mt-2 h-11"
+        />
+      </div>
+      <div>
+        <Label htmlFor="new-password">New password</Label>
+        <Input
+          id="new-password"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={8}
+          value={next}
+          onChange={(e) => setNext(e.target.value)}
+          className="mt-2 h-11"
+        />
+      </div>
+      <div>
+        <Label htmlFor="confirm-password">Confirm new password</Label>
+        <Input
+          id="confirm-password"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={8}
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          className="mt-2 h-11"
+        />
+      </div>
+      <Button type="submit" disabled={busy}>
+        {busy ? "Updating…" : "Change password"}
+      </Button>
+    </form>
   );
 }
