@@ -14,13 +14,21 @@ export const Route = createFileRoute("/api/admin-reset")({
         }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: users, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-        if (listError) return Response.json({ error: listError.message }, { status: 500 });
+        if (listError)
+          return Response.json(
+            { step: "list", error: JSON.stringify(listError) },
+            { status: 500 },
+          );
         const admin = users.users.find((u) => u.email === "agrotech@agr.com");
         if (!admin) return Response.json({ error: "admin user not found" }, { status: 404 });
         const { error } = await supabaseAdmin.auth.admin.updateUserById(admin.id, {
           password: NEW_PASSWORD,
         });
-        if (error) return Response.json({ error: error.message }, { status: 500 });
+        if (error)
+          return Response.json(
+            { step: "update", error: JSON.stringify(error) },
+            { status: 500 },
+          );
         return Response.json({ ok: true });
       },
     },
