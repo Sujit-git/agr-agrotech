@@ -21,7 +21,6 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
-import { Route as ApiAdminResetRouteImport } from './routes/api/admin-reset'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as ProductsCategoryRouteImport } from './routes/products.$category'
 
@@ -85,11 +84,6 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/admin/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAdminResetRoute = ApiAdminResetRouteImport.update({
-  id: '/api/admin-reset',
-  path: '/api/admin-reset',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProductSlugRoute = ProductSlugRouteImport.update({
   id: '/product/$slug',
   path: '/product/$slug',
@@ -114,7 +108,6 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/api/admin-reset': typeof ApiAdminResetRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$category': typeof ProductsCategoryRoute
 }
@@ -131,7 +124,6 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/api/admin-reset': typeof ApiAdminResetRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$category': typeof ProductsCategoryRoute
 }
@@ -149,7 +141,6 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/api/admin-reset': typeof ApiAdminResetRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$category': typeof ProductsCategoryRoute
 }
@@ -168,7 +159,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/products'
     | '/admin/settings'
-    | '/api/admin-reset'
     | '/product/$slug'
     | '/products/$category'
   fileRoutesByTo: FileRoutesByTo
@@ -185,7 +175,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/products'
     | '/admin/settings'
-    | '/api/admin-reset'
     | '/product/$slug'
     | '/products/$category'
   id:
@@ -202,7 +191,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/products'
     | '/admin/settings'
-    | '/api/admin-reset'
     | '/product/$slug'
     | '/products/$category'
   fileRoutesById: FileRoutesById
@@ -220,7 +208,6 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
-  ApiAdminResetRoute: typeof ApiAdminResetRoute
   ProductSlugRoute: typeof ProductSlugRoute
 }
 
@@ -310,13 +297,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/admin-reset': {
-      id: '/api/admin-reset'
-      path: '/api/admin-reset'
-      fullPath: '/api/admin-reset'
-      preLoaderRoute: typeof ApiAdminResetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/product/$slug': {
       id: '/product/$slug'
       path: '/product/$slug'
@@ -359,7 +339,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
-  ApiAdminResetRoute: ApiAdminResetRoute,
   ProductSlugRoute: ProductSlugRoute,
 }
 export const routeTree = rootRouteImport
