@@ -56,11 +56,16 @@ with that user's id and role `admin`. Public sign-up is disabled, so no one else
 - **Contact details:** Admin → Settings. Brand name, description, enquiry email, phone, WhatsApp,
   address, Instagram, Facebook and website address are stored once and used across the site. The enquiry email controls the displayed email address, mail links and contact-form recipient.
 
-### Contact-form email (no additional DNS records)
+### Contact-form email delivery (Gmail SMTP; no domain DNS verification)
 
-The contact form saves submissions to `contact_messages`, then opens a pre-filled `mailto:` draft in the visitor's default email app. The destination comes from Admin → Settings → **Enquiry email** (for example, `agragrotech@gmail.com`). No Resend account, extra email DNS records, or server email credentials are required.
+The contact form sends enquiries directly from the website through the Gmail SMTP account configured on Netlify. The recipient is read from Admin → Settings → **Enquiry email** (initially `agragrotech@gmail.com`). Visitors do not need to open an email app or WhatsApp.
 
-The visitor must press **Send** in their email app. The actual From address is controlled by the email account configured in that app; the browser cannot force the entered form address to become the From address. Visitors should use an account configured in their email app. The entered email is included in the message, and the submission is saved to the website's enquiry log when database access is available.
+1. In the Google account for `agragrotech@gmail.com`, enable 2-Step Verification and create a Google **App Password** for the website. Use that app password, not the normal Gmail password.
+2. In Netlify → Site configuration → Environment variables, add `GMAIL_SMTP_USER=agragrotech@gmail.com` and `GMAIL_SMTP_APP_PASSWORD` with the generated app password.
+3. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` (these can match `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`) so the function can read the current recipient from `site_settings`. Set `CONTACT_EMAIL=agragrotech@gmail.com` as a fallback.
+4. Deploy the site, then set the destination address in Admin → Settings → **Enquiry email**.
+
+No Resend account or extra DNS records are required. The email is sent from the authenticated Gmail account; the visitor's entered email is included in the message and used as **Reply-To**. The site cannot safely impersonate an arbitrary visitor address as the authenticated From address. Keep the app password only in Netlify environment variables and never commit it to GitHub.
 
 
 ## Backup / export
