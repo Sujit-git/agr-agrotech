@@ -223,7 +223,9 @@ function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/10 pt-5 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
               <span>Dehydrated fruit</span>
               <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
-              <span>Dehydrated fruit</span>
+              <span>Freeze-dried fruits</span>
+              <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
+              <span>Fruit-first snacking</span>
             </div>
           </div>
 
