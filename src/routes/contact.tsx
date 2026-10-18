@@ -76,21 +76,46 @@ function Contact() {
     if (Object.keys(next).length) return;
 
     setSending(true);
+    let emailSent = false;
+    try {
+      const response = await fetch("/.netlify/functions/send-enquiry", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        }),
+      });
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
+      if (!response.ok) {
+        toast.error(result.error || "We couldn't email your enquiry. Please try again or email us directly.");
+        return;
+      }
+      emailSent = true;
+    } catch {
+      toast.error("We couldn't connect to email delivery. Please try again or email us directly.");
+      return;
+    } finally {
+      setSending(false);
+    }
+
+    // Keep the existing enquiry record as well as sending the notification email.
     const { error } = await supabase.from("contact_messages").insert({
       name: form.name.trim(),
       email: form.email.trim() || null,
       phone: form.phone.trim() || null,
       message: form.message.trim(),
     });
-    setSending(false);
-
-    if (error) {
-      toast.error("We couldn't send your message. Please try again or call us directly.");
-      return;
-    }
     setSent(true);
     setForm({ name: "", email: "", phone: "", message: "" });
-    toast.success("Thanks! Your message has reached Fruitly.");
+    if (error) {
+      toast.success("Your enquiry email was sent to Fruitly.");
+      toast.warning("The email was sent, but the website enquiry log could not be saved.");
+      return;
+    }
+    if (emailSent) toast.success("Thanks! Your enquiry has been emailed to Fruitly.");
   };
 
   return (
