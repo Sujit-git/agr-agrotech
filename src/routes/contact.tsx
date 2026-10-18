@@ -164,7 +164,7 @@ function Contact() {
                     <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent/60 text-primary">
                       <MessageSquareText className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="mt-5 text-2xl">Thank you for contacting Fruitly.</h3>
+                    <h3 className="mt-5 text-2xl">{isTestimonial ? "Thank you for sharing your story." : "Thank you for contacting Fruitly."}</h3>
                     <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
                       {isTestimonial ? "Thank you for sharing your Fruitly experience. Our team has received your message." : "Your enquiry has been sent successfully. Our team will get back to you as soon as possible."}
                     </p>
