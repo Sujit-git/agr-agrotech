@@ -59,8 +59,7 @@ const marqueeItems = [
   "Fruit for the moments in between",
 ];
 
-// Local testimonial content keeps the section independent of database availability.
-// Replace these sample lines with customer-approved wording before publishing as verified reviews.
+// Customer-provided testimonial copy is kept locally; entries without approved feedback remain pending.
 const testimonials = [
   { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", product: "Freeze-dried Mangoes", quote: "Fruitly's freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
   { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", product: "Fruitly fruit snack", quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a bless.", rating: null, verified: false },
