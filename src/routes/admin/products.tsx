@@ -26,7 +26,7 @@ import {
   productsQuery,
   type Product,
 } from "@/lib/catalog";
-import { slugify, uploadProductImage } from "@/lib/uploads";
+import { PRODUCT_IMAGE_SIZE_LABEL, slugify, uploadProductImage } from "@/lib/uploads";
 
 export const Route = createFileRoute("/admin/products")({
   ssr: false,
@@ -406,12 +406,23 @@ function ProductsAdmin() {
             </div>
 
             <div>
-              <Label htmlFor="p-image">Product image</Label>
+              <div className="flex items-start gap-3 rounded-2xl border border-primary/15 bg-secondary/55 p-4">
+                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-background text-primary">
+                  <Upload className="h-4 w-4" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold">Standard image format required</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                    Use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Keep the fruit or pack centered with a clean background. The same square format is used in product cards, product details and the homepage spotlight.
+                  </p>
+                </div>
+              </div>
+              <Label htmlFor="p-image">Product image (1200 × 1200 px)</Label>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <Input
                   id="p-image"
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   onChange={(e) => void pickImage(e.target.files?.[0])}
                   className="max-w-xs"
                 />
@@ -428,11 +439,14 @@ function ProductsAdmin() {
                   </span>
                 )}
               </div>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                Uploads are checked for the exact square dimensions before they are saved. Featured fruit products can also appear in the rotating homepage spotlight; change the image here to update it without editing code.
+              </p>
               {form.image_url && (
                 <img
                   src={form.image_url}
                   alt=""
-                  className="mt-3 h-24 w-24 rounded-xl object-cover"
+                  className="mt-3 aspect-square w-24 rounded-xl object-cover"
                 />
               )}
             </div>
@@ -443,7 +457,7 @@ function ProductsAdmin() {
                 checked={form.featured}
                 onCheckedChange={(v) => set("featured", v === true)}
               />
-              <Label htmlFor="p-featured">Show on the homepage as featured</Label>
+              <Label htmlFor="p-featured">Feature on homepage (also used in the Fruitly spotlight slider)</Label>
             </div>
 
             <DialogFooter>

@@ -79,17 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FRUITLY | Goodness in Every Bite" },
+      { title: "Fruitly | Pure. Fresh. Natural." },
       {
         name: "description",
         content:
-          "Discover FRUITLY's natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
+          "Discover Fruitly's natural dehydrated fruits. Pure. Fresh. Natural.",
       },
-      { name: "author", content: "FRUITLY" },
-      { property: "og:title", content: "FRUITLY | Goodness in Every Bite" },
+      { name: "author", content: "Fruitly" },
+      { name: "theme-color", content: "#184d2b" },
+      { property: "og:title", content: "Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",
-        content: "Natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
+        content: "Dehydrated fruit, presented with a fruit-first point of view. Pure. Fresh. Natural.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -105,7 +106,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", href: "/favicon.svg?v=4", type: "image/svg+xml", sizes: "any" },
+      { rel: "shortcut icon", href: "/favicon.svg?v=4", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,

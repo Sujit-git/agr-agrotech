@@ -1,9 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
 
-import vermicompost from "@/assets/product-vermicompost.jpg";
-import mango from "@/assets/product-dehydrated-mango.jpg";
-import strawberry from "@/assets/product-freeze-dried-strawberry.jpg";
-import pineapple from "@/assets/product-freeze-dried-pineapple.jpg";
 
 export type Availability = "available" | "out_of_stock" | "coming_soon";
 
@@ -38,16 +34,33 @@ export type Product = {
   updated_at: string;
 };
 
-/** Placeholder photography used until the admin uploads real product images. */
+/** Fruitly launch pouch artwork. The display frame controls crop and size consistently. */
 const seedImages: Record<string, string> = {
-  "agr-premium-vermicompost": vermicompost,
-  "dehydrated-mango-slices": mango,
-  "freeze-dried-strawberry": strawberry,
-  "freeze-dried-pineapple": pineapple,
+  "dehydrated-strawberry-whole": "/fruitly-products/dehydrated-strawberry-whole.webp",
+  "dehydrated-lemon-slices": "/fruitly-products/dehydrated-lemon-slices.webp",
+  "dehydrated-mango-cubes": "/fruitly-products/dehydrated-mango-cubes.webp",
+  "dehydrated-jamun-cubes": "/fruitly-products/dehydrated-jamun-cubes.webp",
+  "dehydrated-papaya-cubes": "/fruitly-products/dehydrated-papaya-cubes.webp",
 };
 
+const legacySeedProductSlugs = new Set([
+  "agr-premium-vermicompost",
+  "dehydrated-mango-slices",
+  "freeze-dried-strawberry",
+  "freeze-dried-pineapple",
+]);
+
+/** Hide only the original demo catalogue seeds while the cleanup migration is being deployed.
+ * Newly created products remain visible, regardless of their category.
+ */
+export function isLegacySeedProduct(slug: string): boolean {
+  return legacySeedProductSlugs.has(slug);
+}
+
 export function productImage(product: Pick<Product, "slug" | "image_url">): string | null {
-  return product.image_url || seedImages[product.slug] || null;
+  // Prefer the approved local Fruitly launch artwork over stale image URLs in the live catalogue.
+  // Admin-managed URLs remain available for products without a bundled launch asset.
+  return seedImages[product.slug] || product.image_url || null;
 }
 
 export const availabilityLabels: Record<Availability, string> = {

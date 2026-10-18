@@ -4,11 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * FRUITLY brand theme.
- * Forest green, fresh leaf green, clean whites, and subtle natural accents.
- */
-
 @theme inline {
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -51,51 +46,52 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.03 70 / 0.04), 0 12px 32px oklch(0.3 0.03 70 / 0.07);
-  --shadow-lift: 0 2px 6px oklch(0.3 0.03 70 / 0.06), 0 24px 48px oklch(0.3 0.03 70 / 0.12);
+  --shadow-soft: 0 2px 8px oklch(0.27 0.055 150 / 0.045), 0 16px 38px oklch(0.27 0.055 150 / 0.09);
+  --shadow-lift: 0 4px 10px oklch(0.27 0.055 150 / 0.06), 0 26px 58px oklch(0.27 0.055 150 / 0.14);
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 1rem;
 
-  --background: oklch(0.99 0.008 108);
-  --foreground: oklch(0.24 0.045 153);
+  /* Fruitly: forest green, leaf green, berry red and warm cream sampled from the supplied logo. */
+  --background: oklch(0.985 0.014 88);
+  --foreground: oklch(0.245 0.045 150);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.045 153);
+  --card-foreground: oklch(0.245 0.045 150);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.045 153);
+  --popover-foreground: oklch(0.245 0.045 150);
 
-  --primary: oklch(0.34 0.085 153);
-  --primary-foreground: oklch(0.99 0.008 108);
+  --primary: oklch(0.36 0.095 150);
+  --primary-foreground: oklch(0.985 0.014 88);
 
-  --secondary: oklch(0.96 0.018 112);
-  --secondary-foreground: oklch(0.28 0.06 153);
+  --secondary: oklch(0.96 0.028 118);
+  --secondary-foreground: oklch(0.29 0.065 150);
 
-  --muted: oklch(0.955 0.014 112);
-  --muted-foreground: oklch(0.48 0.025 145);
+  --muted: oklch(0.955 0.02 95);
+  --muted-foreground: oklch(0.47 0.03 148);
 
-  --accent: oklch(0.91 0.09 135);
-  --accent-foreground: oklch(0.27 0.07 153);
+  --accent: oklch(0.88 0.15 132);
+  --accent-foreground: oklch(0.27 0.08 150);
 
-  --clay: oklch(0.63 0.13 38);
-  --clay-foreground: oklch(0.99 0.008 108);
+  --clay: oklch(0.57 0.21 26);
+  --clay-foreground: oklch(0.99 0.01 90);
 
   --destructive: oklch(0.55 0.19 27);
   --destructive-foreground: oklch(0.98 0.01 95);
 
-  --border: oklch(0.89 0.024 126);
-  --input: oklch(0.89 0.024 126);
-  --ring: oklch(0.48 0.11 145);
+  --border: oklch(0.89 0.026 105);
+  --input: oklch(0.89 0.026 105);
+  --ring: oklch(0.51 0.12 150);
 
-  --sidebar: oklch(0.965 0.014 112);
-  --sidebar-foreground: oklch(0.24 0.045 153);
-  --sidebar-primary: oklch(0.34 0.085 153);
-  --sidebar-primary-foreground: oklch(0.99 0.008 108);
-  --sidebar-accent: oklch(0.91 0.09 135);
-  --sidebar-accent-foreground: oklch(0.27 0.07 153);
-  --sidebar-border: oklch(0.89 0.024 126);
-  --sidebar-ring: oklch(0.48 0.11 145);
+  --sidebar: oklch(0.965 0.02 105);
+  --sidebar-foreground: oklch(0.245 0.045 150);
+  --sidebar-primary: oklch(0.36 0.095 150);
+  --sidebar-primary-foreground: oklch(0.985 0.014 88);
+  --sidebar-accent: oklch(0.88 0.15 132);
+  --sidebar-accent-foreground: oklch(0.27 0.08 150);
+  --sidebar-border: oklch(0.89 0.026 105);
+  --sidebar-ring: oklch(0.51 0.12 150);
 }
 
 @layer base {
@@ -105,6 +101,7 @@
 
   html {
     scroll-behavior: smooth;
+    background: var(--color-background);
   }
 
   body {
@@ -112,6 +109,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -120,7 +118,20 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: 0;
+    letter-spacing: -0.025em;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -132,20 +143,307 @@
 @utility container-page {
   width: 100%;
   margin-inline: auto;
-  max-width: 80rem;
+  max-width: 84rem;
   padding-inline: 1.25rem;
 }
 
 @utility eyebrow {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  line-height: 1.5;
   text-transform: uppercase;
-  color: var(--color-muted-foreground);
+  color: var(--color-primary);
 }
 
 @utility rise-in {
-  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fruitly-wordmark-clip {
+  display: block;
+  width: 150px;
+  height: 60px;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.fruitly-wordmark-clip.is-compact {
+  width: 108px;
+  height: 43px;
+}
+
+.fruitly-wordmark-image {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+}
+
+.fruitly-hero-surface {
+  background:
+    radial-gradient(ellipse at 82% 14%, oklch(0.9 0.1 132 / 0.24), transparent 34%),
+    radial-gradient(ellipse at 8% 78%, oklch(0.91 0.075 25 / 0.11), transparent 36%),
+    linear-gradient(135deg, oklch(0.99 0.012 88), oklch(0.965 0.032 105));
+}
+
+.fruitly-pack-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 34rem;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.42);
+  border-radius: 2.15rem;
+  background:
+    radial-gradient(ellipse at 18% 18%, rgb(229 239 199 / 0.72), transparent 36%),
+    radial-gradient(ellipse at 84% 75%, rgb(244 222 169 / 0.48), transparent 38%),
+    radial-gradient(ellipse at 80% 10%, rgb(241 247 205 / 0.24), transparent 32%),
+    linear-gradient(145deg, #fbf8ee 0%, #f3eedc 52%, #e9edda 100%);
+  box-shadow: 0 24px 64px rgb(46 67 35 / 0.12);
+}
+
+.fruitly-pack-stage::before,
+.fruitly-pack-stage::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  border: 1px solid rgb(79 111 56 / 0.14);
+  border-radius: 999px;
+}
+
+.fruitly-pack-stage::before {
+  width: 21rem;
+  height: 21rem;
+  right: -7rem;
+  top: -8rem;
+  box-shadow: 0 0 0 1.8rem rgb(79 111 56 / 0.035), 0 0 0 3.6rem rgb(255 255 255 / 0.025);
+}
+
+.fruitly-pack-stage::after {
+  width: 16rem;
+  height: 16rem;
+  left: -7rem;
+  bottom: -7rem;
+  box-shadow: 0 0 0 1.7rem rgb(255 255 255 / 0.035);
+}
+
+.fruitly-pack-stage-kicker,
+.fruitly-pack-stage-tag {
+  position: absolute;
+  z-index: 10;
+  top: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  border-radius: 999px;
+  background: rgb(255 252 240 / 0.94);
+  color: #15452a;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  box-shadow: 0 9px 26px rgb(12 44 22 / 0.1);
+}
+
+.fruitly-pack-stage-kicker { left: 1.25rem; }
+.fruitly-pack-stage-tag { right: 1.25rem; letter-spacing: 0.03em; text-transform: none; }
+
+.fruitly-pack-stage-orbit {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.fruitly-pack-stage-orbit--one {
+  width: 15rem;
+  height: 15rem;
+  left: 34%;
+  top: 23%;
+  background: rgb(194 211 143 / 0.22);
+  filter: blur(1px);
+}
+
+.fruitly-pack-stage-orbit--two {
+  width: 9rem;
+  height: 9rem;
+  right: 5%;
+  bottom: 4%;
+  border: 1px solid rgb(79 111 56 / 0.18);
+}
+
+.fruitly-pack-card {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 21 / 29;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 1.15rem;
+  background: #fffdf7;
+  box-shadow: 0 18px 44px rgb(47 62 37 / 0.16);
+  transition: transform 280ms ease, box-shadow 280ms ease;
+  transform-origin: center bottom;
+}
+
+.fruitly-pack-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #faf7ef;
+}
+
+.fruitly-pack-card:hover,
+.fruitly-pack-card:focus-visible {
+  z-index: 20;
+  box-shadow: 0 25px 54px rgb(47 62 37 / 0.22);
+}
+
+.fruitly-pack-card--1 {
+  z-index: 2;
+  left: 3%;
+  top: 25%;
+  width: 31%;
+  transform: rotate(-9deg);
+}
+
+.fruitly-pack-card--1:hover { transform: translateY(-5px) rotate(-5deg); }
+
+.fruitly-pack-card--2 {
+  z-index: 4;
+  left: 31%;
+  top: 10%;
+  width: 38%;
+  transform: rotate(1deg);
+}
+
+.fruitly-pack-card--2:hover { transform: translateY(-5px) rotate(0deg); }
+
+.fruitly-pack-card--3 {
+  z-index: 3;
+  right: 2.5%;
+  top: 24%;
+  width: 31%;
+  transform: rotate(8deg);
+}
+
+.fruitly-pack-card--3:hover { transform: translateY(-5px) rotate(4deg); }
+
+.fruitly-pack-card--4 {
+  z-index: 6;
+  right: 27%;
+  bottom: -1%;
+  width: 25%;
+  transform: rotate(-3deg);
+}
+
+.fruitly-pack-card--4:hover { transform: translateY(-5px) rotate(0deg); }
+
+.fruitly-pack-stage-caption {
+  position: absolute;
+  z-index: 8;
+  left: 1.2rem;
+  bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 17rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(255 255 255 / 0.62);
+  border-radius: 1.15rem;
+  background: rgb(255 252 242 / 0.96);
+  color: #183f29;
+  box-shadow: 0 12px 30px rgb(14 46 24 / 0.18);
+}
+
+.fruitly-pack-stage-caption-mark {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #16512d;
+  color: #d8f1a1;
+  font-size: 1.1rem;
+}
+
+.fruitly-pack-stage-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+.fruitly-pack-stage-caption small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #607363;
+  font-size: 0.68rem;
+}
+
+.fruitly-product-card {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.fruitly-product-card:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.76 0.11 132);
+}
+
+.fruitly-spotlight-shell {
+  background:
+    radial-gradient(ellipse at 15% 0%, oklch(0.53 0.09 145 / 0.7), transparent 42%),
+    linear-gradient(120deg, oklch(0.30 0.085 150), oklch(0.36 0.105 145));
+}
+
+.fruitly-marquee {
+  overflow: hidden;
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.fruitly-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: fruitly-marquee 34s linear infinite;
+}
+
+.fruitly-marquee-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 1.65rem;
+  padding: 1.05rem 0.825rem;
+  white-space: nowrap;
+}
+
+.fruitly-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.fruitly-marquee-star {
+  color: oklch(0.76 0.16 132);
+  font-size: 1.05rem;
+}
+
+@keyframes fruitly-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes rise-in {
@@ -159,7 +457,76 @@
   }
 }
 
+@media (max-width: 767px) {
+  .fruitly-pack-stage {
+    min-height: 29rem;
+    border-radius: 1.6rem;
+  }
+
+  .fruitly-pack-stage-kicker,
+  .fruitly-pack-stage-tag {
+    top: 0.9rem;
+    font-size: 0.56rem;
+    padding: 0.48rem 0.62rem;
+  }
+
+  .fruitly-pack-stage-kicker { left: 0.8rem; }
+  .fruitly-pack-stage-tag { right: 0.8rem; }
+
+  .fruitly-pack-card {
+    border-width: 3px;
+    border-radius: 0.85rem;
+  }
+
+  .fruitly-pack-card--1 {
+    left: 2%;
+    top: 26%;
+    width: 34%;
+  }
+
+  .fruitly-pack-card--2 {
+    left: 28%;
+    top: 13%;
+    width: 43%;
+  }
+
+  .fruitly-pack-card--3 {
+    right: 1%;
+    top: 26%;
+    width: 34%;
+  }
+
+  .fruitly-pack-card--4 {
+    display: none;
+  }
+
+  .fruitly-pack-stage-caption {
+    left: 0.85rem;
+    bottom: 0.85rem;
+    max-width: 15rem;
+    padding: 0.7rem 0.8rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .container-page {
+    padding-inline: 1rem;
+  }
+
+  .fruitly-wordmark-clip {
+    width: 122px;
+    height: 49px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .fruitly-marquee-track {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   html {
     scroll-behavior: auto;
   }
@@ -169,5 +536,6 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

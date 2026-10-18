@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import {
   categoriesQuery,
+  isLegacySeedProduct,
   productsQuery,
   availabilityLabel,
   formatPrice,
@@ -21,15 +22,15 @@ export const Route = createFileRoute("/product/$slug")({
       .join(" ");
     return {
       meta: [
-        { title: `${label} | FRUITLY` },
+        { title: `${label} | Fruitly` },
         {
           name: "description",
-          content: `${label} from FRUITLY. View pack size and availability, and enquire directly.`,
+          content: `${label} from Fruitly. View pack size and availability, and enquire directly.`,
         },
-        { property: "og:title", content: `${label} | FRUITLY` },
+        { property: "og:title", content: `${label} | Fruitly` },
         {
           property: "og:description",
-          content: `${label} from FRUITLY. Goodness in Every Bite.`,
+          content: `${label} from Fruitly. Pure. Fresh. Natural.`,
         },
         { property: "og:type", content: "product" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -46,7 +47,7 @@ function ProductDetails() {
   const { data: settings } = useQuery(settingsQuery);
   const s = settings ?? fallbackSettings;
 
-  const product = products.find((p) => p.slug === slug);
+  const product = products.find((p) => p.slug === slug && !isLegacySeedProduct(p.slug));
   const category = categories.find((c) => c.id === product?.category_id);
 
   if (isLoading) {
@@ -83,7 +84,7 @@ function ProductDetails() {
   const image = productImage(product);
   const enquiry = whatsappLink(
     s.whatsapp,
-    `Hi FRUITLY, I am interested in ${product.name}. Please share more details.`,
+    `Hi Fruitly, I am interested in ${product.name}. Please share more details.`,
   );
 
   return (
@@ -110,14 +111,14 @@ function ProductDetails() {
         </nav>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="overflow-hidden rounded-3xl border border-border bg-secondary">
+          <div className="overflow-hidden rounded-[2rem] border border-border/70 bg-secondary shadow-soft">
             {image ? (
               <img
                 src={image}
                 alt={product.name}
                 width={1008}
                 height={1008}
-                className="aspect-square w-full object-cover"
+                className="mx-auto aspect-square w-full max-w-[400px] rounded-3xl bg-[#f8f4e9] object-contain"
               />
             ) : (
               <div className="flex aspect-square w-full items-center justify-center text-muted-foreground">

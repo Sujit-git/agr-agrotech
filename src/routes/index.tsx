@@ -1,27 +1,49 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Leaf, Sprout, Snowflake, ShieldCheck, Recycle, FlaskConical } from "lucide-react";
+import {
+  Apple,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  CheckCircle2,
+  Leaf,
+  PackageCheck,
+  Quote,
+  Snowflake,
+  Star,
+  Send,
+} from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
-import { categoriesQuery, productsQuery } from "@/lib/catalog";
-import heroImage from "@/assets/hero-agr.jpg";
+import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
+import { customerReviewsQuery } from "@/lib/site";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const fruitImages = {
+  strawberry: "/fruitly-products/dehydrated-strawberry-whole.webp",
+  lemon: "/fruitly-products/dehydrated-lemon-slices.webp",
+  mango: "/fruitly-products/dehydrated-mango-cubes.webp",
+  jamun: "/fruitly-products/dehydrated-jamun-cubes.webp",
+  papaya: "/fruitly-products/dehydrated-papaya-cubes.webp",
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FRUITLY | Goodness in Every Bite" },
+      { title: "Fruitly | Pure. Fresh. Natural." },
       {
         name: "description",
         content:
-          "Discover natural dehydrated and freeze-dried fruits by FRUITLY. Goodness in Every Bite.",
+          "Discover Fruitly's fruit-first range of dehydrated fruit. Explore product-specific ingredients, details and formats.",
       },
-      { property: "og:title", content: "FRUITLY | Goodness in Every Bite" },
+      { property: "og:title", content: "Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",
-        content:
-          "FRUITLY brings you natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
+        content: "A thoughtful world of dehydrated fruit from Fruitly.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -30,181 +52,474 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const categoryIcons = [Sprout, Leaf, Snowflake];
+const categoryIcons = [Leaf, Apple, Snowflake];
 
-const whyPoints = [
+const marqueeItems = [
+  "Fruit-first snacking",
+  "Dehydrated fruit",
+  "Dehydrated fruit",
+  "Pure. Fresh. Natural.",
+  "Explore every ingredient",
+  "Fruit for the moments in between",
+];
+
+const fallbackSpotlights: SpotlightSlide[] = [
   {
-    icon: ShieldCheck,
-    title: "Quality Focus",
-    text: "Quality-driven practices guide sourcing, processing, packaging and delivery.",
+    key: "mango",
+    title: "A little sunshine in every bite.",
+    description: "Discover the familiar sweetness and golden colour of mango in a dried fruit format.",
+    image: fruitImages.mango,
+    slug: null,
+    category: "Dehydrated fruit",
   },
   {
-    icon: Leaf,
-    title: "Natural Products",
-    text: "Fruit made into naturally delicious dehydrated and freeze-dried bites.",
+    key: "strawberry",
+    title: "A brighter kind of berry moment.",
+    description: "Explore the colour and character of strawberry in a light, fruit-forward format.",
+    image: fruitImages.strawberry,
+    slug: null,
+    category: "Fruit spotlight",
   },
   {
-    icon: FlaskConical,
-    title: "Thoughtful Processing",
-    text: "Thoughtful dehydration and freeze-drying let fruit take center stage.",
+    key: "papaya",
+    title: "A sunny papaya moment.",
+    description: "Explore papaya in a colourful dehydrated fruit format made for curious fruit lovers.",
+    image: fruitImages.papaya,
+    slug: null,
+    category: "Fruit spotlight",
+  },
+];
+
+type SpotlightSlide = {
+  key: string;
+  title: string;
+  description: string;
+  image: string;
+  slug: string | null;
+  category: string;
+};
+
+const storyPoints = [
+  {
+    icon: Apple,
+    title: "Fruit-forward choices",
+    text: "Explore recognisable fruit flavours in dehydrated formats.",
   },
   {
-    icon: Recycle,
-    title: "Made from Fruit",
-    text: "A fruit-first range of dehydrated and freeze-dried favourites.",
+    icon: CheckCircle2,
+    title: "Know what is inside",
+    text: "Ingredients and product details can differ by recipe. Check each product page for the information relevant to that pack.",
+  },
+  {
+    icon: PackageCheck,
+    title: "Find your kind of bite",
+    text: "Compare the texture, format and pack information to discover what suits your own snack routine.",
   },
 ];
 
 function Home() {
   const { data: products = [] } = useQuery(productsQuery);
   const { data: categories = [] } = useQuery(categoriesQuery);
+  const { data: customerReviews = [] } = useQuery(customerReviewsQuery);
 
-  const featured = products.filter((p) => p.featured).slice(0, 4);
-  const shown = featured.length ? featured : products.slice(0, 4);
-  const categoryById = new Map(categories.map((c) => [c.id, c]));
+  const publicProducts = products.filter((product) => !isLegacySeedProduct(product.slug));
+  const publicCategoryIds = new Set(publicProducts.map((product) => product.category_id).filter(Boolean));
+  const publicCategories = categories.filter((category) => publicCategoryIds.has(category.id));
+  const categoryById = new Map(publicCategories.map((category) => [category.id, category]));
+  const fruitCategoryIds = new Set(
+    publicCategories
+      .filter((category) => /dehydrated/i.test(`${category.slug} ${category.name}`))
+      .map((category) => category.id),
+  );
+  const fruitProducts = publicProducts
+    .filter((product) => product.category_id && fruitCategoryIds.has(product.category_id))
+    .filter((product) => Boolean(productImage(product)))
+    .sort(
+      (a, b) =>
+        Number(b.featured) - Number(a.featured) || a.sort_order - b.sort_order,
+    );
+
+  // Admins can replace these spotlight photos through Admin → Products.
+  // Product images and the featured flag are read from the existing catalogue.
+  const spotlights: SpotlightSlide[] = fruitProducts.length
+    ? fruitProducts.slice(0, 5).map((product) => ({
+        key: product.id,
+        title: product.name,
+        description:
+          product.short_description ||
+          "Explore this fruit in a distinctive format, with the details for this product close at hand.",
+        image: productImage(product) ?? mangoImage,
+        slug: product.slug,
+        category: categoryById.get(product.category_id ?? "")?.name ?? "Fruitly selection",
+      }))
+    : fallbackSpotlights;
+
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewQuote, setReviewQuote] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (activeSlide >= spotlights.length) setActiveSlide(0);
+  }, [activeSlide, spotlights.length]);
+
+  useEffect(() => {
+    if (spotlights.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % spotlights.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [spotlights.length]);
+
+  const submitCustomerReview = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const name = reviewName.trim();
+    const quote = reviewQuote.trim();
+    if (name.length < 2 || quote.length < 8) { toast.error("Please enter your name and a little more feedback."); return; }
+    setReviewSubmitting(true);
+    const { error } = await supabase.from("customer_reviews").insert({ name, quote, rating: reviewRating, product: null, is_published: false, verified_buyer: false });
+    setReviewSubmitting(false);
+    if (error) { toast.error("Your review could not be submitted right now. Please try again later."); return; }
+    setReviewName(""); setReviewQuote(""); setReviewRating(5);
+    toast.success("Thank you! Your review has been sent for approval.");
+  };
+  const currentSlide: SpotlightSlide = spotlights[activeSlide] ?? spotlights[0]!;
+  const featured = publicProducts.filter((product) => product.featured).slice(0, 4);
+  const shown = featured.length ? featured : publicProducts.slice(0, 4);
 
   return (
     <SiteLayout>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border bg-secondary/40">
-        <div className="container-page grid items-center gap-10 py-14 md:grid-cols-2 md:py-24">
-          <div className="rise-in">
-            <p className="eyebrow">FRUITLY</p>
-            <h1 className="mt-4 font-display text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-              Goodness in Every Bite.
+      <section className="fruitly-hero-surface relative overflow-hidden border-b border-border/70">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border border-primary/10 md:h-96 md:w-96" aria-hidden />
+        <div className="pointer-events-none absolute -bottom-28 left-[42%] h-64 w-64 rounded-full bg-accent/30 blur-3xl" aria-hidden />
+        <div className="container-page relative grid items-center gap-12 py-12 sm:py-16 md:grid-cols-[0.92fr_1.08fr] md:gap-10 md:py-20 lg:gap-16 lg:py-24">
+          <div className="rise-in relative z-10">
+            <p className="eyebrow inline-flex items-center gap-2 rounded-full border border-primary/15 bg-background/75 px-4 py-2">
+              <span className="h-2 w-2 rounded-full bg-clay" aria-hidden />
+              Fruitly · Pure. Fresh. Natural.
+            </p>
+            <h1 className="mt-6 max-w-xl text-5xl leading-[1.02] tracking-[-0.055em] sm:text-6xl lg:text-[4.6rem]">
+              Real fruit.
               <br />
-              Fruit, Naturally.
+              Remarkable
+              <br />
+              little bites.
             </h1>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Discover natural dehydrated fruits and freeze-dried fruits, made for a bright and
-              delicious little moment in every bite.
+            <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+              Discover a colourful world of dehydrated fruits, presented for
+              curious snackers and everyday fruit lovers.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link to="/products">Explore Products</Link>
+              <Button asChild size="lg" className="rounded-full px-6 shadow-soft">
+                <Link to="/products">
+                  Explore the range <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+                </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/about">Know Our Story</Link>
+              <Button asChild size="lg" variant="outline" className="rounded-full border-primary/20 bg-background/60 px-6">
+                <Link to="/about">Meet Fruitly</Link>
               </Button>
+            </div>
+            <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/10 pt-5 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+              <span>Dehydrated fruit</span>
+              <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
+              <span>Dehydrated fruit</span>
             </div>
           </div>
 
-          <div className="relative">
-            <img
-              src={heroImage}
-              alt="A bowl of dried fruit with fresh fruit in a natural setting"
-              width={1600}
-              height={1104}
-              fetchPriority="high"
-              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lift"
-            />
+          <div className="relative mx-auto flex w-full max-w-[760px] items-center justify-center md:max-w-none">
+            <div className="w-full overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf] p-3 sm:p-5 md:p-2">
+              <img
+                src="/fruitly-products/fruitly-hero-collection.png"
+                alt="Fresh mango, jamun, lemon, strawberry and papaya alongside their dehydrated fruit pieces"
+                width={1640}
+                height={850}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="block h-auto w-full object-contain"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="container-page py-16 md:py-24">
-        <div className="max-w-2xl">
-          <p className="eyebrow">What we make</p>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl">Our product ranges</h2>
+      <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
+        <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
+          <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
+            <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
+              <img
+                key={currentSlide.key}
+                src={currentSlide.image}
+                alt={currentSlide.title}
+                loading="lazy"
+                width={1008}
+                height={1008}
+                className="relative mx-auto aspect-square w-full max-w-[400px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+              />
+              <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
+                {currentSlide.category}
+              </span>
+            </div>
+
+            <div className="relative flex flex-col justify-center px-6 py-8 sm:px-9 sm:py-10 md:px-12 lg:px-16">
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">
+                The Fruitly spotlight
+              </p>
+              <h2 className="mt-4 max-w-xl text-3xl leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                {currentSlide.title}
+              </h2>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 sm:text-base">
+                {currentSlide.description}
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
+                  {currentSlide.slug ? (
+                    <Link to="/product/$slug" params={{ slug: currentSlide.slug }}>
+                      Discover this fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+                    </Link>
+                  ) : (
+                    <Link to="/products">
+                      Explore fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+                    </Link>
+                  )}
+                </Button>
+                {spotlights.length > 1 && (
+                  <div className="ml-auto flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label="Previous spotlight"
+                      onClick={() => setActiveSlide((current) => (current - 1 + spotlights.length) % spotlights.length)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
+                    >
+                      <ArrowLeft className="h-4 w-4" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Next spotlight"
+                      onClick={() => setActiveSlide((current) => (current + 1) % spotlights.length)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
+                    >
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </button>
+                  </div>
+                )}
+              </div>
+              {spotlights.length > 1 && (
+                <div className="mt-7 flex items-center gap-2" aria-label="Choose spotlight slide">
+                  {spotlights.map((spotlight, index) => (
+                    <button
+                      key={spotlight.key}
+                      type="button"
+                      aria-label={`Show spotlight ${index + 1}: ${spotlight.title}`}
+                      aria-current={activeSlide === index ? "true" : undefined}
+                      onClick={() => setActiveSlide(index)}
+                      className={`h-2.5 rounded-full transition-all ${activeSlide === index ? "w-8 bg-white" : "w-2.5 bg-white/40 hover:bg-white/70"}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <p className="mt-3 text-xs leading-5 text-muted-foreground">
+          Spotlight photography follows the product images managed in Admin → Products. Update a product image there to refresh the homepage visual without changing code.
+        </p>
+      </section>
+
+      <div className="fruitly-marquee" aria-label="Fruitly highlights">
+        <div className="fruitly-marquee-track">
+          {[0, 1].map((copy) => (
+            <div className="fruitly-marquee-group" key={copy} aria-hidden={copy === 1}>
+              {marqueeItems.map((item, index) => (
+                <span className="fruitly-marquee-item" key={item}>
+                  {item}
+                  <span className="fruitly-marquee-star" aria-hidden>✳</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section className="container-page py-16 sm:py-20 md:py-24">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Find your kind of fruit</p>
+            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">A range worth reaching for.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
+              Explore the formats and flavours in the Fruitly collection.
+            </p>
+          </div>
+          <Link to="/products" className="inline-flex items-center gap-2 self-start text-sm font-bold text-primary transition-colors hover:text-foreground md:self-auto">
+            View all products <ArrowUpRight className="h-4 w-4" aria-hidden />
+          </Link>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category, i) => {
-            const Icon = categoryIcons[i % categoryIcons.length] ?? Sprout;
-            const count = products.filter((p) => p.category_id === category.id).length;
+        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+          {publicCategories.map((category, i) => {
+            const Icon = categoryIcons[i % categoryIcons.length] ?? Apple;
+            const count = publicProducts.filter((product) => product.category_id === category.id).length;
             return (
               <Link
                 key={category.id}
                 to="/products/$category"
                 params={{ category: category.slug }}
-                className="group rounded-2xl border border-border bg-card p-7 shadow-soft transition-shadow hover:shadow-lift"
+                className="group rounded-3xl border border-border/80 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent/70 hover:shadow-lift sm:p-7"
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
-                  <Icon className="h-5 w-5" aria-hidden />
-                </span>
-                <h3 className="mt-5 font-display text-xl">{category.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/60 text-primary transition-colors group-hover:bg-accent">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden />
+                </div>
+                <h3 className="mt-6 text-xl">{category.name}</h3>
+                <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
                   {category.description}
                 </p>
-                <p className="mt-5 text-sm font-medium text-primary underline-offset-4 group-hover:underline">
-                  {count} {count === 1 ? "product" : "products"} &rarr;
+                <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
+                  {count} {count === 1 ? "product" : "products"}
                 </p>
               </Link>
             );
           })}
           {categories.length === 0 && (
-            <p className="text-sm text-muted-foreground">Product ranges will appear here soon.</p>
+            <p className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground">
+              Product ranges will appear here soon.
+            </p>
           )}
         </div>
       </section>
 
-      {/* Featured */}
-      <section className="border-y border-border bg-secondary/40 py-16 md:py-24">
+      <section className="border-y border-border/70 bg-card py-16 sm:py-20 md:py-24">
         <div className="container-page">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="eyebrow">Selected for you</p>
-              <h2 className="mt-3 font-display text-3xl sm:text-4xl">Featured products</h2>
+              <p className="eyebrow">The Fruitly edit</p>
+              <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">A few favourites to start with.</h2>
             </div>
-            <Link
-              to="/products"
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              View all products &rarr;
+            <Link to="/products" className="inline-flex items-center gap-2 self-start text-sm font-bold text-primary transition-colors hover:text-foreground">
+              Discover the full range <ArrowUpRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
             {shown.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                category={
-                  product.category_id ? categoryById.get(product.category_id) : undefined
-                }
+                category={product.category_id ? categoryById.get(product.category_id) : undefined}
               />
             ))}
             {shown.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No products have been published yet.
-              </p>
+              <p className="text-sm text-muted-foreground">Products will be featured here as they are published.</p>
             )}
           </div>
         </div>
       </section>
 
-      {/* Why FRUITLY */}
-      <section className="container-page py-16 md:py-24">
+      <section className="container-page py-16 sm:py-20 md:py-24">
         <div className="max-w-2xl">
-          <p className="eyebrow">Why FRUITLY</p>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-            A naturally fruit-filled way to snack
-          </h2>
+          <p className="eyebrow">A thoughtful way to snack</p>
+          <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">Fruit at the centre. Clear details at every step.</h2>
+          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
+            A snack choice is personal. We focus on fruit-forward options and clear product information, so you can compare the details and choose what works for you.
+          </p>
         </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {whyPoints.map((point) => (
-            <div key={point.title} className="rounded-2xl border border-border bg-card p-6">
-              <point.icon className="h-5 w-5 text-primary" aria-hidden />
-              <h3 className="mt-4 font-display text-lg">{point.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{point.text}</p>
-            </div>
+        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+          {storyPoints.map((point, index) => (
+            <article key={point.title} className="rounded-3xl border border-border/80 bg-card p-6 transition-colors hover:bg-secondary/40 sm:p-7">
+              <p className="font-display text-sm text-clay">0{index + 1}</p>
+              <point.icon className="mt-5 h-5 w-5 text-primary" aria-hidden />
+              <h3 className="mt-4 text-lg">{point.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{point.text}</p>
+            </article>
           ))}
+        </div>
+        <p className="mt-5 text-xs leading-5 text-muted-foreground">
+          Product ingredients and nutrition vary by recipe. Please read the individual pack label and product information before choosing.
+        </p>
+      </section>
+
+      <section className="border-y border-border/70 bg-secondary/35 py-16 sm:py-20 md:py-24">
+        <div className="container-page">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="eyebrow">Words from our community</p>
+            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">Good fruit deserves honest feedback.</h2>
+            <p className="mt-4 leading-7 text-muted-foreground">
+              We publish customer words only after the feedback is confirmed and approved. Every review shown here comes from a real customer note-not invented review copy.
+            </p>
+          </div>
+
+          {customerReviews.length > 0 ? (
+            <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
+              {customerReviews.map((review) => (
+                <article key={review.id} className="flex w-[min(86vw,360px)] shrink-0 snap-start flex-col rounded-3xl border border-border/80 bg-card p-6 shadow-soft sm:w-[340px] sm:p-7">
+                  <div className="flex items-center gap-1 text-clay" aria-label={`${review.rating} out of 5 stars`}>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <Star key={rating} className={`h-4 w-4 ${rating <= review.rating ? "fill-current" : "opacity-25"}`} aria-hidden />
+                    ))}
+                  </div>
+                  <Quote className="mt-5 h-5 w-5 text-accent" aria-hidden />
+                  <p className="mt-3 flex-1 text-sm leading-7 text-foreground">{review.quote}</p>
+                  <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent/70 text-xs font-bold text-primary" aria-hidden>
+                      {review.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold">{review.name}</p>
+                      {review.verified_buyer && <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary"><CheckCircle2 className="h-3 w-3" aria-hidden /> Verified</p>}
+                      {review.product && <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mx-auto mt-9 max-w-3xl rounded-[2rem] border border-dashed border-border bg-card px-6 py-8 text-center sm:px-10 sm:py-10">
+              <Quote className="mx-auto h-7 w-7 text-primary/70" aria-hidden />
+              <h3 className="mt-4 text-xl">Your Fruitly story belongs here.</h3>
+              <p className="mx-auto mt-2 max-w-xl text-sm leading-7 text-muted-foreground">
+                Customer names have been added to the admin review list. Add each person’s actual feedback and publish it from Admin → Settings when they have approved the wording.
+              </p>
+              <Button asChild variant="outline" className="mt-5 rounded-full">
+                <Link to="/contact">Share your feedback</Link>
+              </Button>
+            </div>
+          )}
+          <form onSubmit={submitCustomerReview} className="mx-auto mt-8 max-w-3xl rounded-3xl border border-border/80 bg-card p-5 shadow-soft sm:p-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div><h3 className="font-display text-xl">Leave a review</h3><p className="mt-1 text-sm text-muted-foreground">Your feedback helps us grow.</p></div>
+              <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Your rating</p>
+                <div className="flex gap-1" role="radiogroup" aria-label="Choose a star rating">
+                  {[1, 2, 3, 4, 5].map((rating) => <button key={rating} type="button" role="radio" aria-checked={reviewRating === rating} aria-label={rating + " stars"} onClick={() => setReviewRating(rating)} className="rounded-md p-1 text-clay"><Star className={rating <= reviewRating ? "h-6 w-6 fill-current" : "h-6 w-6 opacity-30"} aria-hidden /></button>)}
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm font-medium">Your name<input required minLength={2} maxLength={100} value={reviewName} onChange={(event) => setReviewName(event.target.value)} placeholder="Enter your name" className="mt-2 h-11 w-full rounded-xl border border-input bg-background px-3 font-normal" /></label>
+              <label className="text-sm font-medium sm:col-span-2">Your feedback<textarea required minLength={8} maxLength={1000} rows={3} value={reviewQuote} onChange={(event) => setReviewQuote(event.target.value)} placeholder="What did you think of Fruitly?" className="mt-2 w-full rounded-xl border border-input bg-background p-3 font-normal" /></label>
+            </div>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs text-muted-foreground">Reviews are checked by our team before they appear on the website.</p><Button type="submit" disabled={reviewSubmitting} className="rounded-full"><Send className="mr-2 h-4 w-4" aria-hidden />{reviewSubmitting ? "Submitting..." : "Submit review"}</Button></div>
+          </form>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="container-page pb-4">
-        <div className="rounded-3xl bg-primary px-6 py-14 text-center text-primary-foreground sm:px-12">
-          <h2 className="font-display text-3xl sm:text-4xl">Looking for bulk or trade enquiries?</h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed opacity-90 sm:text-base">
-            Tell us what you need and we will get back to you with availability, pack sizes and
-            pricing.
-          </p>
-          <div className="mt-8">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/contact">Contact FRUITLY</Link>
+      <section className="container-page pb-6 pt-16 sm:pt-20 md:pt-24">
+        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-12 text-primary-foreground shadow-lift sm:px-12 sm:py-16 md:px-16">
+          <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full border border-white/15 md:h-80 md:w-80" aria-hidden />
+          <div className="pointer-events-none absolute right-20 top-12 h-32 w-32 rounded-full bg-white/5 blur-2xl" aria-hidden />
+          <div className="relative max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/75">For homes, retailers and partners</p>
+            <h2 className="mt-4 text-3xl leading-tight sm:text-4xl md:text-5xl">Let's talk fruit.</h2>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/80 sm:text-base">
+              Looking for product details, availability or a trade enquiry? Our team would be happy to hear from you.
+            </p>
+            <Button asChild size="lg" variant="secondary" className="mt-7 rounded-full px-6">
+              <Link to="/contact">Contact Fruitly <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden /></Link>
             </Button>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-white/65">Pure. Fresh. Natural.</p>
           </div>
         </div>
       </section>
