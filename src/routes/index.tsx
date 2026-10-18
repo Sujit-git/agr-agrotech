@@ -55,6 +55,8 @@ const marqueeItems = [
   "Dehydrated fruit",
   "Fruit for everyday snacking",
   "Pure. Fresh. Natural.",
+  "Pocket-sized sunshine",
+  "Nature's sweetness",
   "Explore every ingredient",
   "Fruit for the moments in between",
 ];
