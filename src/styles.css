@@ -187,8 +187,204 @@
     linear-gradient(135deg, oklch(0.99 0.012 88), oklch(0.965 0.032 105));
 }
 
-.fruitly-hero-photo {
-  box-shadow: 0 22px 64px oklch(0.30 0.08 150 / 0.18);
+.fruitly-pack-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 34rem;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.42);
+  border-radius: 2.15rem;
+  background:
+    radial-gradient(ellipse at 18% 18%, rgb(193 229 116 / 0.94), transparent 36%),
+    radial-gradient(ellipse at 84% 75%, rgb(245 173 57 / 0.86), transparent 38%),
+    radial-gradient(ellipse at 80% 10%, rgb(241 247 205 / 0.38), transparent 32%),
+    linear-gradient(137deg, #174c2c 0%, #2d7e3d 47%, #8fbd47 100%);
+  box-shadow: 0 28px 74px rgb(23 67 37 / 0.2);
+}
+
+.fruitly-pack-stage::before,
+.fruitly-pack-stage::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+}
+
+.fruitly-pack-stage::before {
+  width: 21rem;
+  height: 21rem;
+  right: -7rem;
+  top: -8rem;
+  box-shadow: 0 0 0 1.8rem rgb(255 255 255 / 0.035), 0 0 0 3.6rem rgb(255 255 255 / 0.025);
+}
+
+.fruitly-pack-stage::after {
+  width: 16rem;
+  height: 16rem;
+  left: -7rem;
+  bottom: -7rem;
+  box-shadow: 0 0 0 1.7rem rgb(255 255 255 / 0.035);
+}
+
+.fruitly-pack-stage-kicker,
+.fruitly-pack-stage-tag {
+  position: absolute;
+  z-index: 10;
+  top: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  border-radius: 999px;
+  background: rgb(255 252 240 / 0.94);
+  color: #15452a;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  box-shadow: 0 9px 26px rgb(12 44 22 / 0.1);
+}
+
+.fruitly-pack-stage-kicker { left: 1.25rem; }
+.fruitly-pack-stage-tag { right: 1.25rem; letter-spacing: 0.03em; text-transform: none; }
+
+.fruitly-pack-stage-orbit {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.fruitly-pack-stage-orbit--one {
+  width: 15rem;
+  height: 15rem;
+  left: 34%;
+  top: 23%;
+  background: rgb(244 249 203 / 0.15);
+  filter: blur(1px);
+}
+
+.fruitly-pack-stage-orbit--two {
+  width: 9rem;
+  height: 9rem;
+  right: 5%;
+  bottom: 4%;
+  border: 1px solid rgb(255 255 255 / 0.3);
+}
+
+.fruitly-pack-card {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 21 / 29;
+  border: 4px solid rgb(255 255 255 / 0.75);
+  border-radius: 1.15rem;
+  background: #faf7ef;
+  box-shadow: 0 18px 44px rgb(12 40 23 / 0.28);
+  transition: transform 280ms ease, box-shadow 280ms ease;
+  transform-origin: center bottom;
+}
+
+.fruitly-pack-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #faf7ef;
+}
+
+.fruitly-pack-card:hover,
+.fruitly-pack-card:focus-visible {
+  z-index: 20;
+  box-shadow: 0 25px 54px rgb(12 40 23 / 0.35);
+}
+
+.fruitly-pack-card--1 {
+  z-index: 2;
+  left: 3%;
+  top: 25%;
+  width: 31%;
+  transform: rotate(-9deg);
+}
+
+.fruitly-pack-card--1:hover { transform: translateY(-5px) rotate(-5deg); }
+
+.fruitly-pack-card--2 {
+  z-index: 4;
+  left: 31%;
+  top: 10%;
+  width: 38%;
+  transform: rotate(1deg);
+}
+
+.fruitly-pack-card--2:hover { transform: translateY(-5px) rotate(0deg); }
+
+.fruitly-pack-card--3 {
+  z-index: 3;
+  right: 2.5%;
+  top: 24%;
+  width: 31%;
+  transform: rotate(8deg);
+}
+
+.fruitly-pack-card--3:hover { transform: translateY(-5px) rotate(4deg); }
+
+.fruitly-pack-card--4 {
+  z-index: 6;
+  right: 27%;
+  bottom: -1%;
+  width: 25%;
+  transform: rotate(-3deg);
+}
+
+.fruitly-pack-card--4:hover { transform: translateY(-5px) rotate(0deg); }
+
+.fruitly-pack-stage-caption {
+  position: absolute;
+  z-index: 8;
+  left: 1.2rem;
+  bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 17rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(255 255 255 / 0.62);
+  border-radius: 1.15rem;
+  background: rgb(255 252 242 / 0.96);
+  color: #183f29;
+  box-shadow: 0 12px 30px rgb(14 46 24 / 0.18);
+}
+
+.fruitly-pack-stage-caption-mark {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #16512d;
+  color: #d8f1a1;
+  font-size: 1.1rem;
+}
+
+.fruitly-pack-stage-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+.fruitly-pack-stage-caption small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #607363;
+  font-size: 0.68rem;
 }
 
 .fruitly-product-card {
@@ -258,6 +454,57 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .fruitly-pack-stage {
+    min-height: 29rem;
+    border-radius: 1.6rem;
+  }
+
+  .fruitly-pack-stage-kicker,
+  .fruitly-pack-stage-tag {
+    top: 0.9rem;
+    font-size: 0.56rem;
+    padding: 0.48rem 0.62rem;
+  }
+
+  .fruitly-pack-stage-kicker { left: 0.8rem; }
+  .fruitly-pack-stage-tag { right: 0.8rem; }
+
+  .fruitly-pack-card {
+    border-width: 3px;
+    border-radius: 0.85rem;
+  }
+
+  .fruitly-pack-card--1 {
+    left: 2%;
+    top: 26%;
+    width: 34%;
+  }
+
+  .fruitly-pack-card--2 {
+    left: 28%;
+    top: 13%;
+    width: 43%;
+  }
+
+  .fruitly-pack-card--3 {
+    right: 1%;
+    top: 26%;
+    width: 34%;
+  }
+
+  .fruitly-pack-card--4 {
+    display: none;
+  }
+
+  .fruitly-pack-stage-caption {
+    left: 0.85rem;
+    bottom: 0.85rem;
+    max-width: 15rem;
+    padding: 0.7rem 0.8rem;
   }
 }
 

@@ -20,9 +20,27 @@ import { Button } from "@/components/ui/button";
 import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
 import { customerReviewsQuery } from "@/lib/site";
 
-const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
-const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
-const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
+const fruitImages = {
+  strawberry: "/fruitly-products/dehydrated-strawberry-whole.webp",
+  lemon: "/fruitly-products/dehydrated-lemon-slices.webp",
+  mango: "/fruitly-products/dehydrated-mango-cubes.webp",
+  jamun: "/fruitly-products/dehydrated-jamun-cubes.webp",
+  papaya: "/fruitly-products/dehydrated-papaya-cubes.webp",
+};
+
+type HeroPack = {
+  key: string;
+  title: string;
+  image: string;
+  slug: string | null;
+};
+
+const fallbackHeroPacks: HeroPack[] = [
+  { key: "strawberry", title: "Dehydrated Strawberry Whole", image: fruitImages.strawberry, slug: null },
+  { key: "lemon", title: "Dehydrated Lemon Slices", image: fruitImages.lemon, slug: null },
+  { key: "mango", title: "Dehydrated Mango Cubes", image: fruitImages.mango, slug: null },
+  { key: "jamun", title: "Dehydrated Jamun Cubes", image: fruitImages.jamun, slug: null },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -61,7 +79,7 @@ const fallbackSpotlights: SpotlightSlide[] = [
     key: "mango",
     title: "A little sunshine in every bite.",
     description: "Discover the familiar sweetness and golden colour of mango in a dried fruit format.",
-    image: mangoImage,
+    image: fruitImages.mango,
     slug: null,
     category: "Dehydrated fruit",
   },
@@ -69,15 +87,15 @@ const fallbackSpotlights: SpotlightSlide[] = [
     key: "strawberry",
     title: "A brighter kind of berry moment.",
     description: "Explore the colour and character of strawberry in a light, fruit-forward format.",
-    image: strawberryImage,
+    image: fruitImages.strawberry,
     slug: null,
     category: "Fruit spotlight",
   },
   {
-    key: "pineapple",
-    title: "A little tropical something.",
-    description: "Get to know pineapple in a distinctive format made for curious fruit lovers.",
-    image: pineappleImage,
+    key: "papaya",
+    title: "A sunny papaya moment.",
+    description: "Explore papaya in a colourful dehydrated fruit format made for curious fruit lovers.",
+    image: fruitImages.papaya,
     slug: null,
     category: "Fruit spotlight",
   },
@@ -147,6 +165,15 @@ function Home() {
       }))
     : fallbackSpotlights;
 
+  const heroPacks: HeroPack[] = fruitProducts.length
+    ? fruitProducts.slice(0, 4).map((product) => ({
+        key: product.id,
+        title: product.name,
+        image: productImage(product) ?? fruitImages.mango,
+        slug: product.slug,
+      }))
+    : fallbackHeroPacks;
+
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
@@ -205,34 +232,52 @@ function Home() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[640px] md:max-w-none">
-            <div className="absolute inset-5 rotate-[-4deg] rounded-[2.5rem] bg-accent/60 md:inset-8" aria-hidden />
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-background p-2.5 shadow-lift sm:p-3">
-              <img
-                src={mangoImage}
-                alt="Golden dried mango pieces served in a ceramic bowl"
-                width={1008}
-                height={1008}
-                fetchPriority="high"
-                className="fruitly-hero-photo aspect-[5/4] w-full rounded-[1.45rem] object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-5 left-3 flex max-w-[245px] items-center gap-3 rounded-2xl border border-white/80 bg-background/95 p-3.5 shadow-lift sm:bottom-5 sm:-left-5 sm:p-4">
-              <img
-                src={strawberryImage}
-                alt=""
-                width={120}
-                height={120}
-                loading="lazy"
-                className="h-14 w-14 rounded-xl object-cover sm:h-16 sm:w-16"
-              />
-              <div>
-                <p className="eyebrow text-[0.6rem]">A fruit-forward favourite</p>
-                <p className="mt-1 font-display text-lg leading-tight">Made for little moments</p>
+            {/*
+              Use separate catalogue images instead of enlarging one small hero thumbnail.
+              Admin-managed product artwork feeds this panel and every pack keeps its own proportions.
+            */}
+            <div className="fruitly-pack-stage">
+              <span className="fruitly-pack-stage-kicker">A fruit-forward collection</span>
+              <span className="fruitly-pack-stage-tag">Pure. Fresh. Natural.</span>
+              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--one" aria-hidden />
+              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--two" aria-hidden />
+              {heroPacks.map((pack, index) => {
+                const className = `fruitly-pack-card fruitly-pack-card--${index + 1}`;
+                const image = (
+                  <img
+                    src={pack.image}
+                    alt={pack.title}
+                    width={840}
+                    height={1160}
+                    fetchPriority={index === 1 ? "high" : undefined}
+                    loading={index === 1 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                );
+                return pack.slug ? (
+                  <Link
+                    key={pack.key}
+                    to="/product/$slug"
+                    params={{ slug: pack.slug }}
+                    className={className}
+                    aria-label={`Explore ${pack.title}`}
+                  >
+                    {image}
+                  </Link>
+                ) : (
+                  <Link key={pack.key} to="/products" className={className} aria-label={`Explore ${pack.title}`}>
+                    {image}
+                  </Link>
+                );
+              })}
+              <div className="fruitly-pack-stage-caption">
+                <span className="fruitly-pack-stage-caption-mark" aria-hidden>✳</span>
+                <span>
+                  <strong>Meet your next favourite.</strong>
+                  <small>Five fruit picks. One Fruitly world.</small>
+                </span>
               </div>
             </div>
-            <p className="absolute -right-2 top-5 hidden rounded-full border border-white/80 bg-background/90 px-4 py-2 text-xs font-semibold tracking-wide text-primary shadow-soft lg:block">
-              Pure. Fresh. Natural.
-            </p>
           </div>
         </div>
       </section>
@@ -249,7 +294,7 @@ function Home() {
                 loading="lazy"
                 width={1008}
                 height={1008}
-                className="relative aspect-square w-full rounded-[1.4rem] object-cover shadow-lift"
+                className="relative aspect-square w-full rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
               />
               <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                 {currentSlide.category}
