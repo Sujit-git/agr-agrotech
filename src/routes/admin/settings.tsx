@@ -31,7 +31,7 @@ export const Route = createFileRoute("/admin/settings")({
 const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?: boolean }[] = [
   { key: "brand_name", label: "Brand name" },
   { key: "business_description", label: "Business description", textarea: true },
-  { key: "email", label: "Enquiry email", hint: "Destination for contact-form email drafts and Email links. Visitors send from their own configured email account." },
+  { key: "email", label: "Enquiry email", hint: "Email address that receives website contact-form enquiries. You can change it here anytime." },
   { key: "phone", label: "Phone numbers", hint: "Separate multiple numbers with /" },
   {
     key: "whatsapp",
