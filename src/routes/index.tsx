@@ -463,6 +463,11 @@ function Home() {
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <span>Meet the Fruitly community</span>
             </div>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2" aria-label="Current Fruitly products">
+              {["Jamun Cubes", "Mango Cubes", "Strawberry Whole", "Lemon Slices", "Papaya Cubes"].map((product) => (
+                <span key={product} className="rounded-full border border-border/70 bg-background/80 px-3 py-1.5 text-xs font-medium text-muted-foreground">{product}</span>
+              ))}
+            </div>
           </div>
 
           <div className="relative mt-9 px-5 sm:px-7 lg:mt-11 lg:px-8">
