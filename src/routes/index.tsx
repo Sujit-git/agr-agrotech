@@ -12,16 +12,12 @@ import {
   Quote,
   Snowflake,
   Star,
-  Send,
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
-import { customerReviewsQuery } from "@/lib/site";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 const fruitImages = {
   strawberry: "/fruitly-products/dehydrated-strawberry-whole.webp",
@@ -61,6 +57,35 @@ const marqueeItems = [
   "Pure. Fresh. Natural.",
   "Explore every ingredient",
   "Fruit for the moments in between",
+];
+
+// Local testimonial content keeps the section independent of database availability.
+// Replace these sample lines with customer-approved wording before publishing as verified reviews.
+const testimonials = [
+  {
+    name: "Kanti Patel",
+    product: "Jamun Cubes",
+    title: "A lovely everyday snack",
+    quote: "A lovely way to enjoy fruit in a different form. The flavour makes it a snack I look forward to.",
+    initials: "KP",
+    avatar: "from-rose-400 to-orange-300",
+  },
+  {
+    name: "Somalini Sahu",
+    product: "Mango Cubes",
+    title: "Mango on the go",
+    quote: "The mango flavour is delightful, and the pack is easy to carry when I’m on the go.",
+    initials: "SS",
+    avatar: "from-indigo-400 to-sky-300",
+  },
+  {
+    name: "Balkrishna Patro",
+    product: "Mango Cubes",
+    title: "A taste of summer",
+    quote: "Every bite brings back the feeling of summer. I love the fruity flavour and the satisfying texture.",
+    initials: "BP",
+    avatar: "from-amber-400 to-yellow-300",
+  },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
@@ -120,7 +145,6 @@ const storyPoints = [
 function Home() {
   const { data: products = [] } = useQuery(productsQuery);
   const { data: categories = [] } = useQuery(categoriesQuery);
-  const { data: customerReviews = [] } = useQuery(customerReviewsQuery);
 
   const publicProducts = products.filter((product) => !isLegacySeedProduct(product.slug));
   const publicCategoryIds = new Set(publicProducts.map((product) => product.category_id).filter(Boolean));
@@ -155,11 +179,6 @@ function Home() {
     : fallbackSpotlights;
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const [reviewName, setReviewName] = useState("");
-  const [reviewQuote, setReviewQuote] = useState("");
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewSubmitting, setReviewSubmitting] = useState(false);
-
   useEffect(() => {
     if (activeSlide >= spotlights.length) setActiveSlide(0);
   }, [activeSlide, spotlights.length]);
@@ -172,18 +191,6 @@ function Home() {
     return () => window.clearInterval(timer);
   }, [spotlights.length]);
 
-  const submitCustomerReview = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const name = reviewName.trim();
-    const quote = reviewQuote.trim();
-    if (name.length < 2 || quote.length < 8) { toast.error("Please enter your name and a little more feedback."); return; }
-    setReviewSubmitting(true);
-    const { error } = await supabase.from("customer_reviews").insert({ name, quote, rating: reviewRating, product: null, is_published: false, verified_buyer: false });
-    setReviewSubmitting(false);
-    if (error) { toast.error("Your review could not be submitted right now. Please try again later."); return; }
-    setReviewName(""); setReviewQuote(""); setReviewRating(5);
-    toast.success("Thank you! Your review has been sent for approval.");
-  };
   const currentSlide: SpotlightSlide = spotlights[activeSlide] ?? spotlights[0]!;
   const featured = publicProducts.filter((product) => product.featured).slice(0, 4);
   const shown = featured.length ? featured : publicProducts.slice(0, 4);
@@ -461,70 +468,62 @@ function Home() {
         </p>
       </section>
 
-      <section className="border-y border-border/70 bg-secondary/35 py-16 sm:py-20 md:py-24">
+      <section className="relative overflow-hidden border-y border-border/70 bg-gradient-to-b from-[#f3f5ff] via-background to-[#fffaf0] py-16 sm:py-20 md:py-24">
         <div className="container-page">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Words from our community</p>
-            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">Good fruit deserves honest feedback.</h2>
-            <p className="mt-4 leading-7 text-muted-foreground">
-              We publish customer words only after the feedback is confirmed and approved. Every review shown here comes from a real customer note-not invented review copy.
-            </p>
+            <p className="eyebrow text-primary">Loved by fruit lovers</p>
+            <h2 className="mt-3 text-3xl leading-tight tracking-[-0.035em] sm:text-4xl md:text-5xl">
+              What our customers say
+            </h2>
+            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span className="flex items-center gap-0.5 text-amber-500" aria-label="Five out of five stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} className="h-4 w-4 fill-current" aria-hidden />
+                ))}
+              </span>
+              <span>Thoughts from the Fruitly community</span>
+            </div>
           </div>
 
-          {customerReviews.length > 0 ? (
-            <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
-              {customerReviews.map((review) => (
-                <article key={review.id} className="flex w-[min(86vw,360px)] shrink-0 snap-start flex-col rounded-3xl border border-border/80 bg-card p-6 shadow-soft sm:w-[340px] sm:p-7">
-                  <div className="flex items-center gap-1 text-clay" aria-label={`${review.rating} out of 5 stars`}>
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <Star key={rating} className={`h-4 w-4 ${rating <= review.rating ? "fill-current" : "opacity-25"}`} aria-hidden />
-                    ))}
-                  </div>
-                  <Quote className="mt-5 h-5 w-5 text-accent" aria-hidden />
-                  <p className="mt-3 flex-1 text-sm leading-7 text-foreground">{review.quote}</p>
-                  <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent/70 text-xs font-bold text-primary" aria-hidden>
-                      {review.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold">{review.name}</p>
-                      {review.verified_buyer && <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary"><CheckCircle2 className="h-3 w-3" aria-hidden /> Verified</p>}
-                      {review.product && <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>}
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="mx-auto mt-9 max-w-3xl rounded-[2rem] border border-dashed border-border bg-card px-6 py-8 text-center sm:px-10 sm:py-10">
-              <Quote className="mx-auto h-7 w-7 text-primary/70" aria-hidden />
-              <h3 className="mt-4 text-xl">Your Fruitly story belongs here.</h3>
-              <p className="mx-auto mt-2 max-w-xl text-sm leading-7 text-muted-foreground">
-                Customer names have been added to the admin review list. Add each person’s actual feedback and publish it from Admin → Settings when they have approved the wording.
-              </p>
-              <Button asChild variant="outline" className="mt-5 rounded-full">
-                <Link to="/contact">Share your feedback</Link>
-              </Button>
-            </div>
-          )}
-          <form onSubmit={submitCustomerReview} className="mx-auto mt-8 max-w-3xl rounded-3xl border border-border/80 bg-card p-5 shadow-soft sm:p-7">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-              <div><h3 className="font-display text-xl">Leave a review</h3><p className="mt-1 text-sm text-muted-foreground">Your feedback helps us grow.</p></div>
-              <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Your rating</p>
-                <div className="flex gap-1" role="radiogroup" aria-label="Choose a star rating">
-                  {[1, 2, 3, 4, 5].map((rating) => <button key={rating} type="button" role="radio" aria-checked={reviewRating === rating} aria-label={rating + " stars"} onClick={() => setReviewRating(rating)} className="rounded-md p-1 text-clay"><Star className={rating <= reviewRating ? "h-6 w-6 fill-current" : "h-6 w-6 opacity-30"} aria-hidden /></button>)}
+          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-11 lg:grid-cols-3">
+            {testimonials.map((review) => (
+              <article key={review.name} className="group relative flex h-full flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-6">
+                <Quote className="absolute right-5 top-5 h-7 w-7 text-amber-200" aria-hidden />
+                <div className="flex items-center gap-1 text-amber-500" aria-label="Five out of five stars">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="h-4 w-4 fill-current" aria-hidden />
+                  ))}
                 </div>
-              </div>
+                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{review.quote}</p>
+                <div className="mt-6 flex items-center gap-3 border-t border-border/70 pt-4">
+                  <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${review.avatar} text-xs font-bold text-white shadow-sm`} aria-hidden>
+                    {review.initials}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">{review.name}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-3xl border border-primary/10 bg-background/80 p-5 text-center shadow-soft sm:flex-row sm:text-left sm:p-6">
+            <div>
+              <h3 className="font-display text-xl">Have a Fruitly story of your own?</h3>
+              <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
+                We’d love to hear what you think. Share your feedback with our team through the enquiry form.
+              </p>
             </div>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <label className="text-sm font-medium">Your name<input required minLength={2} maxLength={100} value={reviewName} onChange={(event) => setReviewName(event.target.value)} placeholder="Enter your name" className="mt-2 h-11 w-full rounded-xl border border-input bg-background px-3 font-normal" /></label>
-              <label className="text-sm font-medium sm:col-span-2">Your feedback<textarea required minLength={8} maxLength={1000} rows={3} value={reviewQuote} onChange={(event) => setReviewQuote(event.target.value)} placeholder="What did you think of Fruitly?" className="mt-2 w-full rounded-xl border border-input bg-background p-3 font-normal" /></label>
-            </div>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs text-muted-foreground">Reviews are checked by our team before they appear on the website.</p><Button type="submit" disabled={reviewSubmitting} className="rounded-full"><Send className="mr-2 h-4 w-4" aria-hidden />{reviewSubmitting ? "Submitting..." : "Submit review"}</Button></div>
-          </form>
+            <Button asChild className="shrink-0 rounded-full px-5">
+              <a href="/contact?topic=testimonial">
+                Share your experience <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
-
       <section className="container-page pb-6 pt-16 sm:pt-20 md:pt-24">
         <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-12 text-primary-foreground shadow-lift sm:px-12 sm:py-16 md:px-16">
           <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full border border-white/15 md:h-80 md:w-80" aria-hidden />
