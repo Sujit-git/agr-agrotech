@@ -157,7 +157,7 @@ function Home() {
     return () => window.clearInterval(timer);
   }, [spotlights.length]);
 
-  const currentSlide = spotlights[activeSlide] ?? spotlights[0] ?? fallbackSpotlights[0];
+  const currentSlide: SpotlightSlide = spotlights[activeSlide] ?? spotlights[0]!;
   const featured = products.filter((product) => product.featured).slice(0, 4);
   const shown = featured.length ? featured : products.slice(0, 4);
 
