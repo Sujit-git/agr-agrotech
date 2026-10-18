@@ -62,66 +62,50 @@ function Contact() {
   const update = (key: keyof typeof form, value: string) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  // Open the visitor's own email app so their real account is the sender.
-  // The recipient is controlled by Admin → Settings; no email-provider DNS is needed.
+  // Send the enquiry directly through the server-side email function.
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
-    const recipient = s.email?.trim() ?? "";
-
     if (!form.name.trim()) next["name"] = "Please tell us your name.";
-    if (!form.email.trim())
-      next["email"] = "Enter your email address so your email app can send the message from your account.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      next["email"] = "That email address doesn't look right.";
     if (!form.message.trim()) next["message"] = "Please add a short message.";
-
-    if (!recipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
-      toast.error("Please configure a valid enquiry email in Admin → Settings.");
-      return;
-    }
-
+    if (!form.email.trim() && !form.phone.trim())
+      next["email"] = "Add an email or a phone number so we can reply.";
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      next["email"] = "That email address doesn't look right.";
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setSending(true);
     try {
-      const subject = "Fruitly website enquiry from " + form.name.trim();
-      const body = [
-        "Name: " + form.name.trim(),
-        "Email: " + form.email.trim(),
-        "Phone: " + (form.phone.trim() || "Not provided"),
-        "",
-        "Message:",
-        form.message.trim(),
-        "",
-        "Sent from the Fruitly website contact form.",
-      ].join("\n");
-      const mailtoUrl =
-        "mailto:" +
-        recipient +
-        "?subject=" +
-        encodeURIComponent(subject) +
-        "&body=" +
-        encodeURIComponent(body);
+      const response = await fetch("/.netlify/functions/send-enquiry", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        }),
+      });
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
+      if (!response.ok) {
+        toast.error(result.error || "We couldn't send your enquiry. Please try again.");
+        return;
+      }
 
-      // Keep a database record. Email delivery itself happens when the visitor
-      // presses Send in their own mail app; the browser cannot confirm that step.
       const { error } = await supabase.from("contact_messages").insert({
         name: form.name.trim(),
-        email: form.email.trim(),
+        email: form.email.trim() || null,
         phone: form.phone.trim() || null,
         message: form.message.trim(),
       });
-      if (error) {
-        toast.warning("Your email draft can still be prepared, but the website enquiry log could not be saved.");
-      }
 
       setSent(true);
       setForm({ name: "", email: "", phone: "", message: "" });
-      window.location.href = mailtoUrl;
+      toast.success("Thank you! Your enquiry has been sent.");
+      if (error) toast.warning("Your email was sent, but the website enquiry log could not be saved.");
     } catch {
-      toast.error("We couldn't prepare your email. Please use the email link on this page.");
+      toast.error("We couldn't send your enquiry. Please try again or contact us by phone or WhatsApp.");
     } finally {
       setSending(false);
     }
@@ -242,20 +226,11 @@ function Contact() {
                     </div>
 
                     <Button type="submit" size="lg" disabled={sending} className="w-full rounded-full shadow-soft sm:w-auto sm:min-w-48">
-                      {sending ? "Preparing…" : "Continue to email"}
+                      {sending ? "Sending…" : "Send your enquiry"}
                       {!sending && <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />}
                     </Button>
-                    {s.email && (
-                      <p className="text-xs leading-5 text-muted-foreground">
-                        Your email draft will be addressed to{" "}
-                        <a href={`mailto:${s.email}`} className="font-semibold text-primary underline underline-offset-2">
-                          {s.email}
-                        </a>
-                        .
-                      </p>
-                    )}
                     <p className="text-xs leading-5 text-muted-foreground">
-                      Your email app controls the From address. To send from the email address entered above, make sure that account is selected in your email app. Press Send there to deliver the message. No email-service DNS setup is required.
+                      Your enquiry is sent directly from the website. We use your contact details only to respond to your message.
                     </p>
                     <p className="text-xs leading-5 text-muted-foreground">
                       Please don't include payment card details or sensitive personal information in your message.
