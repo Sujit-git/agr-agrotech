@@ -182,7 +182,6 @@ function Home() {
   const [reviewQuote, setReviewQuote] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
-  const [heroImageFailed, setHeroImageFailed] = useState(false);
 
   useEffect(() => {
     if (activeSlide >= spotlights.length) setActiveSlide(0);
@@ -251,46 +250,49 @@ function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-[760px] items-center justify-center md:max-w-none">
-            {!heroImageFailed ? (
-              <div className="fruitly-hero-visual" aria-label="Fruitly's colourful range of fresh and dehydrated fruit">
-                <img
-                  src="/fruitly-products/fruitly-hero-collection.png"
-                  alt="A premium collection of mango, jamun, strawberry, lemon and papaya, shown fresh and dehydrated"
-                  width={1699}
-                  height={926}
-                  fetchPriority="high"
-                  loading="eager"
-                  decoding="async"
-                  onError={() => setHeroImageFailed(true)}
-                />
-                <span className="fruitly-hero-visual-tag">Pure. Fresh. Natural.</span>
-                <div className="fruitly-hero-visual-caption">
-                  <span className="fruitly-pack-stage-caption-mark" aria-hidden>✳</span>
-                  <span><strong>Meet your next favourite.</strong><small>Five fruit picks. One Fruitly world.</small></span>
-                </div>
+          <div className="relative mx-auto w-full max-w-[640px] md:max-w-none">
+            <div className="fruitly-pack-stage">
+              <span className="fruitly-pack-stage-kicker">A fruit-forward collection</span>
+              <span className="fruitly-pack-stage-tag">Pure. Fresh. Natural.</span>
+              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--one" aria-hidden />
+              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--two" aria-hidden />
+              {heroPacks.map((pack, index) => {
+                const className = `fruitly-pack-card fruitly-pack-card--${index + 1}`;
+                const image = (
+                  <img
+                    src={pack.image}
+                    alt={pack.title}
+                    width={840}
+                    height={1160}
+                    fetchPriority={index === 1 ? "high" : undefined}
+                    loading={index === 1 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                );
+                return pack.slug ? (
+                  <Link
+                    key={pack.key}
+                    to="/product/$slug"
+                    params={{ slug: pack.slug }}
+                    className={className}
+                    aria-label={`Explore ${pack.title}`}
+                  >
+                    {image}
+                  </Link>
+                ) : (
+                  <Link key={pack.key} to="/products" className={className} aria-label={`Explore ${pack.title}`}>
+                    {image}
+                  </Link>
+                );
+              })}
+              <div className="fruitly-pack-stage-caption">
+                <span className="fruitly-pack-stage-caption-mark" aria-hidden>✳</span>
+                <span>
+                  <strong>Meet your next favourite.</strong>
+                  <small>Five fruit picks. One Fruitly world.</small>
+                </span>
               </div>
-            ) : (
-              <div className="fruitly-pack-stage">
-                <span className="fruitly-pack-stage-kicker">A fruit-forward collection</span>
-                <span className="fruitly-pack-stage-tag">Pure. Fresh. Natural.</span>
-                <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--one" aria-hidden />
-                <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--two" aria-hidden />
-                {heroPacks.map((pack, index) => {
-                  const className = `fruitly-pack-card fruitly-pack-card--${index + 1}`;
-                  const image = <img src={pack.image} alt={pack.title} width={840} height={1160} loading="lazy" decoding="async" />;
-                  return pack.slug ? (
-                    <Link key={pack.key} to="/product/$slug" params={{ slug: pack.slug }} className={className} aria-label={`Explore ${pack.title}`}>{image}</Link>
-                  ) : (
-                    <Link key={pack.key} to="/products" className={className} aria-label={`Explore ${pack.title}`}>{image}</Link>
-                  );
-                })}
-                <div className="fruitly-pack-stage-caption">
-                  <span className="fruitly-pack-stage-caption-mark" aria-hidden>✳</span>
-                  <span><strong>Meet your next favourite.</strong><small>Five fruit picks. One Fruitly world.</small></span>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
