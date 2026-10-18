@@ -62,17 +62,14 @@ const marqueeItems = [
 // Local testimonial content keeps the section independent of database availability.
 // Replace these sample lines with customer-approved wording before publishing as verified reviews.
 const testimonials = [
-  { name: "Kanti Patel", product: "Jamun Cubes", title: "Controlled my sugar", quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a blessing.", initials: "KP", avatar: "from-rose-400 to-orange-300", verified: true },
-  { name: "Somalini Sahu", product: "Mango Cubes", title: "Gourmet Snack for a Busy Lifestyle", quote: "Moon’s freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", initials: "SS", avatar: "from-indigo-400 to-sky-300", verified: true },
-  { name: "Balkrishna Patro", product: "Mango Cubes", title: "Sweet Summer Memories All Year Round!", quote: "Takes me back to summer days with every bite. The flavor is intensely fruity and the crunch adds a fun texture.", initials: "BP", avatar: "from-amber-400 to-yellow-300", verified: true },
-  { name: "Hemant Mali", product: "Fruitly range", title: "A fruit-first choice", quote: "Customer feedback will be added here once Hemant Mali’s approved testimonial is available.", initials: "HM", avatar: "from-emerald-400 to-teal-300", verified: false, rating: null },
-  { name: "Sujit Khopade", product: "Fruitly range", title: "A simple snack moment", quote: "Customer feedback will be added here once Sujit Khopade’s approved testimonial is available.", initials: "SK", avatar: "from-sky-400 to-blue-300", verified: false, rating: null },
-  { name: "Samarth Kadam", product: "Fruitly range", title: "A colourful addition", quote: "Customer feedback will be added here once Samarth Kadam’s approved testimonial is available.", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", verified: false, rating: null },
-  { name: "Satyawan Raskar", product: "Fruitly range", title: "Fruit for the day", quote: "Customer feedback will be added here once Satyawan Raskar’s approved testimonial is available.", initials: "SR", avatar: "from-orange-400 to-rose-300", verified: false, rating: null },
-  { name: "Amarjeet Singh", product: "Fruitly range", title: "A little fruit break", quote: "Customer feedback will be added here once Amarjeet Singh’s approved testimonial is available.", initials: "AS", avatar: "from-cyan-400 to-blue-300", verified: false, rating: null },
-  { name: "Prajwal Dhonde", product: "Fruitly range", title: "Easy to take along", quote: "Customer feedback will be added here once Prajwal Dhonde’s approved testimonial is available.", initials: "PD", avatar: "from-lime-500 to-emerald-300", verified: false, rating: null },
-  { name: "Prathamesh Nikam", product: "Fruitly range", title: "A new fruit format", quote: "Customer feedback will be added here once Prathamesh Nikam’s approved testimonial is available.", initials: "PN", avatar: "from-pink-400 to-rose-300", verified: false, rating: null },
-  { name: "Sandesh Borate", product: "Fruitly range", title: "Made for everyday moments", quote: "Customer feedback will be added here once Sandesh Borate’s approved testimonial is available.", initials: "SB", avatar: "from-yellow-400 to-orange-300", verified: false, rating: null },
+  { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", quote: null, rating: null, verified: false },
+  { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", quote: null, rating: null, verified: false },
+  { name: "Samarth Kadam", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", quote: null, rating: null, verified: false },
+  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", quote: null, rating: null, verified: false },
+  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", quote: null, rating: null, verified: false },
+  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", quote: null, rating: null, verified: false },
+  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", quote: null, rating: null, verified: false },
+  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", quote: null, rating: null, verified: false },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
@@ -464,12 +461,7 @@ function Home() {
               What our customers say
             </h2>
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-0.5 text-amber-500" aria-label="Five out of five stars">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className="h-4 w-4 fill-current" aria-hidden />
-                ))}
-              </span>
-              <span>Thoughts from the Fruitly community</span>
+              <span>Meet the Fruitly community</span>
             </div>
           </div>
 
@@ -488,19 +480,21 @@ function Home() {
                     ))}
                   </div>
                 )}
-                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{review.quote}</p>
+                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.name}</h3>
+                <div className="mt-3 flex flex-1 flex-col justify-center rounded-2xl border border-dashed border-border/80 bg-secondary/30 px-4 py-5">
+                  <p className="text-sm font-medium text-foreground">Review not shared publicly</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">We only publish customer feedback that has actually been shared and approved.</p>
+                  <Link to="/products" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                    Explore Fruitly products <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+                  </Link>
+                </div>
                 <div className="mt-6 flex items-center gap-3 border-t border-border/70 pt-4">
                   <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${review.avatar} text-xs font-bold text-white shadow-sm`} aria-hidden>
                     {review.initials}
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{review.name}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>
-                    <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600">
-                      <CheckCircle2 className="h-3 w-3" aria-hidden />
-                      {review.verified ? "Verified buyer" : "Customer"}
-                    </span>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Fruitly community</p>
                   </div>
                 </div>
               </article>
