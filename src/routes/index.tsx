@@ -64,11 +64,11 @@ const testimonials = [
   { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", product: "Freeze-dried Mangoes", quote: "Fruitly's freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
   { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", product: "Fruitly fruit snack", quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a bless.", rating: null, verified: false },
   { name: "Sachin Ghanwat", initials: "SG", avatar: "from-amber-400 to-yellow-300", product: "Fruitly fruit snack", quote: "It’s not baked or fried, totally healthy and the taste is amazing. I can’t stop my hand, I just eat, eat, eat…", rating: null, verified: false },
-  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", product: null, quote: null, rating: null, verified: false },
-  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", product: null, quote: null, rating: null, verified: false },
-  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", product: null, quote: null, rating: null, verified: false },
-  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", product: null, quote: null, rating: null, verified: false },
-  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", product: null, quote: null, rating: null, verified: false },
+  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", product: "Fruitly fruit snacks", quote: "Such an incredible alternative to junk food! It satisfies my evening cravings completely without any guilt. Absolutely love the natural crunch.", rating: null, verified: false },
+  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", product: "Fruitly fruit snacks", quote: "Finally - I got something that is healthy and delicious to meet my travel needs. Thanks, Fruitly for bringing this amazing product. in love with it.", rating: null, verified: false },
+  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", product: "Freeze-dried fruit snacks", quote: "Fruitly’s freeze-dried snacks are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
+  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", product: "Fruitly fruit snacks", quote: "I never knew that eating this healthy snack can satisfy my sweet cravings so soon. It’s a absolute blessing.", rating: null, verified: false },
+  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", product: "Fruitly fruit snacks", quote: "Super crunchy, fresh, and bursting with natural fruit flavor. Great quality and very easy to carry around during hectic work days.", rating: null, verified: false },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
