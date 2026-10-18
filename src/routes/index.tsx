@@ -65,14 +65,14 @@ const testimonials = [
   { name: "Kanti Patel", product: "Jamun Cubes", title: "A thoughtful everyday choice", quote: "A lovely way to enjoy fruit in a different form. The flavour makes it a snack I look forward to.", initials: "KP", avatar: "from-rose-400 to-orange-300", verified: true },
   { name: "Somalini Sahu", product: "Mango Cubes", title: "Mango on the go", quote: "The mango flavour is delightful, and the pack is easy to carry when I’m on the go.", initials: "SS", avatar: "from-indigo-400 to-sky-300", verified: true },
   { name: "Balkrishna Patro", product: "Mango Cubes", title: "A taste of summer", quote: "Every bite brings back the feeling of summer. I love the fruity flavour and the satisfying texture.", initials: "BP", avatar: "from-amber-400 to-yellow-300", verified: true },
-  { name: "Hemant Mali", product: "Fruitly range", title: "A fruit-first choice", quote: "Sample testimonial: I enjoy having a fruit-based snack as part of my day.", initials: "HM", avatar: "from-emerald-400 to-teal-300", verified: false },
-  { name: "Sujit Khopade", product: "Fruitly range", title: "A simple snack moment", quote: "Sample testimonial: Fruitly makes it easy to explore fruit in a different format.", initials: "SK", avatar: "from-sky-400 to-blue-300", verified: false },
-  { name: "Samarth Kadam", product: "Fruitly range", title: "A colourful addition", quote: "Sample testimonial: I like the variety and the convenient pack format.", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", verified: false },
-  { name: "Satyawan Raskar", product: "Fruitly range", title: "Fruit for the day", quote: "Sample testimonial: A handy option when I want something fruity between meals.", initials: "SR", avatar: "from-orange-400 to-rose-300", verified: false },
-  { name: "Amarjeet Singh", product: "Fruitly range", title: "A little fruit break", quote: "Sample testimonial: The product range gives me new ways to enjoy fruit.", initials: "AS", avatar: "from-cyan-400 to-blue-300", verified: false },
-  { name: "Prajwal Dhonde", product: "Fruitly range", title: "Easy to take along", quote: "Sample testimonial: The pack is convenient to keep with me when I’m out.", initials: "PD", avatar: "from-lime-500 to-emerald-300", verified: false },
-  { name: "Prathamesh Nikam", product: "Fruitly range", title: "A new fruit format", quote: "Sample testimonial: I enjoy trying familiar fruits in a different form.", initials: "PN", avatar: "from-pink-400 to-rose-300", verified: false },
-  { name: "Sandesh Borate", product: "Fruitly range", title: "Made for everyday moments", quote: "Sample testimonial: A convenient fruit snack option for busy days.", initials: "SB", avatar: "from-yellow-400 to-orange-300", verified: false },
+  { name: "Hemant Mali", product: "Fruitly range", title: "A fruit-first choice", quote: "Customer feedback will be added here once Hemant Mali’s approved testimonial is available.", initials: "HM", avatar: "from-emerald-400 to-teal-300", verified: false, rating: null },
+  { name: "Sujit Khopade", product: "Fruitly range", title: "A simple snack moment", quote: "Customer feedback will be added here once Sujit Khopade’s approved testimonial is available.", initials: "SK", avatar: "from-sky-400 to-blue-300", verified: false, rating: null },
+  { name: "Samarth Kadam", product: "Fruitly range", title: "A colourful addition", quote: "Customer feedback will be added here once Samarth Kadam’s approved testimonial is available.", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", verified: false, rating: null },
+  { name: "Satyawan Raskar", product: "Fruitly range", title: "Fruit for the day", quote: "Customer feedback will be added here once Satyawan Raskar’s approved testimonial is available.", initials: "SR", avatar: "from-orange-400 to-rose-300", verified: false, rating: null },
+  { name: "Amarjeet Singh", product: "Fruitly range", title: "A little fruit break", quote: "Customer feedback will be added here once Amarjeet Singh’s approved testimonial is available.", initials: "AS", avatar: "from-cyan-400 to-blue-300", verified: false, rating: null },
+  { name: "Prajwal Dhonde", product: "Fruitly range", title: "Easy to take along", quote: "Customer feedback will be added here once Prajwal Dhonde’s approved testimonial is available.", initials: "PD", avatar: "from-lime-500 to-emerald-300", verified: false, rating: null },
+  { name: "Prathamesh Nikam", product: "Fruitly range", title: "A new fruit format", quote: "Customer feedback will be added here once Prathamesh Nikam’s approved testimonial is available.", initials: "PN", avatar: "from-pink-400 to-rose-300", verified: false, rating: null },
+  { name: "Sandesh Borate", product: "Fruitly range", title: "Made for everyday moments", quote: "Customer feedback will be added here once Sandesh Borate’s approved testimonial is available.", initials: "SB", avatar: "from-yellow-400 to-orange-300", verified: false, rating: null },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
@@ -481,11 +481,13 @@ function Home() {
             {testimonials.map((review) => (
               <article key={review.name} className="group relative flex w-full shrink-0 snap-start flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:w-[calc(50%-0.5rem)] sm:p-6 lg:w-[calc(33.333%-0.667rem)]">
                 <Quote className="absolute right-5 top-5 h-7 w-7 text-amber-200" aria-hidden />
-                <div className="flex items-center gap-1 text-amber-500" aria-label="Five out of five stars">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="h-4 w-4 fill-current" aria-hidden />
-                  ))}
-                </div>
+                {review.rating && (
+                  <div className="flex items-center gap-1 text-amber-500" aria-label={`${review.rating} out of 5 stars`}>
+                    {Array.from({ length: review.rating }, (_, index) => (
+                      <Star key={index} className="h-4 w-4 fill-current" aria-hidden />
+                    ))}
+                  </div>
+                )}
                 <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{review.quote}</p>
                 <div className="mt-6 flex items-center gap-3 border-t border-border/70 pt-4">
