@@ -79,17 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
+      { title: "FRUITLY | Goodness in Every Bite" },
       {
         name: "description",
         content:
-          "AGR Agrotech connects Indian agriculture with nutrition through sustainable soil inputs, preserved fruits and plant-based ingredients.",
+          "Discover FRUITLY's natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
       },
-      { name: "author", content: "AGR Agrotech" },
-      { property: "og:title", content: "AGR Agrotech" },
+      { name: "author", content: "FRUITLY" },
+      { property: "og:title", content: "FRUITLY | Goodness in Every Bite" },
       {
         property: "og:description",
-        content: "From agriculture to nutrition, naturally. Sustainable agricultural inputs, preserved fruits and plant-based ingredients.",
+        content: "Natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

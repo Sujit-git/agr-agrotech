@@ -15,7 +15,7 @@ export function Footer() {
         <div className="md:col-span-2">
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            {s.business_description}
+            FRUITLY brings together natural dehydrated fruits and freeze-dried fruits. Goodness in Every Bite.
           </p>
           {(s.instagram || s.facebook) && (
             <div className="mt-5 flex gap-3">
@@ -107,7 +107,7 @@ export function Footer() {
 
       <div className="border-t border-border">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; AGR &mdash; Agrotech. All rights reserved.</p>
+          <p>&copy; FRUITLY. All rights reserved.</p>
         </div>
       </div>
     </footer>
