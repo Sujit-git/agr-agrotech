@@ -113,7 +113,7 @@ function SettingsAdmin() {
   const saveReview = async (review: ReviewDraft) => {
     const quote = review.quote.trim();
     if (review.is_published && (quote.length < 8 || review.rating < 1 || review.rating > 5)) {
-      toast.error("To publish a review, add the customer's approved words and actual 1–5 star rating.");
+      toast.error("To publish a review, add the customer's approved words and actual 1-5 star rating.");
       return;
     }
     setReviewBusy(review.id);

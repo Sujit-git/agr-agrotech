@@ -31,7 +31,7 @@ export const fallbackSettings: SiteSettings = {
   email: "agragrotech@gmail.com",
   phone: "7758055691 / 9423861690",
   whatsapp: "917758055691",
-  address: "Gat No. 89, Jadhavnagar,\nPhaltan-Upalve Road,\nTahasil Phaltan, District Satara, Maharashtra, India. Pin code – 415523",
+  address: "Gat No. 89, Jadhavnagar,\nPhaltan-Upalve Road,\nTahasil Phaltan, District Satara, Maharashtra, India. Pin code - 415523",
   instagram: "",
   facebook: "",
   site_url: "",

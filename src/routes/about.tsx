@@ -10,7 +10,7 @@ const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "Our Story | Fruitly — Pure. Fresh. Natural." },
+      { title: "Our Story | Fruitly - Pure. Fresh. Natural." },
       {
         name: "description",
         content:

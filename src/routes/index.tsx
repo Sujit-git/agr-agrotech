@@ -486,7 +486,7 @@ function Home() {
             <p className="eyebrow">Words from our community</p>
             <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">Good fruit deserves honest feedback.</h2>
             <p className="mt-4 leading-7 text-muted-foreground">
-              We publish customer words only after the feedback is confirmed and approved. Every review shown here comes from a real customer note—not invented review copy.
+              We publish customer words only after the feedback is confirmed and approved. Every review shown here comes from a real customer note-not invented review copy.
             </p>
           </div>
 

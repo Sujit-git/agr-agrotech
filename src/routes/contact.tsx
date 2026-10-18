@@ -23,7 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { settingsQuery, fallbackSettings, phoneNumbers, telLink, whatsappLink } from "@/lib/site";
 
 const fruitlyAddress =
-  "Gat No. 89, Jadhavnagar, Phaltan-Upalve Road, Tahasil Phaltan, District Satara, Maharashtra, India. Pin code – 415523";
+  "Gat No. 89, Jadhavnagar, Phaltan-Upalve Road, Tahasil Phaltan, District Satara, Maharashtra, India. Pin code - 415523";
 const mapEmbedUrl =
   "https://maps.google.com/maps?q=Gat%20No.%2089%2C%20Jadhavnagar%2C%20Phaltan-Upalve%20Road%2C%20Tahasil%20Phaltan%2C%20District%20Satara%2C%20Maharashtra%2C%20India%20415523&output=embed";
 const mapDirectionsUrl =
@@ -110,7 +110,7 @@ function Contact() {
               starts here.
             </h1>
             <p className="mt-5 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              Product questions, pack details or a business enquiry—we'd love to hear what you're looking for.
+              Product questions, pack details or a business enquiry-we'd love to hear what you're looking for.
             </p>
             <div className="mt-7 flex flex-wrap gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-primary">
               <span className="rounded-full border border-primary/15 bg-background/75 px-3 py-2">Product enquiries</span>
@@ -295,7 +295,7 @@ function Contact() {
 
         <div className="relative min-h-[340px] overflow-hidden rounded-[2rem] border border-border/80 bg-muted shadow-lift sm:min-h-[460px]">
           <iframe
-            title="Fruitly location map — Gat No. 89, Jadhavnagar, Phaltan"
+            title="Fruitly location map - Gat No. 89, Jadhavnagar, Phaltan"
             src={mapEmbedUrl}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
