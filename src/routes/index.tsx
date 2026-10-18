@@ -256,9 +256,9 @@ function Home() {
                 src={currentSlide.image}
                 alt={currentSlide.title}
                 loading="lazy"
-                width={1008}
-                height={1008}
-                className="relative mx-auto aspect-square w-full max-w-[400px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+                width={1024}
+                height={1536}
+                className="relative mx-auto aspect-[2/3] w-full max-w-[320px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
               />
               <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                 {currentSlide.category}
@@ -386,6 +386,23 @@ function Home() {
               </Link>
             );
           })}
+          <article className="rounded-3xl border border-dashed border-primary/25 bg-secondary/45 p-6 shadow-soft sm:p-7">
+            <div className="flex items-start justify-between gap-4">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary">
+                <Snowflake className="h-5 w-5" aria-hidden />
+              </span>
+              <span className="rounded-full bg-clay/15 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-foreground">
+                Coming soon
+              </span>
+            </div>
+            <h3 className="mt-6 text-xl">Freeze-dried fruits</h3>
+            <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
+              Our freeze-dried fruit range is in development. Check back soon for updates.
+            </p>
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
+              Coming soon
+            </p>
+          </article>
           {categories.length === 0 && (
             <p className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground">
               Product ranges will appear here soon.

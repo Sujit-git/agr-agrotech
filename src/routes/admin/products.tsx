@@ -219,7 +219,7 @@ function ProductsAdmin() {
               key={product.id}
               className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-4"
             >
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-muted">
+              <div className="aspect-[2/3] w-16 shrink-0 overflow-hidden rounded-xl bg-muted">
                 {image && (
                   <img
                     src={image}
@@ -413,11 +413,11 @@ function ProductsAdmin() {
                 <div>
                   <p className="text-sm font-semibold">Standard image format required</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Keep the fruit or pack centered with a clean background. The same square format is used in product cards, product details and the homepage spotlight.
+                    Use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Keep the fruit or pack centered with a clean background. The same portrait format is used in product cards, product details and the homepage spotlight.
                   </p>
                 </div>
               </div>
-              <Label htmlFor="p-image">Product image (1200 × 1200 px)</Label>
+              <Label htmlFor="p-image">Product image (1024 × 1536 px)</Label>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <Input
                   id="p-image"
@@ -440,13 +440,13 @@ function ProductsAdmin() {
                 )}
               </div>
               <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                Uploads are checked for the exact square dimensions before they are saved. Featured fruit products can also appear in the rotating homepage spotlight; change the image here to update it without editing code.
+                Uploads are checked for the exact 2:3 portrait dimensions before they are saved. Featured fruit products can also appear in the rotating homepage spotlight; change the image here to update it without editing code.
               </p>
               {form.image_url && (
                 <img
                   src={form.image_url}
                   alt=""
-                  className="mt-3 aspect-square w-24 rounded-xl object-cover"
+                  className="mt-3 aspect-[2/3] w-24 rounded-xl object-contain"
                 />
               )}
             </div>

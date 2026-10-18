@@ -54,7 +54,7 @@ function ProductDetails() {
     return (
       <SiteLayout>
         <div className="container-page grid gap-10 py-14 md:grid-cols-2">
-          <div className="aspect-square animate-pulse rounded-3xl bg-secondary" />
+          <div className="aspect-[2/3] w-full max-w-[480px] animate-pulse rounded-3xl bg-secondary" />
           <div className="space-y-4">
             <div className="h-8 w-2/3 animate-pulse rounded bg-secondary" />
             <div className="h-4 w-full animate-pulse rounded bg-secondary" />
@@ -111,17 +111,17 @@ function ProductDetails() {
         </nav>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="overflow-hidden rounded-[2rem] border border-border/70 bg-secondary shadow-soft">
+          <div className="flex justify-center overflow-hidden rounded-[2rem] border border-border/70 bg-secondary shadow-soft">
             {image ? (
               <img
                 src={image}
                 alt={product.name}
-                width={1008}
-                height={1008}
-                className="mx-auto aspect-square w-full max-w-[400px] rounded-3xl bg-[#f8f4e9] object-contain"
+                width={1024}
+                height={1536}
+                className="aspect-[2/3] w-full max-w-[480px] bg-[#f8f4e9] object-contain"
               />
             ) : (
-              <div className="flex aspect-square w-full items-center justify-center text-muted-foreground">
+              <div className="flex aspect-[2/3] w-full max-w-[480px] items-center justify-center text-muted-foreground">
                 <ImageOff className="h-10 w-10" />
               </div>
             )}

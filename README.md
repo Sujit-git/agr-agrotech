@@ -46,7 +46,7 @@ with that user's id and role `admin`. Public sign-up is disabled, so no one else
 - **Add / edit / delete a product:** Admin → Products → *Add product* or *Edit*. Name and
   category are required; price must be a number. Changes appear on the public site immediately.
 - **Change a price:** edit the product, update the Price field, save.
-- **Product images:** upload a JPG/PNG/WebP (max 5 MB) in the product form. Files are stored in
+- **Product images:** upload a JPG/PNG/WebP at exactly 1024 × 1536 px (portrait, 2:3; max 5 MB) in the product form. Files are stored in
   the private `product-images` bucket and served through a long-lived link.
 - **Availability:** Available / Out of Stock / Coming Soon. Out-of-stock products stay visible
   with a clear badge and no purchase option.
