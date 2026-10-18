@@ -10,12 +10,12 @@ export const Route = createFileRoute("/products")({
       {
         name: "description",
         content:
-          "Explore Fruitly natural dehydrated fruits and freeze-dried fruits, with pack sizes and availability.",
+          "Explore Fruitly's dehydrated fruit collection in consistent 50 g pouches, with product details and availability.",
       },
       { property: "og:title", content: "Fruit Products | Fruitly" },
       {
         property: "og:description",
-        content: "Natural dehydrated fruits and freeze-dried fruits from Fruitly. Pure. Fresh. Natural.",
+        content: "Fruitly's dehydrated fruit collection. Pure. Fresh. Natural.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,7 +32,7 @@ function ProductsPage() {
           <p className="eyebrow">Catalogue</p>
           <h1 className="mt-3 font-display text-4xl sm:text-5xl">All products</h1>
           <p className="mt-4 max-w-xl text-muted-foreground">
-            Discover Fruitly&apos;s natural dehydrated and freeze-dried fruits. Pack sizes and
+            Discover Fruitly&apos;s dehydrated fruit range. Pack sizes and
             availability are kept up to date by our team.
           </p>
         </div>

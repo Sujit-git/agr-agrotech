@@ -15,8 +15,7 @@ export function Footer() {
         <div className="md:col-span-2">
           <Logo />
           <p className="mt-5 max-w-md text-sm leading-7 text-muted-foreground">
-            A thoughtful world of dehydrated and freeze-dried fruit, made to bring a little more
-            colour and flavour to everyday moments.
+            A thoughtful world of dehydrated fruit, presented in a considered range for everyday fruit moments.
           </p>
           <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
             Pure. Fresh. Natural.

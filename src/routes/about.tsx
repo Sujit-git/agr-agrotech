@@ -3,9 +3,9 @@ import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
-import mangoImage from "@/assets/product-dehydrated-mango.jpg";
-import strawberryImage from "@/assets/product-freeze-dried-strawberry.jpg";
-import pineappleImage from "@/assets/product-freeze-dried-pineapple.jpg";
+const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
+const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
+const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Meet Fruitly, a fruit-first consumer brand from AGR Agrotech, focused on dehydrated and freeze-dried fruit.",
+          "Meet Fruitly, a fruit-first consumer brand from AGR Agrotech, focused on dehydrated fruit.",
       },
       { property: "og:title", content: "Our Story | Fruitly" },
       {
@@ -62,7 +62,7 @@ function About() {
             </h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
               Fruitly is a fruit-first consumer brand from AGR Agrotech Pvt. Ltd., bringing together
-              a considered range of dehydrated and freeze-dried fruits.
+              a considered range of dehydrated fruits.
             </p>
             <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
               Our idea is simple: celebrate fruit through thoughtful product choices, clear
@@ -83,7 +83,7 @@ function About() {
             <div className="grid gap-3 sm:gap-4">
               <img
                 src={strawberryImage}
-                alt="Ruby-red freeze-dried strawberry pieces"
+                alt="Fruitly dehydrated strawberry pouch"
                 width={1008}
                 height={1008}
                 loading="lazy"
@@ -91,7 +91,7 @@ function About() {
               />
               <img
                 src={pineappleImage}
-                alt="Pale golden freeze-dried pineapple pieces"
+                alt="Fruitly dehydrated papaya pouch"
                 width={1008}
                 height={1008}
                 loading="lazy"
@@ -113,7 +113,7 @@ function About() {
         <div className="space-y-5 text-base leading-8 text-muted-foreground">
           <p>
             Fruit comes in remarkable colours, flavours and textures. Fruitly brings that variety
-            into a focused range of fruit snacks, including dehydrated and freeze-dried formats.
+            into a focused range of fruit snacks, including dehydrated formats.
           </p>
           <p>
             AGR Agrotech works with manufacturing partners for processing. Fruitly brings the

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductBrowser } from "@/components/site/ProductBrowser";
-import { categoriesQuery } from "@/lib/catalog";
+import { categoriesQuery, isLegacySeedProduct, productsQuery } from "@/lib/catalog";
 
 export const Route = createFileRoute("/products/$category")({
   head: ({ params }) => {
@@ -34,9 +34,13 @@ export const Route = createFileRoute("/products/$category")({
 function CategoryPage() {
   const { category: slug } = useParams({ from: "/products/$category" });
   const { data: categories = [], isLoading } = useQuery(categoriesQuery);
-  const category = categories.find((c) => c.slug === slug);
+  const { data: products = [], isLoading: productsLoading } = useQuery(productsQuery);
+  const activeProducts = products.filter((product) => !isLegacySeedProduct(product.slug));
+  const category = categories.find(
+    (c) => c.slug === slug && activeProducts.some((product) => product.category_id === c.id),
+  );
 
-  if (!isLoading && !category) {
+  if (!isLoading && !productsLoading && !category) {
     return (
       <SiteLayout>
         <div className="container-page py-24 text-center">

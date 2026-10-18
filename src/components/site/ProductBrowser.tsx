@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/site/ProductCard";
-import { categoriesQuery, productsQuery } from "@/lib/catalog";
+import { categoriesQuery, isLegacySeedProduct, productsQuery } from "@/lib/catalog";
 
 type Props = {
   /** Locks the browser to a single category slug. */
@@ -27,16 +27,29 @@ export function ProductBrowser({ categorySlug }: Props) {
   const [availability, setAvailability] = useState("all");
   const [sort, setSort] = useState("featured");
 
+  const publicProducts = useMemo(
+    () => (products.data ?? []).filter((product) => !isLegacySeedProduct(product.slug)),
+    [products.data],
+  );
+
+  const publicCategories = useMemo(
+    () =>
+      (categories.data ?? []).filter((category) =>
+        publicProducts.some((product) => product.category_id === category.id),
+      ),
+    [categories.data, publicProducts],
+  );
+
   const categoryById = useMemo(
-    () => new Map((categories.data ?? []).map((c) => [c.id, c])),
-    [categories.data],
+    () => new Map(publicCategories.map((c) => [c.id, c])),
+    [publicCategories],
   );
 
   const visible = useMemo(() => {
-    let list = [...(products.data ?? [])];
+    let list = [...publicProducts];
 
     if (categorySlug) {
-      const match = (categories.data ?? []).find((c) => c.slug === categorySlug);
+      const match = publicCategories.find((c) => c.slug === categorySlug);
       list = list.filter((p) => p.category_id === match?.id);
     } else if (category !== "all") {
       list = list.filter((p) => p.category_id === category);
@@ -67,7 +80,7 @@ export function ProductBrowser({ categorySlug }: Props) {
         );
     }
     return list;
-  }, [products.data, categories.data, categorySlug, category, availability, search, sort]);
+  }, [publicProducts, publicCategories, categorySlug, category, availability, search, sort]);
 
   if (products.isError) {
     return (
@@ -101,7 +114,7 @@ export function ProductBrowser({ categorySlug }: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All categories</SelectItem>
-              {(categories.data ?? []).map((c) => (
+              {publicCategories.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
                 </SelectItem>

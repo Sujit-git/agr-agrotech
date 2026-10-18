@@ -17,11 +17,12 @@ import {
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
-import { categoriesQuery, productImage, productsQuery } from "@/lib/catalog";
+import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
 import { customerReviewsQuery } from "@/lib/site";
-import mangoImage from "@/assets/product-dehydrated-mango.jpg";
-import strawberryImage from "@/assets/product-freeze-dried-strawberry.jpg";
-import pineappleImage from "@/assets/product-freeze-dried-pineapple.jpg";
+
+const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
+const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
+const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -114,13 +115,16 @@ function Home() {
   const { data: categories = [] } = useQuery(categoriesQuery);
   const { data: customerReviews = [] } = useQuery(customerReviewsQuery);
 
-  const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const publicProducts = products.filter((product) => !isLegacySeedProduct(product.slug));
+  const publicCategoryIds = new Set(publicProducts.map((product) => product.category_id).filter(Boolean));
+  const publicCategories = categories.filter((category) => publicCategoryIds.has(category.id));
+  const categoryById = new Map(publicCategories.map((category) => [category.id, category]));
   const fruitCategoryIds = new Set(
-    categories
+    publicCategories
       .filter((category) => /dehydrated|freeze-dried/i.test(`${category.slug} ${category.name}`))
       .map((category) => category.id),
   );
-  const fruitProducts = products
+  const fruitProducts = publicProducts
     .filter((product) => product.category_id && fruitCategoryIds.has(product.category_id))
     .filter((product) => Boolean(productImage(product)))
     .sort(
@@ -158,8 +162,8 @@ function Home() {
   }, [spotlights.length]);
 
   const currentSlide: SpotlightSlide = spotlights[activeSlide] ?? spotlights[0]!;
-  const featured = products.filter((product) => product.featured).slice(0, 4);
-  const shown = featured.length ? featured : products.slice(0, 4);
+  const featured = publicProducts.filter((product) => product.featured).slice(0, 4);
+  const shown = featured.length ? featured : publicProducts.slice(0, 4);
 
   return (
     <SiteLayout>
@@ -347,9 +351,9 @@ function Home() {
         </div>
 
         <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-          {categories.map((category, i) => {
+          {publicCategories.map((category, i) => {
             const Icon = categoryIcons[i % categoryIcons.length] ?? Apple;
-            const count = products.filter((product) => product.category_id === category.id).length;
+            const count = publicProducts.filter((product) => product.category_id === category.id).length;
             return (
               <Link
                 key={category.id}
