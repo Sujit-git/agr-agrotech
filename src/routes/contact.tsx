@@ -234,6 +234,15 @@ function Contact() {
                       {sending ? "Sending…" : "Send your enquiry"}
                       {!sending && <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />}
                     </Button>
+                    {s.email && (
+                      <p className="text-xs leading-5 text-muted-foreground">
+                        Your enquiry will be emailed to{" "}
+                        <a href={`mailto:${s.email}`} className="font-semibold text-primary underline underline-offset-2">
+                          {s.email}
+                        </a>
+                        .
+                      </p>
+                    )}
                     <p className="text-xs leading-5 text-muted-foreground">
                       Please don't include payment card details or sensitive personal information in your message.
                     </p>
