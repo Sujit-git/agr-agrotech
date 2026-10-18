@@ -12,6 +12,16 @@ export type SiteSettings = {
   site_url: string | null;
 };
 
+export type CustomerReview = {
+  id: string;
+  name: string;
+  quote: string;
+  product: string | null;
+  rating: number;
+  sort_order: number;
+  is_published: boolean;
+};
+
 /** Single source of truth used before the database settings load. */
 export const fallbackSettings: SiteSettings = {
   brand_name: "Fruitly",
@@ -37,6 +47,21 @@ export const settingsQuery = {
       .maybeSingle();
     if (error) throw error;
     return (data as SiteSettings) ?? fallbackSettings;
+  },
+};
+
+export const customerReviewsQuery = {
+  queryKey: ["customer-reviews"],
+  queryFn: async (): Promise<CustomerReview[]> => {
+    const { data, error } = await supabase
+      .from("customer_reviews")
+      .select("id,name,quote,product,rating,sort_order,is_published")
+      .eq("is_published", true)
+      .gte("rating", 1)
+      .neq("quote", "")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as CustomerReview[];
   },
 };
 

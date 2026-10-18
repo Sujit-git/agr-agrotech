@@ -46,52 +46,52 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 2px 8px oklch(0.28 0.06 335 / 0.04), 0 16px 38px oklch(0.28 0.06 335 / 0.08);
-  --shadow-lift: 0 4px 10px oklch(0.28 0.06 335 / 0.06), 0 26px 58px oklch(0.28 0.06 335 / 0.14);
+  --shadow-soft: 0 2px 8px oklch(0.27 0.055 150 / 0.045), 0 16px 38px oklch(0.27 0.055 150 / 0.09);
+  --shadow-lift: 0 4px 10px oklch(0.27 0.055 150 / 0.06), 0 26px 58px oklch(0.27 0.055 150 / 0.14);
 }
 
 :root {
   --radius: 1rem;
 
-  /* Fruitly: ripe plum, warm cream and soft orchard-coral accents. */
-  --background: oklch(0.985 0.014 70);
-  --foreground: oklch(0.24 0.045 335);
+  /* Fruitly: forest green, leaf green, berry red and warm cream sampled from the supplied logo. */
+  --background: oklch(0.985 0.014 88);
+  --foreground: oklch(0.245 0.045 150);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.045 335);
+  --card-foreground: oklch(0.245 0.045 150);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.045 335);
+  --popover-foreground: oklch(0.245 0.045 150);
 
-  --primary: oklch(0.34 0.105 335);
-  --primary-foreground: oklch(0.985 0.014 70);
+  --primary: oklch(0.36 0.095 150);
+  --primary-foreground: oklch(0.985 0.014 88);
 
-  --secondary: oklch(0.96 0.026 66);
-  --secondary-foreground: oklch(0.28 0.055 335);
+  --secondary: oklch(0.96 0.028 118);
+  --secondary-foreground: oklch(0.29 0.065 150);
 
-  --muted: oklch(0.955 0.022 65);
-  --muted-foreground: oklch(0.48 0.035 330);
+  --muted: oklch(0.955 0.02 95);
+  --muted-foreground: oklch(0.47 0.03 148);
 
-  --accent: oklch(0.91 0.085 38);
-  --accent-foreground: oklch(0.29 0.07 335);
+  --accent: oklch(0.88 0.15 132);
+  --accent-foreground: oklch(0.27 0.08 150);
 
-  --clay: oklch(0.66 0.17 42);
-  --clay-foreground: oklch(0.22 0.05 335);
+  --clay: oklch(0.57 0.21 26);
+  --clay-foreground: oklch(0.99 0.01 90);
 
   --destructive: oklch(0.55 0.19 27);
   --destructive-foreground: oklch(0.98 0.01 95);
 
-  --border: oklch(0.89 0.026 65);
-  --input: oklch(0.89 0.026 65);
-  --ring: oklch(0.53 0.12 335);
+  --border: oklch(0.89 0.026 105);
+  --input: oklch(0.89 0.026 105);
+  --ring: oklch(0.51 0.12 150);
 
-  --sidebar: oklch(0.965 0.018 65);
-  --sidebar-foreground: oklch(0.24 0.045 335);
-  --sidebar-primary: oklch(0.34 0.105 335);
-  --sidebar-primary-foreground: oklch(0.985 0.014 70);
-  --sidebar-accent: oklch(0.91 0.085 38);
-  --sidebar-accent-foreground: oklch(0.29 0.07 335);
-  --sidebar-border: oklch(0.89 0.026 65);
-  --sidebar-ring: oklch(0.53 0.12 335);
+  --sidebar: oklch(0.965 0.02 105);
+  --sidebar-foreground: oklch(0.245 0.045 150);
+  --sidebar-primary: oklch(0.36 0.095 150);
+  --sidebar-primary-foreground: oklch(0.985 0.014 88);
+  --sidebar-accent: oklch(0.88 0.15 132);
+  --sidebar-accent-foreground: oklch(0.27 0.08 150);
+  --sidebar-border: oklch(0.89 0.026 105);
+  --sidebar-ring: oklch(0.51 0.12 150);
 }
 
 @layer base {
@@ -178,18 +178,17 @@
   width: 100%;
   max-width: none;
   height: auto;
-  mix-blend-mode: multiply;
 }
 
 .fruitly-hero-surface {
   background:
-    radial-gradient(ellipse at 82% 14%, oklch(0.92 0.09 38 / 0.58), transparent 34%),
-    radial-gradient(ellipse at 8% 78%, oklch(0.94 0.055 68 / 0.85), transparent 36%),
-    linear-gradient(135deg, oklch(0.99 0.012 70), oklch(0.965 0.032 50));
+    radial-gradient(ellipse at 82% 14%, oklch(0.9 0.1 132 / 0.24), transparent 34%),
+    radial-gradient(ellipse at 8% 78%, oklch(0.91 0.075 25 / 0.11), transparent 36%),
+    linear-gradient(135deg, oklch(0.99 0.012 88), oklch(0.965 0.032 105));
 }
 
 .fruitly-hero-photo {
-  box-shadow: 0 22px 64px oklch(0.35 0.10 335 / 0.18);
+  box-shadow: 0 22px 64px oklch(0.30 0.08 150 / 0.18);
 }
 
 .fruitly-product-card {
@@ -201,7 +200,54 @@
 
 .fruitly-product-card:hover {
   transform: translateY(-4px);
-  border-color: oklch(0.77 0.075 35);
+  border-color: oklch(0.76 0.11 132);
+}
+
+.fruitly-spotlight-shell {
+  background:
+    radial-gradient(ellipse at 15% 0%, oklch(0.53 0.09 145 / 0.7), transparent 42%),
+    linear-gradient(120deg, oklch(0.30 0.085 150), oklch(0.36 0.105 145));
+}
+
+.fruitly-marquee {
+  overflow: hidden;
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.fruitly-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: fruitly-marquee 34s linear infinite;
+}
+
+.fruitly-marquee-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 1.65rem;
+  padding: 1.05rem 0.825rem;
+  white-space: nowrap;
+}
+
+.fruitly-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.fruitly-marquee-star {
+  color: oklch(0.76 0.16 132);
+  font-size: 1.05rem;
+}
+
+@keyframes fruitly-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes rise-in {
@@ -227,6 +273,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .fruitly-marquee-track {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   html {
     scroll-behavior: auto;
   }

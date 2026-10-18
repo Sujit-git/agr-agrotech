@@ -428,6 +428,9 @@ function ProductsAdmin() {
                   </span>
                 )}
               </div>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                Homepage spotlight photos are taken from featured fruit products. Change a product image here and keep it featured to refresh its spotlight image without code changes.
+              </p>
               {form.image_url && (
                 <img
                   src={form.image_url}
@@ -443,7 +446,7 @@ function ProductsAdmin() {
                 checked={form.featured}
                 onCheckedChange={(v) => set("featured", v === true)}
               />
-              <Label htmlFor="p-featured">Show on the homepage as featured</Label>
+              <Label htmlFor="p-featured">Feature on homepage (also used in the Fruitly spotlight slider)</Label>
             </div>
 
             <DialogFooter>

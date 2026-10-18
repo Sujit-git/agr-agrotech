@@ -86,6 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Discover Fruitly's natural dehydrated and freeze-dried fruits. Pure. Fresh. Natural.",
       },
       { name: "author", content: "Fruitly" },
+      { name: "theme-color", content: "#184d2b" },
       { property: "og:title", content: "Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",

@@ -12,8 +12,8 @@ export function Logo({ compact = false }: { compact?: boolean }) {
         <img
           src={logo}
           alt="Fruitly"
-          width={1182}
-          height={578}
+          width={634}
+          height={252}
           className="fruitly-wordmark-image"
         />
       </span>

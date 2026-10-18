@@ -148,6 +148,42 @@ export type Database = {
           },
         ]
       }
+      customer_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          name: string
+          product: string | null
+          quote: string
+          rating: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name: string
+          product?: string | null
+          quote?: string
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name?: string
+          product?: string | null
+          quote?: string
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           address: string | null
