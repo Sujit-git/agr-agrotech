@@ -87,7 +87,7 @@ function SettingsAdmin() {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     const email = form.email?.trim() ?? "";
-    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast.error("Enter a valid enquiry email address.");
       return;
     }
