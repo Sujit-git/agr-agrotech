@@ -59,6 +59,35 @@ const marqueeItems = [
   "Fruit for the moments in between",
 ];
 
+// Local testimonial content keeps the section independent of database availability.
+// Replace these sample lines with customer-approved wording before publishing as verified reviews.
+const testimonials = [
+  {
+    name: "Kanti Patel",
+    product: "Jamun Cubes",
+    title: "A lovely everyday snack",
+    quote: "A lovely way to enjoy fruit in a different form. The flavour makes it a snack I look forward to.",
+    initials: "KP",
+    avatar: "from-rose-400 to-orange-300",
+  },
+  {
+    name: "Somalini Sahu",
+    product: "Mango Cubes",
+    title: "Mango on the go",
+    quote: "The mango flavour is delightful, and the pack is easy to carry when I’m on the go.",
+    initials: "SS",
+    avatar: "from-indigo-400 to-sky-300",
+  },
+  {
+    name: "Balkrishna Patro",
+    product: "Mango Cubes",
+    title: "A taste of summer",
+    quote: "Every bite brings back the feeling of summer. I love the fruity flavour and the satisfying texture.",
+    initials: "BP",
+    avatar: "from-amber-400 to-yellow-300",
+  },
+];
+
 const fallbackSpotlights: SpotlightSlide[] = [
   {
     key: "mango",
@@ -457,32 +486,7 @@ function Home() {
           </div>
 
           <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-11 lg:grid-cols-3">
-            {[
-              {
-                name: "Kanti Patel",
-                product: "Jamun Cubes",
-                title: "A thoughtful everyday choice",
-                quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a blessing.",
-                initials: "KP",
-                avatar: "from-rose-400 to-orange-300",
-              },
-              {
-                name: "Somalini Sahu",
-                product: "Mango Cubes",
-                title: "A little mango moment",
-                quote: "Moon’s freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.",
-                initials: "SS",
-                avatar: "from-indigo-400 to-sky-300",
-              },
-              {
-                name: "Balkrishna Patro",
-                product: "Mango Cubes",
-                title: "Summer, any time of year",
-                quote: "Takes me back to summer days with every bite. The flavor is intensely fruity and the crunch adds a fun texture.",
-                initials: "BP",
-                avatar: "from-amber-400 to-yellow-300",
-              },
-            ].map((review) => (
+            {testimonials.map((review) => (
               <article key={review.name} className="group relative flex h-full flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-6">
                 <Quote className="absolute right-5 top-5 h-7 w-7 text-amber-200" aria-hidden />
                 <div className="flex items-center gap-1 text-amber-500" aria-label="Five out of five stars">
