@@ -34,7 +34,7 @@ export type Product = {
   updated_at: string;
 };
 
-/** Fruitly's launch pouch images, optimized as square WebP assets for consistent catalogue presentation. */
+/** Fruitly launch pouch artwork. The display frame controls crop and size consistently. */
 const seedImages: Record<string, string> = {
   "dehydrated-strawberry-whole": "/fruitly-products/dehydrated-strawberry-whole.webp",
   "dehydrated-lemon-slices": "/fruitly-products/dehydrated-lemon-slices.webp",
