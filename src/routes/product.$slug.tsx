@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import {
   categoriesQuery,
+  isLegacySeedProduct,
   productsQuery,
   availabilityLabel,
   formatPrice,
@@ -46,7 +47,7 @@ function ProductDetails() {
   const { data: settings } = useQuery(settingsQuery);
   const s = settings ?? fallbackSettings;
 
-  const product = products.find((p) => p.slug === slug);
+  const product = products.find((p) => p.slug === slug && !isLegacySeedProduct(p.slug));
   const category = categories.find((c) => c.id === product?.category_id);
 
   if (isLoading) {
