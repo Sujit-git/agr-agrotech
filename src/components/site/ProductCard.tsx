@@ -63,7 +63,7 @@ export function ProductCard({
           <Link
             to="/product/$slug"
             params={{ slug: product.slug }}
-            className="after:absolute after:inset-0 hover:text-primary"
+            className="transition-colors hover:text-primary"
           >
             {product.name}
           </Link>
@@ -81,9 +81,13 @@ export function ProductCard({
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-5">
           <AvailabilityBadge value={product.availability} />
-          <span className="relative z-10 inline-flex items-center gap-1 text-sm font-bold text-primary transition-colors group-hover:text-foreground">
+          <Link
+            to="/product/$slug"
+            params={{ slug: product.slug }}
+            className="relative z-10 inline-flex items-center gap-1 text-sm font-bold text-primary transition-colors hover:text-foreground"
+          >
             View details <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
-          </span>
+          </Link>
         </div>
       </div>
     </article>
