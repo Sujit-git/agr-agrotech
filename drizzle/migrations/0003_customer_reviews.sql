@@ -6,6 +6,7 @@ CREATE TABLE public.customer_reviews (
   product text,
   rating integer NOT NULL DEFAULT 0 CHECK (rating BETWEEN 0 AND 5),
   is_published boolean NOT NULL DEFAULT false,
+  verified_buyer boolean NOT NULL DEFAULT false,
   sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
@@ -35,15 +36,25 @@ CREATE TRIGGER customer_reviews_updated_at
   BEFORE UPDATE ON public.customer_reviews
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
+-- Update the legacy default address only when it is still the former Phaltan address.
+UPDATE public.site_settings
+SET address = 'Gat No. 89, Jadhavnagar, Phaltan-Upalve Road, Tahasil Phaltan, District Satara, Maharashtra, India. Pin code – 415523'
+WHERE id = true
+  AND (
+    address IS NULL
+    OR address LIKE '%412355%'
+    OR address LIKE '%[Add AGR address here]%'
+  );
+
 -- Seed customer names as unpublished drafts. The admin must enter approved review text
 -- and the customer's actual rating before publishing; no testimonials are fabricated.
-INSERT INTO public.customer_reviews (name, quote, product, rating, is_published, sort_order)
+INSERT INTO public.customer_reviews (name, quote, product, rating, is_published, verified_buyer, sort_order)
 VALUES
-  ('Hemant Mali', '', NULL, 0, false, 1),
-  ('Sujit Khopade', '', NULL, 0, false, 2),
-  ('Samarth Kadam', '', NULL, 0, false, 3),
-  ('Satyawan Raskar', '', NULL, 0, false, 4),
-  ('Amarjeet Singh', '', NULL, 0, false, 5),
-  ('Prajwal Dhonde', '', NULL, 0, false, 6),
-  ('Prathamesh Nikam', '', NULL, 0, false, 7),
-  ('Sandesh Borate', '', NULL, 0, false, 8);
+  ('Hemant Mali', '', NULL, 0, false, false, 1),
+  ('Sujit Khopade', '', NULL, 0, false, false, 2),
+  ('Samarth Kadam', '', NULL, 0, false, false, 3),
+  ('Satyawan Raskar', '', NULL, 0, false, false, 4),
+  ('Amarjeet Singh', '', NULL, 0, false, false, 5),
+  ('Prajwal Dhonde', '', NULL, 0, false, false, 6),
+  ('Prathamesh Nikam', '', NULL, 0, false, false, 7),
+  ('Sandesh Borate', '', NULL, 0, false, false, 8);

@@ -159,6 +159,7 @@ export type Database = {
           rating: number
           sort_order: number
           updated_at: string
+          verified_buyer: boolean
         }
         Insert: {
           created_at?: string
@@ -170,6 +171,7 @@ export type Database = {
           rating?: number
           sort_order?: number
           updated_at?: string
+          verified_buyer?: boolean
         }
         Update: {
           created_at?: string
@@ -181,6 +183,7 @@ export type Database = {
           rating?: number
           sort_order?: number
           updated_at?: string
+          verified_buyer?: boolean
         }
         Relationships: []
       }

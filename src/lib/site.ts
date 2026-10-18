@@ -20,6 +20,7 @@ export type CustomerReview = {
   rating: number;
   sort_order: number;
   is_published: boolean;
+  verified_buyer: boolean;
 };
 
 /** Single source of truth used before the database settings load. */
@@ -30,7 +31,7 @@ export const fallbackSettings: SiteSettings = {
   email: "agragrotech@gmail.com",
   phone: "7758055691 / 9423861690",
   whatsapp: "917758055691",
-  address: "AGR AGROTECH PVT. LTD.\nGSTN: 27ABECA3291P1Z6\nGat No. 89, Jadhav Nagar,\nPhaltan–Uplave Road,\nTahasil Phaltan, District Satara, Maharashtra, India. Pin code – 412355",
+  address: "Gat No. 89, Jadhavnagar,\nPhaltan-Upalve Road,\nTahasil Phaltan, District Satara, Maharashtra, India. Pin code – 415523",
   instagram: "",
   facebook: "",
   site_url: "",
@@ -55,7 +56,7 @@ export const customerReviewsQuery = {
   queryFn: async (): Promise<CustomerReview[]> => {
     const { data, error } = await supabase
       .from("customer_reviews")
-      .select("id,name,quote,product,rating,sort_order,is_published")
+      .select("id,name,quote,product,rating,sort_order,is_published,verified_buyer")
       .eq("is_published", true)
       .gte("rating", 1)
       .neq("quote", "")

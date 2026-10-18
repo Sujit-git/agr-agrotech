@@ -44,7 +44,7 @@ const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?
   { key: "site_url", label: "Website address", hint: "e.g. https://fruitly.co.in" },
 ];
 
-type ReviewDraft = Pick<CustomerReview, "id" | "name" | "quote" | "product" | "rating" | "is_published">;
+type ReviewDraft = Pick<CustomerReview, "id" | "name" | "quote" | "product" | "rating" | "is_published" | "verified_buyer">;
 
 function SettingsAdmin() {
   const qc = useQueryClient();
@@ -60,7 +60,7 @@ function SettingsAdmin() {
     queryFn: async (): Promise<CustomerReview[]> => {
       const { data, error } = await supabase
         .from("customer_reviews")
-        .select("id,name,quote,product,rating,sort_order,is_published,created_at,updated_at")
+        .select("id,name,quote,product,rating,sort_order,is_published,verified_buyer,created_at,updated_at")
         .order("sort_order", { ascending: true });
       if (error) throw error;
       return (data ?? []) as CustomerReview[];
@@ -124,6 +124,7 @@ function SettingsAdmin() {
         product: review.product?.trim() || null,
         rating: review.rating,
         is_published: review.is_published,
+        verified_buyer: review.verified_buyer,
       })
       .eq("id", review.id);
     setReviewBusy(null);
@@ -170,7 +171,7 @@ function SettingsAdmin() {
         <div>
           <h2 id="customer-feedback-heading" className="font-display text-2xl">Customer feedback</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Add the customer's real words and actual rating. Keep a review unpublished until the customer has approved the wording. Only published reviews appear on the public homepage.
+            Add the customer's real words and actual rating. Keep a review unpublished until the customer has approved the wording. Mark Verified buyer only after matching the review to a purchase record. Only published reviews appear on the public homepage.
           </p>
         </div>
 
@@ -232,6 +233,18 @@ function SettingsAdmin() {
                         <option key={rating} value={rating}>{rating} {rating === 1 ? "star" : "stars"}</option>
                       ))}
                     </select>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2 rounded-xl bg-secondary/45 p-3">
+                  <Checkbox
+                    id={`review-verified-${review.id}`}
+                    checked={review.verified_buyer}
+                    onCheckedChange={(checked) => updateReviewDraft(review.id, "verified_buyer", checked === true)}
+                  />
+                  <div>
+                    <Label htmlFor={`review-verified-${review.id}`}>Verified buyer</Label>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">Check only after confirming the customer's purchase.</p>
                   </div>
                 </div>
 

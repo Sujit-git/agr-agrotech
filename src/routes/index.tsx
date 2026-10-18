@@ -236,7 +236,7 @@ function Home() {
       <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
         <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
           <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
-            <div className="relative min-h-[260px] overflow-hidden bg-background/10 p-4 sm:p-6 md:min-h-[390px] md:p-8">
+            <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
               <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
               <img
                 key={currentSlide.key}
@@ -245,7 +245,7 @@ function Home() {
                 loading="lazy"
                 width={1008}
                 height={1008}
-                className="relative h-full min-h-[250px] w-full rounded-[1.4rem] object-cover shadow-lift md:min-h-[340px]"
+                className="relative aspect-square w-full rounded-[1.4rem] object-cover shadow-lift"
               />
               <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                 {currentSlide.category}
@@ -458,6 +458,7 @@ function Home() {
                     </span>
                     <div>
                       <p className="text-sm font-semibold">{review.name}</p>
+                      {review.verified_buyer && <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary"><CheckCircle2 className="h-3 w-3" aria-hidden /> Verified buyer</p>}
                       {review.product && <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>}
                     </div>
                   </div>
