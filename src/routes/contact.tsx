@@ -15,16 +15,16 @@ import { settingsQuery, fallbackSettings, phoneNumbers, telLink, whatsappLink } 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact AGR \u2014 Agrotech" },
+      { title: "Contact FRUITLY | Goodness in Every Bite" },
       {
         name: "description",
         content:
-          "Get in touch with AGR \u2014 Agrotech about products, pack sizes and bulk enquiries by phone, WhatsApp or the contact form.",
+          "Get in touch with FRUITLY about dehydrated fruits, freeze-dried fruits and product enquiries.",
       },
-      { property: "og:title", content: "Contact AGR \u2014 Agrotech" },
+      { property: "og:title", content: "Contact FRUITLY | Goodness in Every Bite" },
       {
         property: "og:description",
-        content: "Phone, WhatsApp and enquiry form for AGR \u2014 Agrotech.",
+        content: "Phone, WhatsApp and enquiry form for FRUITLY.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,7 +72,7 @@ function Contact() {
     }
     setSent(true);
     setForm({ name: "", email: "", phone: "", message: "" });
-    toast.success("Thanks! Your message has reached AGR.");
+    toast.success("Thanks! Your message has reached FRUITLY.");
   };
 
   return (
@@ -181,7 +181,7 @@ function Contact() {
           ))}
           {s.whatsapp && (
             <a
-              href={whatsappLink(s.whatsapp, "Hi AGR, I'd like to know more about your products.")}
+              href={whatsappLink(s.whatsapp, "Hi FRUITLY, I'd like to know more about your fruits.")}
               target="_blank"
               rel="noreferrer"
               className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:bg-accent/40"
