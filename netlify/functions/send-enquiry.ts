@@ -1,5 +1,3 @@
-import type { Config, Context } from "@netlify/functions";
-
 const json = (statusCode: number, body: Record<string, unknown>) => ({
   statusCode,
   headers: {
@@ -18,7 +16,7 @@ const escapeHtml = (value: string) =>
     "'": "&#39;",
   })[char] ?? char);
 
-export default async (request: Request, _context: Context) => {
+export default async (request, _context) => {
   if (request.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
@@ -36,7 +34,7 @@ export default async (request: Request, _context: Context) => {
     return json(503, { error: "Email delivery is not configured yet." });
   }
 
-  let payload: { name?: unknown; email?: unknown; phone?: unknown; message?: unknown };
+  let payload;
   try {
     payload = await request.json();
   } catch {
@@ -66,7 +64,7 @@ export default async (request: Request, _context: Context) => {
     if (!settingsResponse.ok) {
       return json(502, { error: "Could not read the enquiry destination from website settings." });
     }
-    const settings = (await settingsResponse.json()) as Array<{ email?: string | null }>;
+    const settings = await settingsResponse.json();
     recipient = settings[0]?.email?.trim() ?? "";
   } catch {
     return json(502, { error: "Could not read the enquiry destination from website settings." });
@@ -109,6 +107,6 @@ export default async (request: Request, _context: Context) => {
   }
 };
 
-export const config: Config = {
+export const config = {
   path: "/.netlify/functions/send-enquiry",
 };
