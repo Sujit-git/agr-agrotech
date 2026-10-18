@@ -247,7 +247,7 @@ function Contact() {
                     </Button>
                     {s.email && (
                       <p className="text-xs leading-5 text-muted-foreground">
-                        Your enquiry will be emailed to{" "}
+                        Your email draft will be addressed to{" "}
                         <a href={`mailto:${s.email}`} className="font-semibold text-primary underline underline-offset-2">
                           {s.email}
                         </a>
@@ -255,7 +255,7 @@ function Contact() {
                       </p>
                     )}
                     <p className="text-xs leading-5 text-muted-foreground">
-                      This opens your email app so your own email address is the sender. You must press Send in that app to deliver the message. No email-service DNS setup is required.
+                      This opens your email app so you can send from your own account. Use an email address configured in that app; the browser cannot force its From address. Press Send in the app to deliver the message. No email-service DNS setup is required.
                     </p>
                     <p className="text-xs leading-5 text-muted-foreground">
                       Please don't include payment card details or sensitive personal information in your message.
