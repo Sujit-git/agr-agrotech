@@ -62,14 +62,14 @@ const marqueeItems = [
 // Local testimonial content keeps the section independent of database availability.
 // Replace these sample lines with customer-approved wording before publishing as verified reviews.
 const testimonials = [
-  { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", quote: null, rating: null, verified: false },
-  { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", quote: null, rating: null, verified: false },
-  { name: "Samarth Kadam", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", quote: null, rating: null, verified: false },
-  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", quote: null, rating: null, verified: false },
-  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", quote: null, rating: null, verified: false },
-  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", quote: null, rating: null, verified: false },
-  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", quote: null, rating: null, verified: false },
-  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", quote: null, rating: null, verified: false },
+  { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", product: "Freeze-dried Mangoes", quote: "Fruitly's freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
+  { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", product: "Fruitly fruit snack", quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a bless.", rating: null, verified: false },
+  { name: "Sachin Ghanwat", initials: "SG", avatar: "from-amber-400 to-yellow-300", product: "Fruitly fruit snack", quote: "It’s not baked or fried, totally healthy and the taste is amazing. I can’t stop my hand, I just eat, eat, eat…", rating: null, verified: false },
+  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", product: null, quote: null, rating: null, verified: false },
+  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", product: null, quote: null, rating: null, verified: false },
+  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", product: null, quote: null, rating: null, verified: false },
+  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", product: null, quote: null, rating: null, verified: false },
+  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", product: null, quote: null, rating: null, verified: false },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
@@ -182,6 +182,21 @@ function Home() {
 
   return (
     <SiteLayout>
+      <div className="fruitly-marquee" aria-label="Fruitly highlights">
+        <div className="fruitly-marquee-track">
+          {[0, 1].map((copy) => (
+            <div className="fruitly-marquee-group" key={copy} aria-hidden={copy === 1}>
+              {marqueeItems.map((item, index) => (
+                <span className="fruitly-marquee-item" key={item}>
+                  {item}
+                  <span className="fruitly-marquee-star" aria-hidden>✳</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <section className="fruitly-hero-surface relative overflow-hidden border-b border-border/70">
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border border-primary/10 md:h-96 md:w-96" aria-hidden />
         <div className="pointer-events-none absolute -bottom-28 left-[42%] h-64 w-64 rounded-full bg-accent/30 blur-3xl" aria-hidden />
@@ -317,25 +332,7 @@ function Home() {
             </div>
           </div>
         </div>
-        <p className="mt-3 text-xs leading-5 text-muted-foreground">
-          Spotlight photography follows the product images managed in Admin → Products. Update a product image there to refresh the homepage visual without changing code.
-        </p>
       </section>
-
-      <div className="fruitly-marquee" aria-label="Fruitly highlights">
-        <div className="fruitly-marquee-track">
-          {[0, 1].map((copy) => (
-            <div className="fruitly-marquee-group" key={copy} aria-hidden={copy === 1}>
-              {marqueeItems.map((item, index) => (
-                <span className="fruitly-marquee-item" key={item}>
-                  {item}
-                  <span className="fruitly-marquee-star" aria-hidden>✳</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       <section className="container-page py-16 sm:py-20 md:py-24">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -456,7 +453,10 @@ function Home() {
       <section className="relative overflow-hidden border-y border-border/70 bg-gradient-to-b from-[#f3f5ff] via-background to-[#fffaf0] py-16 sm:py-20 md:py-24">
         <div className="container-page">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow text-primary">Loved by fruit lovers</p>
+            <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-primary/15 bg-background/80 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-primary shadow-soft">
+              <span className="h-1.5 w-1.5 rounded-full bg-clay" aria-hidden />
+              Loved By Fruit Lovers
+            </p>
             <h2 className="mt-3 text-3xl leading-tight tracking-[-0.035em] sm:text-4xl md:text-5xl">
               What our customers say
             </h2>
@@ -485,21 +485,25 @@ function Home() {
                     ))}
                   </div>
                 )}
-                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.name}</h3>
-                <div className="mt-3 flex flex-1 flex-col justify-center rounded-2xl border border-dashed border-border/80 bg-secondary/30 px-4 py-5">
-                  <p className="text-sm font-medium text-foreground">Review not shared publicly</p>
-                  <p className="mt-1 text-xs leading-5 text-muted-foreground">We only publish customer feedback that has actually been shared and approved.</p>
-                  <Link to="/products" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
-                    Explore Fruitly products <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
-                  </Link>
-                </div>
+                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.product ?? "Customer feedback"}</h3>
+                {review.quote ? (
+                  <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">“{review.quote}”</p>
+                ) : (
+                  <div className="mt-3 flex flex-1 flex-col justify-center rounded-2xl border border-dashed border-border/80 bg-secondary/30 px-4 py-5">
+                    <p className="text-sm font-semibold text-foreground">Review pending approval</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">We’ll share this customer’s feedback here once their review is received and approved.</p>
+                    <Link to="/contact?topic=testimonial" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                      Share feedback <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+                    </Link>
+                  </div>
+                )}
                 <div className="mt-6 flex items-center gap-3 border-t border-border/70 pt-4">
                   <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${review.avatar} text-xs font-bold text-white shadow-sm`} aria-hidden>
                     {review.initials}
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{review.name}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">Fruitly community</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{review.quote ? "Customer feedback" : "Awaiting approved feedback"}</p>
                   </div>
                 </div>
               </article>
