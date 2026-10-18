@@ -31,7 +31,7 @@ export const Route = createFileRoute("/admin/settings")({
 const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?: boolean }[] = [
   { key: "brand_name", label: "Brand name" },
   { key: "business_description", label: "Business description", textarea: true },
-  { key: "email", label: "Email" },
+  { key: "email", label: "Enquiry email", hint: "Receives website enquiries and powers the Email / Enquiry buttons across the site." },
   { key: "phone", label: "Phone numbers", hint: "Separate multiple numbers with /" },
   {
     key: "whatsapp",
@@ -86,10 +86,17 @@ function SettingsAdmin() {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
+    const email = form.email?.trim() ?? "";
+    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+      toast.error("Enter a valid enquiry email address.");
+      return;
+    }
+    const nextForm = { ...form, email };
+    setForm(nextForm);
     setBusy(true);
     const { error } = await supabase
       .from("site_settings")
-      .update({ ...form })
+      .update({ ...nextForm })
       .eq("id", true);
     setBusy(false);
     if (error) {
@@ -154,6 +161,8 @@ function SettingsAdmin() {
             ) : (
               <Input
                 id={field.key}
+                type={field.key === "email" ? "email" : "text"}
+                autoComplete={field.key === "email" ? "email" : undefined}
                 value={form[field.key] ?? ""}
                 onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
                 className="mt-2 h-11"
