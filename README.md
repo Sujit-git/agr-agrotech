@@ -56,16 +56,12 @@ with that user's id and role `admin`. Public sign-up is disabled, so no one else
 - **Contact details:** Admin → Settings. Brand name, description, enquiry email, phone, WhatsApp,
   address, Instagram, Facebook and website address are stored once and used across the site. The enquiry email controls the displayed email address, mail links and contact-form recipient.
 
-### Contact-form email delivery (Netlify)
+### Contact-form email (no additional DNS records)
 
-The contact form stores enquiries in `contact_messages` and sends a notification email using the Netlify Function at `/.netlify/functions/send-enquiry`. Email delivery uses Resend.
+The contact form saves submissions to `contact_messages`, then opens a pre-filled `mailto:` draft in the visitor's default email app. The destination comes from Admin → Settings → **Enquiry email** (for example, `agragrotech@gmail.com`). No Resend account, extra email DNS records, or server email credentials are required.
 
-1. In Netlify → Site configuration → Environment variables, set `RESEND_API_KEY` to your Resend API key.
-2. Set `RESEND_FROM_EMAIL` to an address on a domain verified in Resend (the recipient is editable from Admin → Settings; the sender must be verified separately).
-3. Set `SUPABASE_URL` and `SUPABASE_ANON_KEY` for the server function so it can read the current recipient from the public `site_settings` row. These may match the project's `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` values.
-4. In Admin → Settings, set **Enquiry email** to `agragrotech@gmail.com` and save. The contact page email link and footer update from this setting, and the function reads the same saved value for form notifications.
+The visitor must press **Send** in their email app. The actual From address is controlled by the email account configured in that app; the browser cannot force the entered form address to become the From address. Visitors should use an account configured in their email app. The entered email is included in the message, and the submission is saved to the website's enquiry log when database access is available.
 
-Until the Resend and Netlify environment variables are configured, the contact form will report that email delivery is not configured rather than claiming that an email was sent. Do not put the Resend API key in browser variables or commit it to GitHub.
 
 ## Backup / export
 
