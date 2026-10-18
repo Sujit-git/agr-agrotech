@@ -31,12 +31,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Discover Fruitly's fruit-first range of dehydrated and freeze-dried fruit. Explore product-specific ingredients, details and formats.",
+          "Discover Fruitly's fruit-first range of dehydrated fruit. Explore product-specific ingredients, details and formats.",
       },
       { property: "og:title", content: "Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",
-        content: "A thoughtful world of dehydrated and freeze-dried fruit from Fruitly.",
+        content: "A thoughtful world of dehydrated fruit from Fruitly.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -50,7 +50,7 @@ const categoryIcons = [Leaf, Apple, Snowflake];
 const marqueeItems = [
   "Fruit-first snacking",
   "Dehydrated fruit",
-  "Freeze-dried fruit",
+  "Dehydrated fruit",
   "Pure. Fresh. Natural.",
   "Explore every ingredient",
   "Fruit for the moments in between",
@@ -96,7 +96,7 @@ const storyPoints = [
   {
     icon: Apple,
     title: "Fruit-forward choices",
-    text: "Explore recognisable fruit flavours in dehydrated and freeze-dried formats.",
+    text: "Explore recognisable fruit flavours in dehydrated formats.",
   },
   {
     icon: CheckCircle2,
@@ -121,7 +121,7 @@ function Home() {
   const categoryById = new Map(publicCategories.map((category) => [category.id, category]));
   const fruitCategoryIds = new Set(
     publicCategories
-      .filter((category) => /dehydrated|freeze-dried/i.test(`${category.slug} ${category.name}`))
+      .filter((category) => /dehydrated/i.test(`${category.slug} ${category.name}`))
       .map((category) => category.id),
   );
   const fruitProducts = publicProducts
@@ -184,7 +184,7 @@ function Home() {
               little bites.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              Discover a colourful world of dehydrated and freeze-dried fruits, presented for
+              Discover a colourful world of dehydrated fruits, presented for
               curious snackers and everyday fruit lovers.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -200,7 +200,7 @@ function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/10 pt-5 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
               <span>Dehydrated fruit</span>
               <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
-              <span>Freeze-dried fruit</span>
+              <span>Dehydrated fruit</span>
             </div>
           </div>
 
