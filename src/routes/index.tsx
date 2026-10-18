@@ -57,7 +57,7 @@ const categoryIcons = [Leaf, Apple, Snowflake];
 const marqueeItems = [
   "Fruit-first snacking",
   "Dehydrated fruit",
-  "Dehydrated fruit",
+  "Fruit for everyday snacking",
   "Pure. Fresh. Natural.",
   "Explore every ingredient",
   "Fruit for the moments in between",
