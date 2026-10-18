@@ -99,7 +99,7 @@ function Contact() {
       ].join("\n");
       const mailtoUrl =
         "mailto:" +
-        encodeURIComponent(recipient) +
+        recipient +
         "?subject=" +
         encodeURIComponent(subject) +
         "&body=" +
@@ -199,10 +199,11 @@ function Contact() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email">Email address <span className="text-clay">*</span></Label>
                         <Input
                           id="email"
                           type="email"
+                          required
                           autoComplete="email"
                           placeholder="you@example.com"
                           value={form.email}
