@@ -62,60 +62,69 @@ function Contact() {
   const update = (key: keyof typeof form, value: string) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  // Keep existing validation, Supabase submission and success/error flows intact.
+  // Open the visitor's own email app so their real account is the sender.
+  // The recipient is controlled by Admin → Settings; no email-provider DNS is needed.
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
+    const recipient = s.email?.trim() ?? "";
+
     if (!form.name.trim()) next["name"] = "Please tell us your name.";
-    if (!form.message.trim()) next["message"] = "Please add a short message.";
-    if (!form.email.trim() && !form.phone.trim())
-      next["email"] = "Add an email or a phone number so we can reply.";
-    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+    if (!form.email.trim())
+      next["email"] = "Enter your email address so your email app can send the message from your account.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
       next["email"] = "That email address doesn't look right.";
+    if (!form.message.trim()) next["message"] = "Please add a short message.";
+
+    if (!recipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+      toast.error("Please configure a valid enquiry email in Admin → Settings.");
+      return;
+    }
+
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setSending(true);
-    let emailSent = false;
     try {
-      const response = await fetch("/.netlify/functions/send-enquiry", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          message: form.message.trim(),
-        }),
+      const subject = "Fruitly website enquiry from " + form.name.trim();
+      const body = [
+        "Name: " + form.name.trim(),
+        "Email: " + form.email.trim(),
+        "Phone: " + (form.phone.trim() || "Not provided"),
+        "",
+        "Message:",
+        form.message.trim(),
+        "",
+        "Sent from the Fruitly website contact form.",
+      ].join("\n");
+      const mailtoUrl =
+        "mailto:" +
+        encodeURIComponent(recipient) +
+        "?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        encodeURIComponent(body);
+
+      // Keep a database record. Email delivery itself happens when the visitor
+      // presses Send in their own mail app; the browser cannot confirm that step.
+      const { error } = await supabase.from("contact_messages").insert({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim() || null,
+        message: form.message.trim(),
       });
-      const result = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok) {
-        toast.error(result.error || "We couldn't email your enquiry. Please try again or email us directly.");
-        return;
+      if (error) {
+        toast.warning("Your email draft can still be prepared, but the website enquiry log could not be saved.");
       }
-      emailSent = true;
+
+      setSent(true);
+      setForm({ name: "", email: "", phone: "", message: "" });
+      window.location.href = mailtoUrl;
     } catch {
-      toast.error("We couldn't connect to email delivery. Please try again or email us directly.");
-      return;
+      toast.error("We couldn't prepare your email. Please use the email link on this page.");
     } finally {
       setSending(false);
     }
-
-    // Keep the existing enquiry record as well as sending the notification email.
-    const { error } = await supabase.from("contact_messages").insert({
-      name: form.name.trim(),
-      email: form.email.trim() || null,
-      phone: form.phone.trim() || null,
-      message: form.message.trim(),
-    });
-    setSent(true);
-    setForm({ name: "", email: "", phone: "", message: "" });
-    if (error) {
-      toast.success("Your enquiry email was sent to Fruitly.");
-      toast.warning("The email was sent, but the website enquiry log could not be saved.");
-      return;
-    }
-    if (emailSent) toast.success("Thanks! Your enquiry has been emailed to Fruitly.");
   };
 
   return (
@@ -163,12 +172,13 @@ function Contact() {
                     <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent/60 text-primary">
                       <MessageSquareText className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="mt-5 text-2xl">Message received.</h3>
+                    <h3 className="mt-5 text-2xl">Your email draft is ready.</h3>
                     <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
-                      Thank you for reaching out to Fruitly. We'll reply as soon as we can.
+                      Your device should open your email app with the message addressed to Fruitly. Please press Send in that app to deliver it. If no email app opens, email us directly at{" "}
+                      <a href={"mailto:" + s.email} className="font-semibold text-primary underline underline-offset-2">{s.email}</a>.
                     </p>
                     <Button variant="outline" className="mt-6 rounded-full" onClick={() => setSent(false)}>
-                      Send another message
+                      Prepare another email
                     </Button>
                   </div>
                 ) : (
@@ -231,7 +241,7 @@ function Contact() {
                     </div>
 
                     <Button type="submit" size="lg" disabled={sending} className="w-full rounded-full shadow-soft sm:w-auto sm:min-w-48">
-                      {sending ? "Sending…" : "Send your enquiry"}
+                      {sending ? "Preparing…" : "Continue to email"}
                       {!sending && <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />}
                     </Button>
                     {s.email && (
@@ -243,6 +253,9 @@ function Contact() {
                         .
                       </p>
                     )}
+                    <p className="text-xs leading-5 text-muted-foreground">
+                      This opens your email app so your own email address is the sender. You must press Send in that app to deliver the message. No email-service DNS setup is required.
+                    </p>
                     <p className="text-xs leading-5 text-muted-foreground">
                       Please don't include payment card details or sensitive personal information in your message.
                     </p>
