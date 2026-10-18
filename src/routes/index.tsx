@@ -226,16 +226,38 @@ function Home() {
                 <Link to="/about">Meet Fruitly</Link>
               </Button>
             </div>
-            <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/10 pt-5 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+            <div className="mt-9 hidden flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/10 pt-5 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground md:flex">
               <span>Dehydrated fruit</span>
               <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
               <span>Freeze-dried fruits</span>
               <span className="h-1 w-1 rounded-full bg-clay" aria-hidden />
               <span>Fruit-first snacking</span>
             </div>
+            <div className="mt-8 flex items-center gap-3 border-t border-primary/10 pt-5 md:hidden">
+              <div className="min-w-0 flex-1">
+                <p className="text-[0.62rem] font-bold uppercase leading-5 tracking-[0.12em] text-muted-foreground">
+                  Dehydrated fruit <span className="mx-1 text-clay">•</span> Fruit-first snacking
+                </p>
+                <p className="mt-1 text-[0.62rem] font-bold uppercase leading-5 tracking-[0.12em] text-muted-foreground">
+                  Freeze-dried fruits
+                </p>
+                <p className="mt-2 text-xs font-semibold text-primary">Goodness in every bite.</p>
+              </div>
+              <div className="relative flex h-[112px] w-[138px] shrink-0 items-center justify-center overflow-hidden rounded-[1.4rem] bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf] p-1">
+                <img
+                  src="/fruitly-products/fruitly-hero-collection.png"
+                  alt="A compact assortment of Fruitly fruit snacks"
+                  width={1640}
+                  height={850}
+                  loading="eager"
+                  decoding="async"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-[760px] items-center justify-center md:max-w-none">
+          <div className="relative mx-auto hidden w-full max-w-[760px] items-center justify-center md:flex md:max-w-none">
             <div className="w-full overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf] p-3 sm:p-5 md:p-2">
               <img
                 src="/fruitly-products/fruitly-hero-collection.png"
