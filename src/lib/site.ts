@@ -14,9 +14,9 @@ export type SiteSettings = {
 
 /** Single source of truth used before the database settings load. */
 export const fallbackSettings: SiteSettings = {
-  brand_name: "AGR Agrotech",
+  brand_name: "FRUITLY",
   business_description:
-    "From agriculture to nutrition, naturally. AGR Agrotech develops sustainable agricultural inputs, preserved fruits, and plant-based nutrition ingredients.",
+    "FRUITLY brings together natural dehydrated fruits and freeze-dried fruits. Goodness in Every Bite.",
   email: "agragrotech@gmail.com",
   phone: "7758055691 / 9423861690",
   whatsapp: "917758055691",

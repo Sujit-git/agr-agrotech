@@ -21,15 +21,15 @@ export const Route = createFileRoute("/product/$slug")({
       .join(" ");
     return {
       meta: [
-        { title: `${label} | AGR \u2014 Agrotech` },
+        { title: `${label} | FRUITLY` },
         {
           name: "description",
-          content: `${label} from AGR \u2014 Agrotech. See price, pack size, availability and product information, and enquire directly.`,
+          content: `${label} from FRUITLY. View pack size and availability, and enquire directly.`,
         },
-        { property: "og:title", content: `${label} | AGR \u2014 Agrotech` },
+        { property: "og:title", content: `${label} | FRUITLY` },
         {
           property: "og:description",
-          content: `${label} from AGR \u2014 Agrotech. Price, pack size and availability.`,
+          content: `${label} from FRUITLY. Goodness in Every Bite.`,
         },
         { property: "og:type", content: "product" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -83,7 +83,7 @@ function ProductDetails() {
   const image = productImage(product);
   const enquiry = whatsappLink(
     s.whatsapp,
-    `Hi AGR, I am interested in ${product.name}. Please share more details.`,
+    `Hi FRUITLY, I am interested in ${product.name}. Please share more details.`,
   );
 
   return (

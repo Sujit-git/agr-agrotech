@@ -13,15 +13,15 @@ export const Route = createFileRoute("/products/$category")({
       .join(" ");
     return {
       meta: [
-        { title: `${label} | AGR \u2014 Agrotech` },
+        { title: `${label} | FRUITLY` },
         {
           name: "description",
-          content: `Explore ${label} from AGR \u2014 Agrotech, with prices, pack sizes and current availability.`,
+          content: `Explore FRUITLY ${label.toLowerCase()}, with pack sizes and current availability.`,
         },
-        { property: "og:title", content: `${label} | AGR \u2014 Agrotech` },
+        { property: "og:title", content: `${label} | FRUITLY` },
         {
           property: "og:description",
-          content: `Explore ${label} from AGR \u2014 Agrotech.`,
+          content: `Explore FRUITLY ${label.toLowerCase()} fruit. Goodness in Every Bite.`,
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },

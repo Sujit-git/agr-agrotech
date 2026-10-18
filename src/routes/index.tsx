@@ -11,17 +11,17 @@ import heroImage from "@/assets/hero-agr.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
+      { title: "FRUITLY | Goodness in Every Bite" },
       {
         name: "description",
         content:
-          "AGR Agrotech connects Indian agriculture to nutrition through sustainable soil inputs, dehydrated and freeze-dried fruits, and plant-based ingredients.",
+          "Discover natural dehydrated and freeze-dried fruits by FRUITLY. Goodness in Every Bite.",
       },
-      { property: "og:title", content: "AGR Agrotech | From Agriculture to Nutrition, Naturally" },
+      { property: "og:title", content: "FRUITLY | Goodness in Every Bite" },
       {
         property: "og:description",
         content:
-          "Sustainable agricultural inputs, preserved fruits and plant-based nutrition ingredients from AGR Agrotech.",
+          "FRUITLY brings you natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -41,17 +41,17 @@ const whyPoints = [
   {
     icon: Leaf,
     title: "Natural Products",
-    text: "Agricultural and food products built around what the farm already gives us.",
+    text: "Fruit made into naturally delicious dehydrated and freeze-dried bites.",
   },
   {
     icon: FlaskConical,
     title: "Thoughtful Processing",
-    text: "Modern preservation processes help maintain fruits’ natural taste, color and nutritional characteristics.",
+    text: "Thoughtful dehydration and freeze-drying let fruit take center stage.",
   },
   {
     icon: Recycle,
-    title: "Sustainable Approach",
-    text: "Soil-enrichment products support healthier soil and more sustainable farming practices.",
+    title: "Made from Fruit",
+    text: "A fruit-first range of dehydrated and freeze-dried favourites.",
   },
 ];
 
@@ -69,15 +69,15 @@ function Home() {
       <section className="relative overflow-hidden border-b border-border bg-secondary/40">
         <div className="container-page grid items-center gap-10 py-14 md:grid-cols-2 md:py-24">
           <div className="rise-in">
-            <p className="eyebrow">AGR Agrotech</p>
+            <p className="eyebrow">FRUITLY</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-              Growing Agriculture.
+              Goodness in Every Bite.
               <br />
-              Advancing Nutrition.
+              Fruit, Naturally.
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Creating value from agriculture to nutrition through sustainable soil inputs,
-              dehydrated and freeze-dried fruits, and an expanding range of plant-based ingredients.
+              Discover natural dehydrated fruits and freeze-dried fruits, made for a bright and
+              delicious little moment in every bite.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -92,7 +92,7 @@ function Home() {
           <div className="relative">
             <img
               src={heroImage}
-              alt="Dried fruit and rich compost on a farm at golden hour"
+              alt="A bowl of dried fruit with fresh fruit in a natural setting"
               width={1600}
               height={1104}
               fetchPriority="high"
@@ -174,12 +174,12 @@ function Home() {
         </div>
       </section>
 
-      {/* Why AGR */}
+      {/* Why FRUITLY */}
       <section className="container-page py-16 md:py-24">
         <div className="max-w-2xl">
-          <p className="eyebrow">Why AGR</p>
+          <p className="eyebrow">Why FRUITLY</p>
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-            From agriculture to nutrition, naturally
+            A naturally fruit-filled way to snack
           </h2>
         </div>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -203,7 +203,7 @@ function Home() {
           </p>
           <div className="mt-8">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/contact">Contact AGR</Link>
+              <Link to="/contact">Contact FRUITLY</Link>
             </Button>
           </div>
         </div>

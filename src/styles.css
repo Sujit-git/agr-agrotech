@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * AGR — Agrotech design system.
- * Earthy greens, cream, warm clay. All colors are oklch tokens.
+ * FRUITLY brand theme.
+ * Forest green, fresh leaf green, clean whites, and subtle natural accents.
  */
 
 @theme inline {
@@ -58,44 +58,44 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.012 92);
-  --foreground: oklch(0.27 0.028 62);
+  --background: oklch(0.99 0.008 108);
+  --foreground: oklch(0.24 0.045 153);
 
-  --card: oklch(1 0.004 95);
-  --card-foreground: oklch(0.27 0.028 62);
-  --popover: oklch(1 0.004 95);
-  --popover-foreground: oklch(0.27 0.028 62);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.045 153);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.045 153);
 
-  --primary: oklch(0.42 0.075 152);
-  --primary-foreground: oklch(0.975 0.015 95);
+  --primary: oklch(0.34 0.085 153);
+  --primary-foreground: oklch(0.99 0.008 108);
 
-  --secondary: oklch(0.935 0.025 88);
-  --secondary-foreground: oklch(0.32 0.03 64);
+  --secondary: oklch(0.96 0.018 112);
+  --secondary-foreground: oklch(0.28 0.06 153);
 
-  --muted: oklch(0.955 0.017 90);
-  --muted-foreground: oklch(0.52 0.025 70);
+  --muted: oklch(0.955 0.014 112);
+  --muted-foreground: oklch(0.48 0.025 145);
 
-  --accent: oklch(0.93 0.035 120);
-  --accent-foreground: oklch(0.33 0.05 148);
+  --accent: oklch(0.91 0.09 135);
+  --accent-foreground: oklch(0.27 0.07 153);
 
-  --clay: oklch(0.68 0.115 52);
-  --clay-foreground: oklch(0.99 0.01 95);
+  --clay: oklch(0.63 0.13 38);
+  --clay-foreground: oklch(0.99 0.008 108);
 
   --destructive: oklch(0.55 0.19 27);
   --destructive-foreground: oklch(0.98 0.01 95);
 
-  --border: oklch(0.9 0.02 88);
-  --input: oklch(0.9 0.02 88);
-  --ring: oklch(0.42 0.075 152);
+  --border: oklch(0.89 0.024 126);
+  --input: oklch(0.89 0.024 126);
+  --ring: oklch(0.48 0.11 145);
 
-  --sidebar: oklch(0.965 0.016 90);
-  --sidebar-foreground: oklch(0.27 0.028 62);
-  --sidebar-primary: oklch(0.42 0.075 152);
-  --sidebar-primary-foreground: oklch(0.975 0.015 95);
-  --sidebar-accent: oklch(0.93 0.035 120);
-  --sidebar-accent-foreground: oklch(0.33 0.05 148);
-  --sidebar-border: oklch(0.9 0.02 88);
-  --sidebar-ring: oklch(0.42 0.075 152);
+  --sidebar: oklch(0.965 0.014 112);
+  --sidebar-foreground: oklch(0.24 0.045 153);
+  --sidebar-primary: oklch(0.34 0.085 153);
+  --sidebar-primary-foreground: oklch(0.99 0.008 108);
+  --sidebar-accent: oklch(0.91 0.09 135);
+  --sidebar-accent-foreground: oklch(0.27 0.07 153);
+  --sidebar-border: oklch(0.89 0.024 126);
+  --sidebar-ring: oklch(0.48 0.11 145);
 }
 
 @layer base {
@@ -120,7 +120,7 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
   }
 
   ::selection {
