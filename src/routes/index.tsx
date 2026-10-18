@@ -12,6 +12,7 @@ import {
   Quote,
   Snowflake,
   Star,
+  Send,
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
@@ -19,6 +20,8 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
 import { customerReviewsQuery } from "@/lib/site";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const fruitImages = {
   strawberry: "/fruitly-products/dehydrated-strawberry-whole.webp",
@@ -175,6 +178,10 @@ function Home() {
     : fallbackHeroPacks;
 
   const [activeSlide, setActiveSlide] = useState(0);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewQuote, setReviewQuote] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   useEffect(() => {
     if (activeSlide >= spotlights.length) setActiveSlide(0);
@@ -188,6 +195,18 @@ function Home() {
     return () => window.clearInterval(timer);
   }, [spotlights.length]);
 
+  const submitCustomerReview = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const name = reviewName.trim();
+    const quote = reviewQuote.trim();
+    if (name.length < 2 || quote.length < 8) { toast.error("Please enter your name and a little more feedback."); return; }
+    setReviewSubmitting(true);
+    const { error } = await supabase.from("customer_reviews").insert({ name, quote, rating: reviewRating, product: null, is_published: false, verified_buyer: false });
+    setReviewSubmitting(false);
+    if (error) { toast.error("Your review could not be submitted right now. Please try again later."); return; }
+    setReviewName(""); setReviewQuote(""); setReviewRating(5);
+    toast.success("Thank you! Your review has been sent for approval.");
+  };
   const currentSlide: SpotlightSlide = spotlights[activeSlide] ?? spotlights[0]!;
   const featured = publicProducts.filter((product) => product.featured).slice(0, 4);
   const shown = featured.length ? featured : publicProducts.slice(0, 4);
@@ -507,7 +526,7 @@ function Home() {
                     </span>
                     <div>
                       <p className="text-sm font-semibold">{review.name}</p>
-                      {review.verified_buyer && <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary"><CheckCircle2 className="h-3 w-3" aria-hidden /> Verified buyer</p>}
+                      {review.verified_buyer && <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary"><CheckCircle2 className="h-3 w-3" aria-hidden /> Verified</p>}
                       {review.product && <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>}
                     </div>
                   </div>
@@ -526,6 +545,21 @@ function Home() {
               </Button>
             </div>
           )}
+          <form onSubmit={submitCustomerReview} className="mx-auto mt-8 max-w-3xl rounded-3xl border border-border/80 bg-card p-5 shadow-soft sm:p-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div><h3 className="font-display text-xl">Leave a review</h3><p className="mt-1 text-sm text-muted-foreground">Your feedback helps us grow.</p></div>
+              <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Your rating</p>
+                <div className="flex gap-1" role="radiogroup" aria-label="Choose a star rating">
+                  {[1, 2, 3, 4, 5].map((rating) => <button key={rating} type="button" role="radio" aria-checked={reviewRating === rating} aria-label={rating + " stars"} onClick={() => setReviewRating(rating)} className="rounded-md p-1 text-clay"><Star className={rating <= reviewRating ? "h-6 w-6 fill-current" : "h-6 w-6 opacity-30"} aria-hidden /></button>)}
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm font-medium">Your name<input required minLength={2} maxLength={100} value={reviewName} onChange={(event) => setReviewName(event.target.value)} placeholder="Enter your name" className="mt-2 h-11 w-full rounded-xl border border-input bg-background px-3 font-normal" /></label>
+              <label className="text-sm font-medium sm:col-span-2">Your feedback<textarea required minLength={8} maxLength={1000} rows={3} value={reviewQuote} onChange={(event) => setReviewQuote(event.target.value)} placeholder="What did you think of Fruitly?" className="mt-2 w-full rounded-xl border border-input bg-background p-3 font-normal" /></label>
+            </div>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs text-muted-foreground">Reviews are checked by our team before they appear on the website.</p><Button type="submit" disabled={reviewSubmitting} className="rounded-full"><Send className="mr-2 h-4 w-4" aria-hidden />{reviewSubmitting ? "Submitting..." : "Submit review"}</Button></div>
+          </form>
         </div>
       </section>
 

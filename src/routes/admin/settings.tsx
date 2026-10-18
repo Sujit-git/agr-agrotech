@@ -171,7 +171,7 @@ function SettingsAdmin() {
         <div>
           <h2 id="customer-feedback-heading" className="font-display text-2xl">Customer feedback</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Add the customer's real words and actual rating. Keep a review unpublished until the customer has approved the wording. Mark Verified buyer only after matching the review to a purchase record. Only published reviews appear on the public homepage.
+            Edit a review, choose its rating, and select which reviews appear on the homepage. The Verified badge is a simple admin-controlled label.
           </p>
         </div>
 
@@ -243,8 +243,8 @@ function SettingsAdmin() {
                     onCheckedChange={(checked) => updateReviewDraft(review.id, "verified_buyer", checked === true)}
                   />
                   <div>
-                    <Label htmlFor={`review-verified-${review.id}`}>Verified buyer</Label>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">Check only after confirming the customer's purchase.</p>
+                    <Label htmlFor={`review-verified-${review.id}`}>Verified badge</Label>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">Show the Verified badge on this review.</p>
                   </div>
                 </div>
 

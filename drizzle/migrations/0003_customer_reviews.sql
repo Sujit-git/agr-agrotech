@@ -26,6 +26,16 @@ CREATE POLICY "Published customer reviews are publicly readable"
     AND rating BETWEEN 1 AND 5
   );
 
+CREATE POLICY "Customers can submit reviews for approval"
+  ON public.customer_reviews
+  FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    char_length(btrim(name)) BETWEEN 2 AND 100
+    AND char_length(btrim(quote)) BETWEEN 8 AND 1000
+    AND rating BETWEEN 1 AND 5
+    AND is_published = false
+    AND verified_buyer = false
+  );
 CREATE POLICY "Admins manage customer reviews"
   ON public.customer_reviews
   FOR ALL TO authenticated
