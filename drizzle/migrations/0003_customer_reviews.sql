@@ -12,7 +12,7 @@ CREATE TABLE public.customer_reviews (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-GRANT SELECT ON public.customer_reviews TO anon, authenticated;
+GRANT SELECT, INSERT ON public.customer_reviews TO anon, authenticated;
 GRANT INSERT, UPDATE, DELETE ON public.customer_reviews TO authenticated;
 GRANT ALL ON public.customer_reviews TO service_role;
 ALTER TABLE public.customer_reviews ENABLE ROW LEVEL SECURITY;
