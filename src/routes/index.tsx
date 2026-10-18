@@ -294,7 +294,7 @@ function Home() {
                 loading="lazy"
                 width={1008}
                 height={1008}
-                className="relative aspect-square w-full rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+                className="relative mx-auto aspect-square w-full max-w-[400px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
               />
               <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                 {currentSlide.category}

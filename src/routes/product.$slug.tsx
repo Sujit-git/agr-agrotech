@@ -118,7 +118,7 @@ function ProductDetails() {
                 alt={product.name}
                 width={1008}
                 height={1008}
-                className="aspect-square w-full rounded-3xl bg-[#f8f4e9] object-contain"
+                className="mx-auto aspect-square w-full max-w-[400px] rounded-3xl bg-[#f8f4e9] object-contain"
               />
             ) : (
               <div className="flex aspect-square w-full items-center justify-center text-muted-foreground">
