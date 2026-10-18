@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpRight,
   Clock3,
-  Mail,
   MapPin,
   MessageCircle,
   MessageSquareText,
@@ -300,18 +299,7 @@ function Contact() {
                 </span>
               </a>
             )}
-            {s.email && (
-              <a
-                href={`mailto:${s.email}`}
-                className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-accent/70 hover:shadow-soft"
-              >
-                <Mail className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-                <span className="min-w-0">
-                  <span className="block text-xs text-muted-foreground">Email</span>
-                  <span className="block break-all text-sm font-semibold">{s.email}</span>
-                </span>
-              </a>
-            )}
+
           </div>
         </div>
 
