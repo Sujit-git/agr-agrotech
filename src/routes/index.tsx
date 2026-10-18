@@ -267,6 +267,15 @@ function Home() {
                     fetchPriority={index === 1 ? "high" : undefined}
                     loading={index === 1 ? "eager" : "lazy"}
                     decoding="async"
+                    onError={(event) => {
+                      const image = event.currentTarget;
+                      if (image.dataset.fallbackApplied === "true") {
+                        image.style.visibility = "hidden";
+                        return;
+                      }
+                      image.dataset.fallbackApplied = "true";
+                      image.src = fallbackHeroPacks[index]?.image ?? fruitImages.mango;
+                    }}
                   />
                 );
                 return pack.slug ? (
