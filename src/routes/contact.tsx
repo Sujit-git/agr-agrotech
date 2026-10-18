@@ -172,9 +172,9 @@ function Contact() {
                     <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent/60 text-primary">
                       <MessageSquareText className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="mt-5 text-2xl">Your email draft is ready.</h3>
+                    <h3 className="mt-5 text-2xl">Continue in your email app.</h3>
                     <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
-                      Your device should open your email app with the message addressed to Fruitly. Please press Send in that app to deliver it. If no email app opens, email us directly at{" "}
+                      Your device should open your email app with the message addressed to Fruitly. Check the From account and press Send to deliver it. If no email app opens, email us directly at{" "}
                       <a href={"mailto:" + s.email} className="font-semibold text-primary underline underline-offset-2">{s.email}</a>.
                     </p>
                     <Button variant="outline" className="mt-6 rounded-full" onClick={() => setSent(false)}>
@@ -255,7 +255,7 @@ function Contact() {
                       </p>
                     )}
                     <p className="text-xs leading-5 text-muted-foreground">
-                      This opens your email app so you can send from your own account. Use an email address configured in that app; the browser cannot force its From address. Press Send in the app to deliver the message. No email-service DNS setup is required.
+                      Your email app controls the From address. To send from the email address entered above, make sure that account is selected in your email app. Press Send there to deliver the message. No email-service DNS setup is required.
                     </p>
                     <p className="text-xs leading-5 text-muted-foreground">
                       Please don't include payment card details or sensitive personal information in your message.
