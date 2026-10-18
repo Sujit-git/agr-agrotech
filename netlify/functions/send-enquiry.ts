@@ -65,7 +65,7 @@ export default async (request, _context) => {
       return json(502, { error: "Could not read the enquiry destination from website settings." });
     }
     const settings = await settingsResponse.json();
-    recipient = settings[0]?.email?.trim() ?? "";
+    recipient = settings[0]?.email?.trim() || process.env.CONTACT_EMAIL?.trim() || "";
   } catch {
     return json(502, { error: "Could not read the enquiry destination from website settings." });
   }
