@@ -20,7 +20,7 @@ export function Footer() {
           <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
             Pure. Fresh. Natural.
           </p>
-          <p className="mt-5 text-xs text-muted-foreground">A consumer fruit brand by AGR Agrotech Pvt. Ltd.</p>
+          <p className="mt-5 text-xs font-bold text-muted-foreground">A consumer fruit brand by AGR Agrotech Pvt. Ltd.</p>
           {(s.instagram || s.facebook) && (
             <div className="mt-5 flex gap-3">
               {s.instagram && (
