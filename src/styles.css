@@ -539,3 +539,67 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* Transparent high-resolution fruit still life for the homepage hero. */
+.fruitly-hero-visual {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: clamp(300px, 38vw, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fruitly-hero-visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 590px;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 24px rgb(46 67 35 / 0.12));
+}
+.fruitly-hero-visual-tag {
+  position: absolute;
+  top: 8%;
+  right: 3%;
+  z-index: 2;
+  border: 1px solid rgb(79 111 56 / 0.12);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: rgb(255 253 247 / 0.9);
+  color: hsl(var(--primary));
+  font-size: 0.7rem;
+  font-weight: 650;
+  box-shadow: 0 8px 24px rgb(47 62 37 / 0.08);
+  backdrop-filter: blur(12px);
+}
+.fruitly-hero-visual-caption {
+  position: absolute;
+  left: 3%;
+  bottom: 3%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: calc(100% - 2rem);
+  border: 1px solid rgb(79 111 56 / 0.1);
+  border-radius: 1.25rem;
+  padding: 0.8rem 1rem;
+  background: rgb(255 253 247 / 0.94);
+  color: hsl(var(--primary));
+  box-shadow: 0 12px 32px rgb(47 62 37 / 0.1);
+  backdrop-filter: blur(12px);
+}
+.fruitly-hero-visual-caption strong,
+.fruitly-hero-visual-caption small { display: block; }
+.fruitly-hero-visual-caption strong { font-family: var(--font-display); font-size: 1rem; font-weight: 650; }
+.fruitly-hero-visual-caption small { margin-top: 0.15rem; color: hsl(var(--muted-foreground)); font-size: 0.72rem; }
+@media (max-width: 767px) {
+  .fruitly-hero-visual { min-height: 250px; margin-top: -0.5rem; }
+  .fruitly-hero-visual > img { max-height: 370px; }
+  .fruitly-hero-visual-tag { top: 2%; right: 0; padding: 0.55rem 0.75rem; font-size: 0.62rem; }
+  .fruitly-hero-visual-caption { left: 0; bottom: 0; padding: 0.65rem 0.8rem; }
+  .fruitly-hero-visual-caption strong { font-size: 0.88rem; }
+  .fruitly-hero-visual-caption small { font-size: 0.66rem; }
+}
