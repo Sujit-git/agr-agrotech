@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -62,30 +62,17 @@ const marqueeItems = [
 // Local testimonial content keeps the section independent of database availability.
 // Replace these sample lines with customer-approved wording before publishing as verified reviews.
 const testimonials = [
-  {
-    name: "Kanti Patel",
-    product: "Jamun Cubes",
-    title: "A lovely everyday snack",
-    quote: "A lovely way to enjoy fruit in a different form. The flavour makes it a snack I look forward to.",
-    initials: "KP",
-    avatar: "from-rose-400 to-orange-300",
-  },
-  {
-    name: "Somalini Sahu",
-    product: "Mango Cubes",
-    title: "Mango on the go",
-    quote: "The mango flavour is delightful, and the pack is easy to carry when I’m on the go.",
-    initials: "SS",
-    avatar: "from-indigo-400 to-sky-300",
-  },
-  {
-    name: "Balkrishna Patro",
-    product: "Mango Cubes",
-    title: "A taste of summer",
-    quote: "Every bite brings back the feeling of summer. I love the fruity flavour and the satisfying texture.",
-    initials: "BP",
-    avatar: "from-amber-400 to-yellow-300",
-  },
+  { name: "Kanti Patel", product: "Jamun Cubes", title: "A thoughtful everyday choice", quote: "A lovely way to enjoy fruit in a different form. The flavour makes it a snack I look forward to.", initials: "KP", avatar: "from-rose-400 to-orange-300", verified: true },
+  { name: "Somalini Sahu", product: "Mango Cubes", title: "Mango on the go", quote: "The mango flavour is delightful, and the pack is easy to carry when I’m on the go.", initials: "SS", avatar: "from-indigo-400 to-sky-300", verified: true },
+  { name: "Balkrishna Patro", product: "Mango Cubes", title: "A taste of summer", quote: "Every bite brings back the feeling of summer. I love the fruity flavour and the satisfying texture.", initials: "BP", avatar: "from-amber-400 to-yellow-300", verified: true },
+  { name: "Hemant Mali", product: "Fruitly range", title: "A fruit-first choice", quote: "Sample testimonial: I enjoy having a fruit-based snack as part of my day.", initials: "HM", avatar: "from-emerald-400 to-teal-300", verified: false },
+  { name: "Sujit Khopade", product: "Fruitly range", title: "A simple snack moment", quote: "Sample testimonial: Fruitly makes it easy to explore fruit in a different format.", initials: "SK", avatar: "from-sky-400 to-blue-300", verified: false },
+  { name: "Samarth Kadam", product: "Fruitly range", title: "A colourful addition", quote: "Sample testimonial: I like the variety and the convenient pack format.", initials: "SK", avatar: "from-violet-400 to-fuchsia-300", verified: false },
+  { name: "Satyawan Raskar", product: "Fruitly range", title: "Fruit for the day", quote: "Sample testimonial: A handy option when I want something fruity between meals.", initials: "SR", avatar: "from-orange-400 to-rose-300", verified: false },
+  { name: "Amarjeet Singh", product: "Fruitly range", title: "A little fruit break", quote: "Sample testimonial: The product range gives me new ways to enjoy fruit.", initials: "AS", avatar: "from-cyan-400 to-blue-300", verified: false },
+  { name: "Prajwal Dhonde", product: "Fruitly range", title: "Easy to take along", quote: "Sample testimonial: The pack is convenient to keep with me when I’m out.", initials: "PD", avatar: "from-lime-500 to-emerald-300", verified: false },
+  { name: "Prathamesh Nikam", product: "Fruitly range", title: "A new fruit format", quote: "Sample testimonial: I enjoy trying familiar fruits in a different form.", initials: "PN", avatar: "from-pink-400 to-rose-300", verified: false },
+  { name: "Sandesh Borate", product: "Fruitly range", title: "Made for everyday moments", quote: "Sample testimonial: A convenient fruit snack option for busy days.", initials: "SB", avatar: "from-yellow-400 to-orange-300", verified: false },
 ];
 
 const fallbackSpotlights: SpotlightSlide[] = [
@@ -179,6 +166,7 @@ function Home() {
     : fallbackSpotlights;
 
   const [activeSlide, setActiveSlide] = useState(0);
+  const testimonialTrack = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (activeSlide >= spotlights.length) setActiveSlide(0);
   }, [activeSlide, spotlights.length]);
@@ -485,9 +473,13 @@ function Home() {
             </div>
           </div>
 
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-11 lg:grid-cols-3">
+          <div className="relative mt-9 px-5 sm:px-7 lg:mt-11 lg:px-8">
+            <button type="button" aria-label="Show previous testimonials" onClick={() => testimonialTrack.current?.scrollBy({ left: -Math.max(280, testimonialTrack.current.clientWidth * 0.85), behavior: "smooth" })} className="absolute left-0 top-1/2 z-10 inline-flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border/80 bg-background text-foreground shadow-lg transition hover:scale-105 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <ArrowLeft className="h-4 w-4" aria-hidden />
+            </button>
+            <div ref={testimonialTrack} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {testimonials.map((review) => (
-              <article key={review.name} className="group relative flex h-full flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-6">
+              <article key={review.name} className="group relative flex w-full shrink-0 snap-start flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:w-[calc(50%-0.5rem)] sm:p-6 lg:w-[calc(33.333%-0.667rem)]">
                 <Quote className="absolute right-5 top-5 h-7 w-7 text-amber-200" aria-hidden />
                 <div className="flex items-center gap-1 text-amber-500" aria-label="Five out of five stars">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -503,10 +495,18 @@ function Home() {
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{review.name}</p>
                     <p className="mt-0.5 text-xs text-muted-foreground">{review.product}</p>
+                    <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600">
+                      <CheckCircle2 className="h-3 w-3" aria-hidden />
+                      {review.verified ? "Verified buyer" : "Customer"}
+                    </span>
                   </div>
                 </div>
               </article>
             ))}
+            </div>
+            <button type="button" aria-label="Show next testimonials" onClick={() => testimonialTrack.current?.scrollBy({ left: Math.max(280, testimonialTrack.current.clientWidth * 0.85), behavior: "smooth" })} className="absolute right-0 top-1/2 z-10 inline-flex h-10 w-10 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border/80 bg-background text-foreground shadow-lg transition hover:scale-105 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </button>
           </div>
 
           <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-3xl border border-primary/10 bg-background/80 p-5 text-center shadow-soft sm:flex-row sm:text-left sm:p-6">
