@@ -58,7 +58,9 @@ export function isLegacySeedProduct(slug: string): boolean {
 }
 
 export function productImage(product: Pick<Product, "slug" | "image_url">): string | null {
-  return product.image_url || seedImages[product.slug] || null;
+  // Prefer the approved local Fruitly launch artwork over stale image URLs in the live catalogue.
+  // Admin-managed URLs remain available for products without a bundled launch asset.
+  return seedImages[product.slug] || product.image_url || null;
 }
 
 export const availabilityLabels: Record<Availability, string> = {
