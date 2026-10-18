@@ -4,11 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * FRUITLY brand theme.
- * Forest green, fresh leaf green, clean whites, and subtle natural accents.
- */
-
 @theme inline {
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -51,51 +46,52 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.03 70 / 0.04), 0 12px 32px oklch(0.3 0.03 70 / 0.07);
-  --shadow-lift: 0 2px 6px oklch(0.3 0.03 70 / 0.06), 0 24px 48px oklch(0.3 0.03 70 / 0.12);
+  --shadow-soft: 0 2px 8px oklch(0.28 0.06 335 / 0.04), 0 16px 38px oklch(0.28 0.06 335 / 0.08);
+  --shadow-lift: 0 4px 10px oklch(0.28 0.06 335 / 0.06), 0 26px 58px oklch(0.28 0.06 335 / 0.14);
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 1rem;
 
-  --background: oklch(0.99 0.008 108);
-  --foreground: oklch(0.24 0.045 153);
+  /* Fruitly: ripe plum, warm cream and soft orchard-coral accents. */
+  --background: oklch(0.985 0.014 70);
+  --foreground: oklch(0.24 0.045 335);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.045 153);
+  --card-foreground: oklch(0.24 0.045 335);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.045 153);
+  --popover-foreground: oklch(0.24 0.045 335);
 
-  --primary: oklch(0.34 0.085 153);
-  --primary-foreground: oklch(0.99 0.008 108);
+  --primary: oklch(0.34 0.105 335);
+  --primary-foreground: oklch(0.985 0.014 70);
 
-  --secondary: oklch(0.96 0.018 112);
-  --secondary-foreground: oklch(0.28 0.06 153);
+  --secondary: oklch(0.96 0.026 66);
+  --secondary-foreground: oklch(0.28 0.055 335);
 
-  --muted: oklch(0.955 0.014 112);
-  --muted-foreground: oklch(0.48 0.025 145);
+  --muted: oklch(0.955 0.022 65);
+  --muted-foreground: oklch(0.48 0.035 330);
 
-  --accent: oklch(0.91 0.09 135);
-  --accent-foreground: oklch(0.27 0.07 153);
+  --accent: oklch(0.91 0.085 38);
+  --accent-foreground: oklch(0.29 0.07 335);
 
-  --clay: oklch(0.63 0.13 38);
-  --clay-foreground: oklch(0.99 0.008 108);
+  --clay: oklch(0.66 0.17 42);
+  --clay-foreground: oklch(0.22 0.05 335);
 
   --destructive: oklch(0.55 0.19 27);
   --destructive-foreground: oklch(0.98 0.01 95);
 
-  --border: oklch(0.89 0.024 126);
-  --input: oklch(0.89 0.024 126);
-  --ring: oklch(0.48 0.11 145);
+  --border: oklch(0.89 0.026 65);
+  --input: oklch(0.89 0.026 65);
+  --ring: oklch(0.53 0.12 335);
 
-  --sidebar: oklch(0.965 0.014 112);
-  --sidebar-foreground: oklch(0.24 0.045 153);
-  --sidebar-primary: oklch(0.34 0.085 153);
-  --sidebar-primary-foreground: oklch(0.99 0.008 108);
-  --sidebar-accent: oklch(0.91 0.09 135);
-  --sidebar-accent-foreground: oklch(0.27 0.07 153);
-  --sidebar-border: oklch(0.89 0.024 126);
-  --sidebar-ring: oklch(0.48 0.11 145);
+  --sidebar: oklch(0.965 0.018 65);
+  --sidebar-foreground: oklch(0.24 0.045 335);
+  --sidebar-primary: oklch(0.34 0.105 335);
+  --sidebar-primary-foreground: oklch(0.985 0.014 70);
+  --sidebar-accent: oklch(0.91 0.085 38);
+  --sidebar-accent-foreground: oklch(0.29 0.07 335);
+  --sidebar-border: oklch(0.89 0.026 65);
+  --sidebar-ring: oklch(0.53 0.12 335);
 }
 
 @layer base {
@@ -105,6 +101,7 @@
 
   html {
     scroll-behavior: smooth;
+    background: var(--color-background);
   }
 
   body {
@@ -112,6 +109,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -120,7 +118,20 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: 0;
+    letter-spacing: -0.025em;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -132,20 +143,65 @@
 @utility container-page {
   width: 100%;
   margin-inline: auto;
-  max-width: 80rem;
+  max-width: 84rem;
   padding-inline: 1.25rem;
 }
 
 @utility eyebrow {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  line-height: 1.5;
   text-transform: uppercase;
-  color: var(--color-muted-foreground);
+  color: var(--color-primary);
 }
 
 @utility rise-in {
-  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fruitly-wordmark-clip {
+  display: block;
+  width: 150px;
+  height: 60px;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.fruitly-wordmark-clip.is-compact {
+  width: 108px;
+  height: 43px;
+}
+
+.fruitly-wordmark-image {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
+.fruitly-hero-surface {
+  background:
+    radial-gradient(ellipse at 82% 14%, oklch(0.92 0.09 38 / 0.58), transparent 34%),
+    radial-gradient(ellipse at 8% 78%, oklch(0.94 0.055 68 / 0.85), transparent 36%),
+    linear-gradient(135deg, oklch(0.99 0.012 70), oklch(0.965 0.032 50));
+}
+
+.fruitly-hero-photo {
+  box-shadow: 0 22px 64px oklch(0.35 0.10 335 / 0.18);
+}
+
+.fruitly-product-card {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.fruitly-product-card:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.77 0.075 35);
 }
 
 @keyframes rise-in {
@@ -159,6 +215,17 @@
   }
 }
 
+@media (max-width: 639px) {
+  .container-page {
+    padding-inline: 1rem;
+  }
+
+  .fruitly-wordmark-clip {
+    width: 122px;
+    height: 49px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -169,5 +236,6 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -14,9 +14,9 @@ export type SiteSettings = {
 
 /** Single source of truth used before the database settings load. */
 export const fallbackSettings: SiteSettings = {
-  brand_name: "FRUITLY",
+  brand_name: "Fruitly",
   business_description:
-    "FRUITLY brings together natural dehydrated fruits and freeze-dried fruits. Goodness in Every Bite.",
+    "Fruitly brings together a fruit-first range of dehydrated and freeze-dried fruits. Pure. Fresh. Natural.",
   email: "agragrotech@gmail.com",
   phone: "7758055691 / 9423861690",
   whatsapp: "917758055691",

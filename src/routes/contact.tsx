@@ -15,16 +15,16 @@ import { settingsQuery, fallbackSettings, phoneNumbers, telLink, whatsappLink } 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact FRUITLY | Goodness in Every Bite" },
+      { title: "Contact Fruitly | Pure. Fresh. Natural." },
       {
         name: "description",
         content:
-          "Get in touch with FRUITLY about dehydrated fruits, freeze-dried fruits and product enquiries.",
+          "Get in touch with Fruitly about dehydrated fruits, freeze-dried fruits and product enquiries.",
       },
-      { property: "og:title", content: "Contact FRUITLY | Goodness in Every Bite" },
+      { property: "og:title", content: "Contact Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",
-        content: "Phone, WhatsApp and enquiry form for FRUITLY.",
+        content: "Phone, WhatsApp and enquiry form for Fruitly.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,13 +72,13 @@ function Contact() {
     }
     setSent(true);
     setForm({ name: "", email: "", phone: "", message: "" });
-    toast.success("Thanks! Your message has reached FRUITLY.");
+    toast.success("Thanks! Your message has reached Fruitly.");
   };
 
   return (
     <SiteLayout>
-      <section className="border-b border-border bg-secondary/40">
-        <div className="container-page py-12 md:py-16">
+      <section className="fruitly-hero-surface border-b border-border/70">
+        <div className="container-page py-14 md:py-20">
           <p className="eyebrow">Contact</p>
           <h1 className="mt-3 font-display text-4xl sm:text-5xl">We&apos;d love to hear from you</h1>
           <p className="mt-4 max-w-xl text-muted-foreground">
@@ -89,7 +89,7 @@ function Contact() {
       </section>
 
       <div className="container-page grid gap-10 py-12 lg:grid-cols-[1.2fr_1fr] md:py-16">
-        <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
+        <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft sm:p-8 md:p-10">
           {sent ? (
             <div className="py-10 text-center">
               <h2 className="font-display text-2xl">Message sent</h2>
@@ -181,7 +181,7 @@ function Contact() {
           ))}
           {s.whatsapp && (
             <a
-              href={whatsappLink(s.whatsapp, "Hi FRUITLY, I'd like to know more about your fruits.")}
+              href={whatsappLink(s.whatsapp, "Hi Fruitly, I'd like to know more about your fruits.")}
               target="_blank"
               rel="noreferrer"
               className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:bg-accent/40"

@@ -13,15 +13,15 @@ export const Route = createFileRoute("/products/$category")({
       .join(" ");
     return {
       meta: [
-        { title: `${label} | FRUITLY` },
+        { title: `${label} | Fruitly` },
         {
           name: "description",
-          content: `Explore FRUITLY ${label.toLowerCase()}, with pack sizes and current availability.`,
+          content: `Explore Fruitly ${label.toLowerCase()}, with pack sizes and current availability.`,
         },
-        { property: "og:title", content: `${label} | FRUITLY` },
+        { property: "og:title", content: `${label} | Fruitly` },
         {
           property: "og:description",
-          content: `Explore FRUITLY ${label.toLowerCase()} fruit. Goodness in Every Bite.`,
+          content: `Explore Fruitly ${label.toLowerCase()} fruit. Pure. Fresh. Natural.`,
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -57,8 +57,8 @@ function CategoryPage() {
 
   return (
     <SiteLayout>
-      <section className="border-b border-border bg-secondary/40">
-        <div className="container-page py-12 md:py-16">
+      <section className="fruitly-hero-surface border-b border-border/70">
+        <div className="container-page py-14 md:py-20">
           <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
             <Link to="/products" className="hover:text-foreground">
               Products
@@ -73,7 +73,7 @@ function CategoryPage() {
         </div>
       </section>
 
-      <div className="container-page py-10 md:py-14">
+      <div className="container-page py-12 md:py-16">
         <ProductBrowser categorySlug={slug} />
       </div>
     </SiteLayout>

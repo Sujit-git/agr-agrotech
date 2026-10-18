@@ -79,17 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FRUITLY | Goodness in Every Bite" },
+      { title: "Fruitly | Pure. Fresh. Natural." },
       {
         name: "description",
         content:
-          "Discover FRUITLY's natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
+          "Discover Fruitly's natural dehydrated and freeze-dried fruits. Pure. Fresh. Natural.",
       },
-      { name: "author", content: "FRUITLY" },
-      { property: "og:title", content: "FRUITLY | Goodness in Every Bite" },
+      { name: "author", content: "Fruitly" },
+      { property: "og:title", content: "Fruitly | Pure. Fresh. Natural." },
       {
         property: "og:description",
-        content: "Natural dehydrated and freeze-dried fruits. Goodness in Every Bite.",
+        content: "Dehydrated and freeze-dried fruit, presented with a fruit-first point of view. Pure. Fresh. Natural.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
