@@ -31,20 +31,6 @@ const fruitImages = {
   papaya: "/fruitly-products/dehydrated-papaya-cubes.webp",
 };
 
-type HeroPack = {
-  key: string;
-  title: string;
-  image: string;
-  slug: string | null;
-};
-
-const fallbackHeroPacks: HeroPack[] = [
-  { key: "strawberry", title: "Dehydrated Strawberry Whole", image: fruitImages.strawberry, slug: null },
-  { key: "lemon", title: "Dehydrated Lemon Slices", image: fruitImages.lemon, slug: null },
-  { key: "mango", title: "Dehydrated Mango Cubes", image: fruitImages.mango, slug: null },
-  { key: "jamun", title: "Dehydrated Jamun Cubes", image: fruitImages.jamun, slug: null },
-];
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -168,15 +154,6 @@ function Home() {
       }))
     : fallbackSpotlights;
 
-  const heroPacks: HeroPack[] = fruitProducts.length
-    ? fruitProducts.slice(0, 4).map((product) => ({
-        key: product.id,
-        title: product.name,
-        image: productImage(product) ?? fruitImages.mango,
-        slug: product.slug,
-      }))
-    : fallbackHeroPacks;
-
   const [activeSlide, setActiveSlide] = useState(0);
   const [reviewName, setReviewName] = useState("");
   const [reviewQuote, setReviewQuote] = useState("");
@@ -250,57 +227,18 @@ function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[640px] md:max-w-none">
-            <div className="fruitly-pack-stage">
-              <span className="fruitly-pack-stage-kicker">A fruit-forward collection</span>
-              <span className="fruitly-pack-stage-tag">Pure. Fresh. Natural.</span>
-              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--one" aria-hidden />
-              <span className="fruitly-pack-stage-orbit fruitly-pack-stage-orbit--two" aria-hidden />
-              {heroPacks.map((pack, index) => {
-                const className = `fruitly-pack-card fruitly-pack-card--${index + 1}`;
-                const image = (
-                  <img
-                    src={pack.image}
-                    alt={pack.title}
-                    width={840}
-                    height={1160}
-                    fetchPriority={index === 1 ? "high" : undefined}
-                    loading={index === 1 ? "eager" : "lazy"}
-                    decoding="async"
-                    onError={(event) => {
-                      const image = event.currentTarget;
-                      if (image.dataset.fallbackApplied === "true") {
-                        image.style.visibility = "hidden";
-                        return;
-                      }
-                      image.dataset.fallbackApplied = "true";
-                      image.src = fallbackHeroPacks[index]?.image ?? fruitImages.mango;
-                    }}
-                  />
-                );
-                return pack.slug ? (
-                  <Link
-                    key={pack.key}
-                    to="/product/$slug"
-                    params={{ slug: pack.slug }}
-                    className={className}
-                    aria-label={`Explore ${pack.title}`}
-                  >
-                    {image}
-                  </Link>
-                ) : (
-                  <Link key={pack.key} to="/products" className={className} aria-label={`Explore ${pack.title}`}>
-                    {image}
-                  </Link>
-                );
-              })}
-              <div className="fruitly-pack-stage-caption">
-                <span className="fruitly-pack-stage-caption-mark" aria-hidden>✳</span>
-                <span>
-                  <strong>Meet your next favourite.</strong>
-                  <small>Five fruit picks. One Fruitly world.</small>
-                </span>
-              </div>
+          <div className="relative mx-auto flex w-full max-w-[760px] items-center justify-center md:max-w-none">
+            <div className="w-full overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf] p-3 sm:p-5 md:p-2">
+              <img
+                src="/fruitly-products/fruitly-hero-collection.png"
+                alt="Fresh mango, jamun, lemon, strawberry and papaya alongside their dehydrated fruit pieces"
+                width={1640}
+                height={850}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="block h-auto w-full object-contain"
+              />
             </div>
           </div>
         </div>
