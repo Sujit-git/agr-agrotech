@@ -66,6 +66,12 @@ export const customerReviewsQuery = {
   },
 };
 
+export function buildProductUrl(siteUrl: string | null | undefined, slug: string): string {
+  const fallbackOrigin = typeof window !== "undefined" ? window.location.origin : "https://fruitly.co.in";
+  const base = (siteUrl?.trim() || fallbackOrigin).replace(/\/+$/, "");
+  return `${base}/product/${encodeURIComponent(slug)}`;
+}
+
 export function whatsappLink(number: string | null | undefined, message: string): string {
   const digits = (number || fallbackSettings.whatsapp || "").replace(/\D/g, "");
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
