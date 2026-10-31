@@ -36,22 +36,22 @@ const approach = [
     icon: Apple,
     title: "Fruit at the centre",
     text: "We build the range around fruit, its familiar flavours and the different textures each format offers.",
-    image: mangoImage,
-    imageAlt: "Fruitly product pouch",
+    image: "/our-story/fruit-at-the-centre.webp",
+    imageAlt: "Fruitly fruit selected for the Fruitly approach",
   },
   {
     icon: Handshake,
     title: "Partner-led processing",
     text: "We work with manufacturing partners for product processing, while keeping the Fruitly range and brand experience in focus.",
-    image: strawberryImage,
-    imageAlt: "Fruitly product pouch",
+    image: "/our-story/partner-led-processing.webp",
+    imageAlt: "Fruitly partner-led fruit processing",
   },
   {
     icon: PackageCheck,
     title: "Clear product details",
     text: "Product-specific ingredients, pack information and availability belong with each product, so customers can explore with confidence.",
-    image: papayaImage,
-    imageAlt: "Fruitly product pouch",
+    image: "/our-story/clear-product-details.webp",
+    imageAlt: "Fresh mango selected for a Fruitly product",
   },
 ];
 
@@ -167,15 +167,15 @@ function About() {
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {approach.map((item, index) => (
               <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-5 shadow-soft sm:p-6">
-                <div className="mb-5 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
+                <div className="mb-5 flex aspect-[11/10] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
                   <img
-                    src={storyImage(index, item.image)}
-                    alt={storyAlt(index, item.imageAlt)}
-                    width={1024}
-                    height={1536}
+                    src={item.image}
+                    alt={item.imageAlt}
+                    width={420}
+                    height={381}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-contain p-2"
+                    className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="flex items-center justify-between">
