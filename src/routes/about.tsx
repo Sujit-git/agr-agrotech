@@ -77,7 +77,7 @@ function About() {
             <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-primary">Pure. Fresh. Natural.</p>
           </div>
 
-          <div className="w-full">
+          <div className="mx-auto w-full max-w-[560px] rounded-[2rem] bg-[#f8f4e9] p-3 shadow-lift sm:p-4 md:max-w-none">
             <img
               src={heroStoryImage}
               alt="Fresh fruit basket held in hands, representing Fruitly's fruit-first approach"
@@ -86,7 +86,7 @@ function About() {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="block h-auto w-full rounded-[2rem] bg-[#f8f4e9] object-contain shadow-lift"
+              className="mx-auto block h-auto max-h-[320px] w-full rounded-[1.4rem] object-contain md:max-h-none"
             />
           </div>
         </div>
