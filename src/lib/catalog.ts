@@ -70,8 +70,7 @@ export function isLegacySeedProduct(slug: string): boolean {
 }
 
 export function productImage(product: Pick<Product, "slug" | "image_url">): string | null {
-  // Prefer the approved local Fruitly launch artwork over stale image URLs in the live catalogue.
-  // Admin-managed URLs remain available for products without a bundled launch asset.
+  // Prefer the latest Admin-uploaded artwork, then use the bundled launch image as a fallback.
   return product.image_url || seedImages[product.slug] || null;
 }
 
@@ -107,6 +106,9 @@ export const productTagsQuery = {
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true });
+    // Keep the public catalogue usable on a deployment before the additive
+    // product-tags migration has been applied to its Supabase database.
+    if (error?.code === "42P01") return [];
     if (error) throw error;
     return (data ?? []) as ProductTag[];
   },
@@ -117,7 +119,7 @@ export const categoriesQuery = {
   queryFn: async (): Promise<Category[]> => {
     const { data, error } = await supabase
       .from("categories")
-      .select("id,name,slug,description,image_url,sort_order,featured")
+      .select("*")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return (data ?? []) as Category[];
