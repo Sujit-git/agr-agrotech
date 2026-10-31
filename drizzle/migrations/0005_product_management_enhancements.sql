@@ -29,6 +29,11 @@ CREATE TABLE IF NOT EXISTS public.product_tags (
 CREATE INDEX IF NOT EXISTS product_tags_active_order_idx
   ON public.product_tags (is_active, sort_order, name);
 
+DROP TRIGGER IF EXISTS product_tags_updated_at ON public.product_tags;
+CREATE TRIGGER product_tags_updated_at
+  BEFORE UPDATE ON public.product_tags
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
 INSERT INTO public.product_tags (name, slug, is_preset, is_active, sort_order)
 VALUES
   ('New Arrival', 'new-arrival', true, true, 1),
