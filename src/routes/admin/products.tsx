@@ -307,6 +307,9 @@ function ProductsAdmin() {
                 <p className="text-sm text-muted-foreground">
                   {category?.name ?? "No category"} &middot;{" "}
                   {formatPrice(product.price, product.currency)}
+                  {product.original_price != null && product.price != null && product.original_price > product.price
+                    ? ` (was ${formatPrice(product.original_price, product.currency)})`
+                    : ""}
                   {product.unit ? ` / ${product.unit}` : ""} &middot;{" "}
                   {availabilityLabels[product.availability as keyof typeof availabilityLabels] ??
                     product.availability}
