@@ -11,3 +11,9 @@
 
 [functions]
   directory = "netlify/functions"
+
+# Keep the shared contact form endpoint working on Netlify as well as Vercel.
+[[redirects]]
+  from = "/api/send-enquiry"
+  to = "/.netlify/functions/send-enquiry"
+  status = 200
