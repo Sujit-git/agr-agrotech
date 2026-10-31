@@ -112,7 +112,7 @@ tables and routes without rebuilding the catalog.
 
 ## Product merchandising (admin)
 
-Admin → Products supports product images at exactly 1024 × 1536 px, selling price, optional original price, spotlight inclusion and reusable product tags. Original price is shown with a strike-through and discount percentage only when it is greater than the selling price. Equal prices display as a normal price with no discount badge.
+Admin → Products supports product images at exactly 1024 × 1536 px, selling price, optional original price, spotlight inclusion and reusable product tags. Validated uploads are re-encoded to high-quality WebP for smaller page transfers while preserving the portrait master dimensions. Original price is shown with a strike-through and discount percentage only when it is greater than the selling price. Equal prices display as a normal price with no discount badge.
 
 The product tag presets are: New Arrival, Best Seller, Highly Ordered, Customer Favourite, Trending and Limited Edition. Admins can also create, rename and delete custom tags, then assign multiple tags to a product. Empty tag assignments do not render a badge.
 
