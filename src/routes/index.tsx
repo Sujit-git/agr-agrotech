@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -9,7 +9,9 @@ import {
   CheckCircle2,
   Leaf,
   PackageCheck,
+  Quote,
   Snowflake,
+  Star,
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
@@ -51,6 +53,19 @@ const marqueeItems = [
   "Explore every ingredient",
   "Fruit for the moments in between",
 ];
+
+// Customer-provided testimonial copy is kept locally; entries without approved feedback remain pending.
+const testimonials = [
+  { name: "Sujit Khopade", initials: "SK", avatar: "from-sky-400 to-blue-300", product: "Freeze-dried Mangoes", quote: "Fruitly's freeze-dried mangoes are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
+  { name: "Hemant Mali", initials: "HM", avatar: "from-emerald-400 to-teal-300", product: "Fruitly fruit snack", quote: "I never knew that eating this healthy snack can make my sugar control so soon. It’s a bless.", rating: null, verified: false },
+  { name: "Sachin Ghanwat", initials: "SG", avatar: "from-amber-400 to-yellow-300", product: "Fruitly fruit snack", quote: "It’s not baked or fried, totally healthy and the taste is amazing. I can’t stop my hand, I just eat, eat, eat…", rating: null, verified: false },
+  { name: "Satyawan Raskar", initials: "SR", avatar: "from-orange-400 to-rose-300", product: "Fruitly fruit snacks", quote: "Such an incredible alternative to junk food! It satisfies my evening cravings completely without any guilt. Absolutely love the natural crunch.", rating: null, verified: false },
+  { name: "Amarjeet Singh", initials: "AS", avatar: "from-cyan-400 to-blue-300", product: "Fruitly fruit snacks", quote: "Finally - I got something that is healthy and delicious to meet my travel needs. Thanks, Fruitly for bringing this amazing product. in love with it.", rating: null, verified: false },
+  { name: "Prajwal Dhonde", initials: "PD", avatar: "from-lime-500 to-emerald-300", product: "Freeze-dried fruit snacks", quote: "Fruitly’s freeze-dried snacks are a perfect match for my busy lifestyle. The packaging is travel-friendly, the taste is top-notch.", rating: null, verified: false },
+  { name: "Prathamesh Nikam", initials: "PN", avatar: "from-pink-400 to-rose-300", product: "Fruitly fruit snacks", quote: "I never knew that eating this healthy snack can satisfy my sweet cravings so soon. It’s a absolute blessing.", rating: null, verified: false },
+  { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", product: "Fruitly fruit snacks", quote: "Super crunchy, fresh, and bursting with natural fruit flavor. Great quality and very easy to carry around during hectic work days.", rating: null, verified: false },
+];
+
 
 type SpotlightSlide = {
   key: string;
@@ -114,6 +129,7 @@ function Home() {
   }));
 
   const [activeSlide, setActiveSlide] = useState(0);
+  const testimonialTrack = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (activeSlide >= spotlights.length) setActiveSlide(0);
   }, [activeSlide, spotlights.length]);
@@ -425,6 +441,85 @@ function Home() {
         </p>
       </section>
 
+      <section className="relative overflow-hidden border-y border-border/70 bg-gradient-to-b from-[#f3f5ff] via-background to-[#fffaf0] py-16 sm:py-20 md:py-24">
+        <div className="container-page">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-primary/15 bg-background/80 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-primary shadow-soft">
+              <span className="h-1.5 w-1.5 rounded-full bg-clay" aria-hidden />
+              Loved By Fruit Lovers
+            </p>
+            <h2 className="mt-3 text-3xl leading-tight tracking-[-0.035em] sm:text-4xl md:text-5xl">
+              What our customers say
+            </h2>
+            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span>Meet the Fruitly community</span>
+            </div>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2" aria-label="Current Fruitly products">
+              {["Jamun Cubes", "Mango Cubes", "Strawberry Whole", "Lemon Slices", "Papaya Cubes"].map((product) => (
+                <span key={product} className="rounded-full border border-border/70 bg-background/80 px-3 py-1.5 text-xs font-medium text-muted-foreground">{product}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative mt-9 px-5 sm:px-7 lg:mt-11 lg:px-8">
+            <button type="button" aria-label="Show previous testimonials" onClick={() => testimonialTrack.current?.scrollBy({ left: -Math.max(280, testimonialTrack.current.clientWidth * 0.85), behavior: "smooth" })} className="absolute left-0 top-1/2 z-10 inline-flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border/80 bg-background text-foreground shadow-lg transition hover:scale-105 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <ArrowLeft className="h-4 w-4" aria-hidden />
+            </button>
+            <div ref={testimonialTrack} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {testimonials.map((review) => (
+              <article key={review.name} className="group relative flex w-full shrink-0 snap-start flex-col rounded-3xl border border-border/70 bg-card/95 p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:w-[calc(50%-0.5rem)] sm:p-6 lg:w-[calc(33.333%-0.667rem)]">
+                <Quote className="absolute right-5 top-5 h-7 w-7 text-amber-200" aria-hidden />
+                {review.rating && (
+                  <div className="flex items-center gap-1 text-amber-500" aria-label={`${review.rating} out of 5 stars`}>
+                    {Array.from({ length: review.rating }, (_, index) => (
+                      <Star key={index} className="h-4 w-4 fill-current" aria-hidden />
+                    ))}
+                  </div>
+                )}
+                <h3 className="mt-5 pr-8 text-base font-semibold leading-snug">{review.product ?? "Customer feedback"}</h3>
+                {review.quote ? (
+                  <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">“{review.quote}”</p>
+                ) : (
+                  <div className="mt-3 flex flex-1 flex-col justify-center rounded-2xl border border-dashed border-border/80 bg-secondary/30 px-4 py-5">
+                    <p className="text-sm font-semibold text-foreground">Review pending approval</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">We’ll share this customer’s feedback here once their review is received and approved.</p>
+                    <Link to="/contact?topic=testimonial" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                      Share feedback <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+                    </Link>
+                  </div>
+                )}
+                <div className="mt-6 flex items-center gap-3 border-t border-border/70 pt-4">
+                  <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${review.avatar} text-xs font-bold text-white shadow-sm`} aria-hidden>
+                    {review.initials}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">{review.name}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{review.quote ? "Customer feedback" : "Awaiting approved feedback"}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+            </div>
+            <button type="button" aria-label="Show next testimonials" onClick={() => testimonialTrack.current?.scrollBy({ left: Math.max(280, testimonialTrack.current.clientWidth * 0.85), behavior: "smooth" })} className="absolute right-0 top-1/2 z-10 inline-flex h-10 w-10 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border/80 bg-background text-foreground shadow-lg transition hover:scale-105 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-3xl border border-primary/10 bg-background/80 p-5 text-center shadow-soft sm:flex-row sm:text-left sm:p-6">
+            <div>
+              <h3 className="font-display text-xl">Have a Fruitly story of your own?</h3>
+              <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
+                We’d love to hear what you think. Share your feedback with our team through the enquiry form.
+              </p>
+            </div>
+            <Button asChild className="shrink-0 rounded-full px-5">
+              <a href="/contact?topic=testimonial">
+                Share your experience <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
       <section className="container-page pb-6 pt-16 sm:pt-20 md:pt-24">
         <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-12 text-primary-foreground shadow-lift sm:px-12 sm:py-16 md:px-16">
           <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full border border-white/15 md:h-80 md:w-80" aria-hidden />
