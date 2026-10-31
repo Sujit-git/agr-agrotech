@@ -116,7 +116,7 @@ Admin → Products supports product images at exactly 1024 × 1536 px, selling p
 
 The product tag presets are: New Arrival, Best Seller, Highly Ordered, Customer Favourite, Trending and Limited Edition. Admins can also create, rename and delete custom tags, then assign multiple tags to a product. Empty tag assignments do not render a badge.
 
-Admin → Categories also supports a homepage spotlight toggle. The homepage spotlight includes products explicitly featured on the product record or belonging to a featured category. Turning off both product and category spotlight flags removes the spotlight section when no eligible products remain.
+Admin → Categories also supports a homepage spotlight toggle. The homepage spotlight includes products explicitly featured on the product record or belonging to a featured category. A product can be explicitly hidden to exclude it even when its category is featured. Turning off both product and category spotlight flags removes the spotlight section when no eligible products remain.
 
 Product WhatsApp enquiries include a direct URL to the current product page. Set Admin → Settings → Website address to the canonical site origin (for example, `https://fruitly.co.in`) so messages use the production domain.
 
