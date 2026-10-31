@@ -6,9 +6,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
-  CheckCircle2,
   Leaf,
-  PackageCheck,
   Quote,
   Snowflake,
   Star,
@@ -75,24 +73,6 @@ type SpotlightSlide = {
   slug: string | null;
   category: string;
 };
-
-const storyPoints = [
-  {
-    icon: Apple,
-    title: "Fruit-forward choices",
-    text: "Explore recognisable fruit flavours in dehydrated formats.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Know what is inside",
-    text: "Ingredients and product details can differ by recipe. Check each product page for the information relevant to that pack.",
-  },
-  {
-    icon: PackageCheck,
-    title: "Find your kind of bite",
-    text: "Compare the texture, format and pack information to discover what suits your own snack routine.",
-  },
-];
 
 function Home() {
   const { data: products = [] } = useQuery(productsQuery);
@@ -416,29 +396,6 @@ function Home() {
             )}
           </div>
         </div>
-      </section>
-
-      <section className="container-page py-16 sm:py-20 md:py-24">
-        <div className="max-w-2xl">
-          <p className="eyebrow">A thoughtful way to snack</p>
-          <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">Fruit at the centre. Clear details at every step.</h2>
-          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
-            A snack choice is personal. We focus on fruit-forward options and clear product information, so you can compare the details and choose what works for you.
-          </p>
-        </div>
-        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-          {storyPoints.map((point, index) => (
-            <article key={point.title} className="rounded-3xl border border-border/80 bg-card p-6 transition-colors hover:bg-secondary/40 sm:p-7">
-              <p className="font-display text-sm text-clay">0{index + 1}</p>
-              <point.icon className="mt-5 h-5 w-5 text-primary" aria-hidden />
-              <h3 className="mt-4 text-lg">{point.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{point.text}</p>
-            </article>
-          ))}
-        </div>
-        <p className="mt-5 text-xs leading-5 text-muted-foreground">
-          Product ingredients and nutrition vary by recipe. Please read the individual pack label and product information before choosing.
-        </p>
       </section>
 
       <section className="relative overflow-hidden border-y border-border/70 bg-gradient-to-b from-[#f3f5ff] via-background to-[#fffaf0] py-16 sm:py-20 md:py-24">
