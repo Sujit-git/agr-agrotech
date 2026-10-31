@@ -85,7 +85,7 @@ function Contact() {
 
     setSending(true);
     try {
-      const response = await fetch("/.netlify/functions/send-enquiry", {
+      const response = await fetch("/api/send-enquiry", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
