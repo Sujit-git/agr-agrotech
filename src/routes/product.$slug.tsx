@@ -9,10 +9,12 @@ import {
   isLegacySeedProduct,
   productsQuery,
   availabilityLabel,
+  discountPercentage,
   formatPrice,
   productImage,
+  productTagsQuery,
 } from "@/lib/catalog";
-import { settingsQuery, fallbackSettings, whatsappLink } from "@/lib/site";
+import { buildProductUrl, settingsQuery, fallbackSettings, whatsappLink } from "@/lib/site";
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => {
@@ -45,6 +47,7 @@ function ProductDetails() {
   const { data: products = [], isLoading, isError } = useQuery(productsQuery);
   const { data: categories = [] } = useQuery(categoriesQuery);
   const { data: settings } = useQuery(settingsQuery);
+  const { data: productTags = [] } = useQuery(productTagsQuery);
   const s = settings ?? fallbackSettings;
 
   const product = products.find((p) => p.slug === slug && !isLegacySeedProduct(p.slug));
@@ -82,10 +85,13 @@ function ProductDetails() {
   }
 
   const image = productImage(product);
+  const productUrl = buildProductUrl(s.site_url, product.slug);
   const enquiry = whatsappLink(
     s.whatsapp,
-    `Hi Fruitly, I am interested in ${product.name}. Please share more details.`,
+    `Hi Fruitly Team, I am interested in ${product.name}. Please share more details.\n\nProduct Link: ${productUrl}`,
   );
+  const discount = discountPercentage(product.original_price, product.price);
+  const visibleTags = productTags.filter((tag) => product.tags?.includes(tag.slug));
 
   return (
     <SiteLayout>
@@ -118,6 +124,7 @@ function ProductDetails() {
                 alt={product.name}
                 width={1024}
                 height={1536}
+                decoding="async"
                 className="aspect-[2/3] w-full max-w-[480px] bg-[#f8f4e9] object-contain"
               />
             ) : (
@@ -130,6 +137,13 @@ function ProductDetails() {
           <div>
             {category && <p className="eyebrow">{category.name}</p>}
             <h1 className="mt-3 font-display text-3xl sm:text-4xl">{product.name}</h1>
+            {visibleTags.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {visibleTags.map((tag) => (
+                  <span key={tag.id} className="rounded-full bg-accent/70 px-3 py-1.5 text-xs font-semibold text-accent-foreground">{tag.name}</span>
+                ))}
+              </div>
+            )}
             {product.short_description && (
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
                 {product.short_description}
@@ -137,12 +151,12 @@ function ProductDetails() {
             )}
 
             <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="font-display text-3xl">
-                {formatPrice(product.price, product.currency)}
-              </span>
-              {product.unit && (
-                <span className="text-muted-foreground">per {product.unit}</span>
+              {discount !== null && (
+                <span className="text-base text-muted-foreground line-through">{formatPrice(product.original_price, product.currency)}</span>
               )}
+              <span className="font-display text-3xl">{formatPrice(product.price, product.currency)}</span>
+              {discount !== null && <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">{discount}% OFF</span>}
+              {product.unit && <span className="text-muted-foreground">per {product.unit}</span>}
             </div>
 
             <div className="mt-4 flex items-center gap-2 text-sm">
