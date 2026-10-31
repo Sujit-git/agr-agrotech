@@ -4,10 +4,8 @@ import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 
-// Keep the established Fruitly pouch collage in the Our Story hero.
-const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
-const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
-const papayaImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
+// One editorial fruit-basket image for the Our Story hero.
+const heroStoryImage = "/our-story/Fresh%20Fruit%20Basket%20Held%20by%20Hands.png";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -55,10 +53,6 @@ const approach = [
 ];
 
 function About() {
-  const mangoHeroImage = mangoImage;
-  const strawberryHeroImage = strawberryImage;
-  const papayaHeroImage = papayaImage;
-
   return (
     <SiteLayout>
       <section className="fruitly-hero-surface relative overflow-hidden border-b border-border/70">
@@ -83,40 +77,17 @@ function About() {
             <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-primary">Pure. Fresh. Natural.</p>
           </div>
 
-          <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
+          <div className="w-full">
             <img
-              src={mangoHeroImage}
-              alt="Fruitly dehydrated mango cubes pouch"
-              width={1024}
-              height={1536}
+              src={heroStoryImage}
+              alt="Fresh fruit basket held in hands, representing Fruitly's fruit-first approach"
+              width={1536}
+              height={1024}
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="aspect-[4/5] w-full rounded-[1.75rem] bg-[#f8f4e9] object-contain p-2 shadow-lift"
+              className="aspect-[4/3] w-full rounded-[2rem] bg-[#f8f4e9] object-cover shadow-lift sm:aspect-[5/4] md:aspect-[4/3]"
             />
-            <div className="grid gap-3 sm:gap-4">
-              <img
-                src={strawberryHeroImage}
-                alt="Fruitly dehydrated strawberry whole pouch"
-                width={1024}
-                height={1536}
-                loading="lazy"
-                decoding="async"
-                className="aspect-square w-full rounded-[1.5rem] bg-[#f8f4e9] object-contain p-2 shadow-soft"
-              />
-              <img
-                src={papayaHeroImage}
-                alt="Fruitly dehydrated papaya cubes pouch"
-                width={1024}
-                height={1536}
-                loading="lazy"
-                decoding="async"
-                className="aspect-square w-full rounded-[1.5rem] bg-[#f8f4e9] object-contain p-2 shadow-soft"
-              />
-            </div>
-            <p className="col-span-2 text-right text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-              Different fruits. Distinctive textures. One fruit-first idea.
-            </p>
           </div>
         </div>
       </section>
