@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -36,7 +37,7 @@ export const Route = createFileRoute("/admin/categories")({
   component: CategoriesAdmin,
 });
 
-const emptyForm = { name: "", slug: "", description: "", sort_order: "0" };
+const emptyForm = { name: "", slug: "", description: "", sort_order: "0", featured: false };
 
 function CategoriesAdmin() {
   const qc = useQueryClient();
@@ -61,6 +62,7 @@ function CategoriesAdmin() {
       slug: category.slug,
       description: category.description ?? "",
       sort_order: String(category.sort_order),
+      featured: category.featured,
     });
     setOpen(true);
   };
@@ -77,6 +79,7 @@ function CategoriesAdmin() {
       slug: slugify(form.slug || form.name),
       description: form.description.trim() || null,
       sort_order: Number(form.sort_order) || 0,
+      featured: form.featured,
     };
 
     const { error } = editing
@@ -132,6 +135,7 @@ function CategoriesAdmin() {
               <p className="text-sm text-muted-foreground">
                 /products/{category.slug} &middot;{" "}
                 {products.filter((p) => p.category_id === category.id).length} products
+                {category.featured ? " · Homepage spotlight enabled" : ""}
               </p>
             </div>
             <div className="flex gap-2">
@@ -188,6 +192,13 @@ function CategoriesAdmin() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="mt-2"
               />
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-primary/15 bg-secondary/45 p-3">
+              <Checkbox id="cat-featured" checked={form.featured} onCheckedChange={(value) => setForm((current) => ({ ...current, featured: value === true }))} />
+              <div>
+                <Label htmlFor="cat-featured">Show products from this category in the homepage spotlight</Label>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">When enabled, products in this category become eligible for the rotating spotlight. You can also spotlight individual products.</p>
+              </div>
             </div>
             <div>
               <Label htmlFor="cat-order">Display order</Label>
