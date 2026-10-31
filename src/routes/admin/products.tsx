@@ -322,7 +322,7 @@ function ProductsAdmin() {
                   {product.unit ? ` / ${product.unit}` : ""} &middot;{" "}
                   {availabilityLabels[product.availability as keyof typeof availabilityLabels] ??
                     product.availability}
-                  {product.featured ? " \u00b7 Featured" : ""}
+                  {product.featured ? " · Spotlight" : ""}{product.spotlight_hidden ? " · Hidden" : ""}
                 </p>
                 {!!product.tags?.length && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
