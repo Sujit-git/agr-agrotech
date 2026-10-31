@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ImageOff, MessageCircle, Package, Info, Sparkles } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ImageOff, MessageCircle, Package, Info, Sparkles } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/product/$slug")({
 
 function ProductDetails() {
   const { slug } = useParams({ from: "/product/$slug" });
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { data: products = [], isLoading, isError } = useQuery(productsQuery);
   const { data: categories = [] } = useQuery(categoriesQuery);
   const { data: settings } = useQuery(settingsQuery);
@@ -52,6 +54,10 @@ function ProductDetails() {
 
   const product = products.find((p) => p.slug === slug && !isLegacySeedProduct(p.slug));
   const category = categories.find((c) => c.id === product?.category_id);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [slug, product?.additional_images?.[0]]);
 
   if (isLoading) {
     return (
@@ -85,6 +91,8 @@ function ProductDetails() {
   }
 
   const image = productImage(product);
+  const backImage = product.additional_images?.[0] ?? null;
+  const currentImageIndex = backImage ? activeImageIndex : 0;
   const productUrl = buildProductUrl(s.site_url, product.slug);
   const enquiry = whatsappLink(
     s.whatsapp,
@@ -117,18 +125,50 @@ function ProductDetails() {
         </nav>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="flex justify-center overflow-hidden rounded-[2rem] border border-border/70 bg-secondary shadow-soft">
+          <div className="relative mx-auto aspect-[2/3] w-full max-w-[480px] overflow-hidden rounded-[2rem] border border-border/70 bg-[#f8f4e9] shadow-soft">
             {image ? (
-              <img
-                src={image}
-                alt={product.name}
-                width={1024}
-                height={1536}
-                decoding="async"
-                className="aspect-[2/3] w-full max-w-[480px] bg-[#f8f4e9] object-contain"
-              />
+              <>
+                {[image, ...(backImage ? [backImage] : [])].map((src, index) => (
+                  <img
+                    key={`${product.id}-image-${index}`}
+                    src={src}
+                    alt={`${product.name} ${index === 0 ? "front" : "back"} image`}
+                    width={1024}
+                    height={1536}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    aria-hidden={currentImageIndex !== index}
+                    className={`absolute inset-0 h-full w-full bg-[#f8f4e9] object-contain transition-opacity duration-300 ease-in-out ${currentImageIndex === index ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                  />
+                ))}
+                {backImage && (
+                  <>
+                    <button
+                      type="button"
+                      aria-label="Show main / front image"
+                      disabled={currentImageIndex === 0}
+                      onClick={() => setActiveImageIndex(0)}
+                      className="absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-background/90 text-foreground shadow-soft transition hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-30"
+                    >
+                      <ChevronLeft className="h-5 w-5" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Show back image"
+                      disabled={currentImageIndex === 1}
+                      onClick={() => setActiveImageIndex(1)}
+                      className="absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-background/90 text-foreground shadow-soft transition hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-30"
+                    >
+                      <ChevronRight className="h-5 w-5" aria-hidden />
+                    </button>
+                    <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs font-medium text-foreground shadow-soft">
+                      {currentImageIndex === 0 ? "Front image" : "Back image"}
+                    </span>
+                  </>
+                )}
+              </>
             ) : (
-              <div className="flex aspect-[2/3] w-full max-w-[480px] items-center justify-center text-muted-foreground">
+              <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                 <ImageOff className="h-10 w-10" />
               </div>
             )}
