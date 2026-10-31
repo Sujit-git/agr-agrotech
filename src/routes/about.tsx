@@ -36,6 +36,7 @@ const approach = [
     title: "Fruit at the centre",
     text: "We build the range around fruit, its familiar flavours and the different textures each format offers.",
     image: mangoImage,
+    imageSlug: "dehydrated-mango-cubes",
     imageAlt: "Fruitly dehydrated mango pouch",
   },
   {
@@ -43,6 +44,7 @@ const approach = [
     title: "Partner-led processing",
     text: "We work with manufacturing partners for product processing, while keeping the Fruitly range and brand experience in focus.",
     image: strawberryImage,
+    imageSlug: "dehydrated-strawberry-whole",
     imageAlt: "Fruitly dehydrated strawberry pouch",
   },
   {
@@ -50,6 +52,7 @@ const approach = [
     title: "Clear product details",
     text: "Product-specific ingredients, pack information and availability belong with each product, so customers can explore with confidence.",
     image: papayaImage,
+    imageSlug: "dehydrated-papaya-cubes",
     imageAlt: "Fruitly dehydrated papaya pouch",
   },
 ];
@@ -158,7 +161,7 @@ function About() {
               <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-5 shadow-soft sm:p-6">
                 <div className="mb-5 flex aspect-[16/8] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
                   <img
-                    src={item.image}
+                    src={imageFor(item.imageSlug, item.image)}
                     alt={item.imageAlt}
                     width={1024}
                     height={1536}
