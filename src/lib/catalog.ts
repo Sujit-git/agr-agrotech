@@ -10,7 +10,6 @@ export type Category = {
   description: string | null;
   image_url: string | null;
   featured: boolean;
-  spotlight_hidden: boolean;
   sort_order: number;
 };
 
@@ -30,6 +29,7 @@ export type Product = {
   additional_images: string[];
   availability: string;
   featured: boolean;
+  spotlight_hidden: boolean;
   sort_order: number;
   key_features: string[];
   storage_information: string | null;
