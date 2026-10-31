@@ -12,17 +12,6 @@ export type SiteSettings = {
   site_url: string | null;
 };
 
-export type CustomerReview = {
-  id: string;
-  name: string;
-  quote: string;
-  product: string | null;
-  rating: number;
-  sort_order: number;
-  is_published: boolean;
-  verified_buyer: boolean;
-};
-
 const OUR_STORY_SELECTION_MARKER = "<!-- fruitly-our-story-product-slugs:";
 
 /**
@@ -67,21 +56,6 @@ export const settingsQuery = {
       ...settings,
       business_description: cleanBusinessDescription(settings.business_description),
     };
-  },
-};
-
-export const customerReviewsQuery = {
-  queryKey: ["customer-reviews"],
-  queryFn: async (): Promise<CustomerReview[]> => {
-    const { data, error } = await supabase
-      .from("customer_reviews")
-      .select("id,name,quote,product,rating,sort_order,is_published,verified_buyer")
-      .eq("is_published", true)
-      .gte("rating", 1)
-      .neq("quote", "")
-      .order("sort_order", { ascending: true });
-    if (error) throw error;
-    return (data ?? []) as CustomerReview[];
   },
 };
 
