@@ -5,6 +5,7 @@ import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { productsQuery, productImage } from "@/lib/catalog";
+import { DEFAULT_OUR_STORY_PRODUCT_SLUGS, settingsQuery } from "@/lib/site";
 const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
 const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
 const papayaImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
@@ -36,36 +37,43 @@ const approach = [
     title: "Fruit at the centre",
     text: "We build the range around fruit, its familiar flavours and the different textures each format offers.",
     image: mangoImage,
-    imageSlug: "dehydrated-mango-cubes",
-    imageAlt: "Fruitly dehydrated mango pouch",
+    imageAlt: "Fruitly product pouch",
   },
   {
     icon: Handshake,
     title: "Partner-led processing",
     text: "We work with manufacturing partners for product processing, while keeping the Fruitly range and brand experience in focus.",
     image: strawberryImage,
-    imageSlug: "dehydrated-strawberry-whole",
-    imageAlt: "Fruitly dehydrated strawberry pouch",
+    imageAlt: "Fruitly product pouch",
   },
   {
     icon: PackageCheck,
     title: "Clear product details",
     text: "Product-specific ingredients, pack information and availability belong with each product, so customers can explore with confidence.",
     image: papayaImage,
-    imageSlug: "dehydrated-papaya-cubes",
-    imageAlt: "Fruitly dehydrated papaya pouch",
+    imageAlt: "Fruitly product pouch",
   },
 ];
 
 function About() {
   const { data: products = [] } = useQuery(productsQuery);
-  const imageFor = (slug: string, fallback: string) => {
-    const product = products.find((item) => item.slug === slug);
+  const { data: settings } = useQuery(settingsQuery);
+  const storyProductSlugs = settings?.our_story_product_slugs ?? [...DEFAULT_OUR_STORY_PRODUCT_SLUGS];
+
+  const storyProduct = (slot: number) =>
+    products.find((product) => product.slug === storyProductSlugs[slot]);
+  const storyImage = (slot: number, fallback: string) => {
+    const product = storyProduct(slot);
     return product ? productImage(product) ?? fallback : fallback;
   };
-  const mangoHeroImage = imageFor("dehydrated-mango-cubes", mangoImage);
-  const strawberryHeroImage = imageFor("dehydrated-strawberry-whole", strawberryImage);
-  const papayaHeroImage = imageFor("dehydrated-papaya-cubes", papayaImage);
+  const storyAlt = (slot: number, fallback: string) => {
+    const product = storyProduct(slot);
+    return product?.name ? `Fruitly ${product.name} pouch` : fallback;
+  };
+
+  const mangoHeroImage = storyImage(0, mangoImage);
+  const strawberryHeroImage = storyImage(1, strawberryImage);
+  const papayaHeroImage = storyImage(2, papayaImage);
 
   return (
     <SiteLayout>
@@ -94,7 +102,7 @@ function About() {
           <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
             <img
               src={mangoHeroImage}
-              alt="Fruitly dehydrated mango cubes pouch"
+              alt={storyAlt(0, "Fruitly product pouch")}
               width={1024}
               height={1536}
               loading="eager"
@@ -105,7 +113,7 @@ function About() {
             <div className="grid gap-3 sm:gap-4">
               <img
                 src={strawberryHeroImage}
-                alt="Fruitly dehydrated strawberry pouch"
+                alt={storyAlt(1, "Fruitly product pouch")}
                 width={1024}
                 height={1536}
                 loading="lazy"
@@ -114,7 +122,7 @@ function About() {
               />
               <img
                 src={papayaHeroImage}
-                alt="Fruitly dehydrated papaya pouch"
+                alt={storyAlt(2, "Fruitly product pouch")}
                 width={1024}
                 height={1536}
                 loading="lazy"
@@ -159,10 +167,10 @@ function About() {
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {approach.map((item, index) => (
               <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-5 shadow-soft sm:p-6">
-                <div className="mb-5 flex aspect-[16/8] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
+                <div className="mb-5 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
                   <img
-                    src={imageFor(item.imageSlug, item.image)}
-                    alt={item.imageAlt}
+                    src={storyImage(index, item.image)}
+                    alt={storyAlt(index, item.imageAlt)}
                     width={1024}
                     height={1536}
                     loading="lazy"
