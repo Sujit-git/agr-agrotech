@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
+import { productsQuery, productImage } from "@/lib/catalog";
 const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
 const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
-const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
+const papayaImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -33,20 +35,35 @@ const approach = [
     icon: Apple,
     title: "Fruit at the centre",
     text: "We build the range around fruit, its familiar flavours and the different textures each format offers.",
+    image: mangoImage,
+    imageAlt: "Fruitly dehydrated mango pouch",
   },
   {
     icon: Handshake,
     title: "Partner-led processing",
     text: "We work with manufacturing partners for product processing, while keeping the Fruitly range and brand experience in focus.",
+    image: strawberryImage,
+    imageAlt: "Fruitly dehydrated strawberry pouch",
   },
   {
     icon: PackageCheck,
     title: "Clear product details",
     text: "Product-specific ingredients, pack information and availability belong with each product, so customers can explore with confidence.",
+    image: papayaImage,
+    imageAlt: "Fruitly dehydrated papaya pouch",
   },
 ];
 
 function About() {
+  const { data: products = [] } = useQuery(productsQuery);
+  const imageFor = (slug: string, fallback: string) => {
+    const product = products.find((item) => item.slug === slug);
+    return product ? productImage(product) ?? fallback : fallback;
+  };
+  const mangoHeroImage = imageFor("dehydrated-mango-cubes", mangoImage);
+  const strawberryHeroImage = imageFor("dehydrated-strawberry-whole", strawberryImage);
+  const papayaHeroImage = imageFor("dehydrated-papaya-cubes", papayaImage);
+
   return (
     <SiteLayout>
       <section className="fruitly-hero-surface relative overflow-hidden border-b border-border/70">
@@ -73,29 +90,33 @@ function About() {
 
           <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
             <img
-              src={mangoImage}
-              alt="Golden dried mango pieces in a ceramic bowl"
-              width={1008}
-              height={1008}
+              src={mangoHeroImage}
+              alt="Fruitly dehydrated mango cubes pouch"
+              width={1024}
+              height={1536}
+              loading="eager"
               fetchPriority="high"
-              className="aspect-[4/5] w-full rounded-[1.75rem] object-cover shadow-lift"
+              decoding="async"
+              className="aspect-[4/5] w-full rounded-[1.75rem] bg-[#f8f4e9] object-contain p-2 shadow-lift"
             />
             <div className="grid gap-3 sm:gap-4">
               <img
-                src={strawberryImage}
+                src={strawberryHeroImage}
                 alt="Fruitly dehydrated strawberry pouch"
-                width={1008}
-                height={1008}
+                width={1024}
+                height={1536}
                 loading="lazy"
-                className="aspect-square w-full rounded-[1.5rem] object-cover shadow-soft"
+                decoding="async"
+                className="aspect-square w-full rounded-[1.5rem] bg-[#f8f4e9] object-contain p-2 shadow-soft"
               />
               <img
-                src={pineappleImage}
+                src={papayaHeroImage}
                 alt="Fruitly dehydrated papaya pouch"
-                width={1008}
-                height={1008}
+                width={1024}
+                height={1536}
                 loading="lazy"
-                className="aspect-square w-full rounded-[1.5rem] object-cover shadow-soft"
+                decoding="async"
+                className="aspect-square w-full rounded-[1.5rem] bg-[#f8f4e9] object-contain p-2 shadow-soft"
               />
             </div>
             <p className="col-span-2 text-right text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -134,14 +155,25 @@ function About() {
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {approach.map((item, index) => (
-              <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-6 sm:p-8">
+              <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-5 shadow-soft sm:p-6">
+                <div className="mb-5 flex aspect-[16/8] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
+                  <img
+                    src={item.image}
+                    alt={item.imageAlt}
+                    width={1024}
+                    height={1536}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-contain p-2"
+                  />
+                </div>
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/60 text-primary">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/60 text-primary">
                     <item.icon className="h-5 w-5" aria-hidden />
                   </span>
                   <span className="font-display text-sm text-clay">0{index + 1}</span>
                 </div>
-                <h3 className="mt-6 text-xl">{item.title}</h3>
+                <h3 className="mt-5 text-xl">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.text}</p>
               </article>
             ))}
