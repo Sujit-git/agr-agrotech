@@ -28,18 +28,48 @@ export async function uploadProductImage(file: File): Promise<string> {
   }
 
   const { width, height } = bitmap;
-  bitmap.close();
 
   if (width !== PRODUCT_IMAGE_WIDTH || height !== PRODUCT_IMAGE_HEIGHT) {
+    bitmap.close();
     throw new Error(
       `Image must be exactly ${PRODUCT_IMAGE_SIZE_LABEL}. Your image is ${width} × ${height} px. Resize or crop it before uploading.`,
     );
   }
 
-  const ext = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : "webp";
-  const path = `${crypto.randomUUID()}.${ext}`;
+  // Re-encode the validated master at high quality to WebP. This keeps the
+  // 1024 × 1536 artwork sharp while reducing transfer size for storefronts.
+  const canvas = document.createElement("canvas");
+  canvas.width = PRODUCT_IMAGE_WIDTH;
+  canvas.height = PRODUCT_IMAGE_HEIGHT;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    bitmap.close();
+    throw new Error("This browser could not prepare the image. Please try another browser.");
+  }
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+  context.drawImage(bitmap, 0, 0, PRODUCT_IMAGE_WIDTH, PRODUCT_IMAGE_HEIGHT);
+  bitmap.close();
 
-  const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
+  let optimized: Blob;
+  try {
+    optimized = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("Image optimization failed."))),
+        "image/webp",
+        0.94,
+      );
+    });
+  } catch {
+    throw new Error("The image could not be optimized. Please export it as WebP and try again.");
+  }
+  if (optimized.size > 5 * 1024 * 1024) {
+    throw new Error("The optimized image is still larger than 5 MB. Please export a smaller WebP file.");
+  }
+
+  const path = `${crypto.randomUUID()}.webp`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, optimized, {
+    contentType: "image/webp",
     cacheControl: "31536000",
     upsert: false,
   });
