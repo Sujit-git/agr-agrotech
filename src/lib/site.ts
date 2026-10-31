@@ -68,8 +68,14 @@ export const customerReviewsQuery = {
 
 export function buildProductUrl(siteUrl: string | null | undefined, slug: string): string {
   const fallbackOrigin = typeof window !== "undefined" ? window.location.origin : "https://fruitly.co.in";
-  const base = (siteUrl?.trim() || fallbackOrigin).replace(/\/+$/, "");
-  return `${base}/product/${encodeURIComponent(slug)}`;
+  const configured = siteUrl?.trim() || fallbackOrigin;
+  const base = /^https?:\/\//i.test(configured) ? configured : `https://${configured}`;
+
+  try {
+    return new URL(`/product/${encodeURIComponent(slug)}`, base).toString();
+  } catch {
+    return `${fallbackOrigin.replace(/\/+$/, "")}/product/${encodeURIComponent(slug)}`;
+  }
 }
 
 export function whatsappLink(number: string | null | undefined, message: string): string {
