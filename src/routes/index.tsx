@@ -19,13 +19,6 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { categoriesQuery, isLegacySeedProduct, productImage, productsQuery } from "@/lib/catalog";
 
-const fruitImages = {
-  strawberry: "/fruitly-products/dehydrated-strawberry-whole.webp",
-  lemon: "/fruitly-products/dehydrated-lemon-slices.webp",
-  mango: "/fruitly-products/dehydrated-mango-cubes.webp",
-  jamun: "/fruitly-products/dehydrated-jamun-cubes.webp",
-  papaya: "/fruitly-products/dehydrated-papaya-cubes.webp",
-};
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -73,32 +66,6 @@ const testimonials = [
   { name: "Sandesh Borate", initials: "SB", avatar: "from-yellow-400 to-orange-300", product: "Fruitly fruit snacks", quote: "Super crunchy, fresh, and bursting with natural fruit flavor. Great quality and very easy to carry around during hectic work days.", rating: null, verified: false },
 ];
 
-const fallbackSpotlights: SpotlightSlide[] = [
-  {
-    key: "mango",
-    title: "A little sunshine in every bite.",
-    description: "Discover the familiar sweetness and golden colour of mango in a dried fruit format.",
-    image: fruitImages.mango,
-    slug: null,
-    category: "Dehydrated fruit",
-  },
-  {
-    key: "strawberry",
-    title: "A brighter kind of berry moment.",
-    description: "Explore the colour and character of strawberry in a light, fruit-forward format.",
-    image: fruitImages.strawberry,
-    slug: null,
-    category: "Fruit spotlight",
-  },
-  {
-    key: "papaya",
-    title: "A sunny papaya moment.",
-    description: "Explore papaya in a colourful dehydrated fruit format made for curious fruit lovers.",
-    image: fruitImages.papaya,
-    slug: null,
-    category: "Fruit spotlight",
-  },
-];
 
 type SpotlightSlide = {
   key: string;
@@ -135,33 +102,30 @@ function Home() {
   const publicCategoryIds = new Set(publicProducts.map((product) => product.category_id).filter(Boolean));
   const publicCategories = categories.filter((category) => publicCategoryIds.has(category.id));
   const categoryById = new Map(publicCategories.map((category) => [category.id, category]));
-  const fruitCategoryIds = new Set(
-    publicCategories
-      .filter((category) => /dehydrated/i.test(`${category.slug} ${category.name}`))
-      .map((category) => category.id),
+  const spotlightCategoryIds = new Set(
+    publicCategories.filter((category) => category.featured).map((category) => category.id),
   );
-  const fruitProducts = publicProducts
-    .filter((product) => product.category_id && fruitCategoryIds.has(product.category_id))
+  const spotlightProducts = publicProducts
+    .filter((product) =>
+      product.featured || (product.category_id && spotlightCategoryIds.has(product.category_id)),
+    )
     .filter((product) => Boolean(productImage(product)))
     .sort(
       (a, b) =>
         Number(b.featured) - Number(a.featured) || a.sort_order - b.sort_order,
     );
 
-  // Admins can replace these spotlight photos through Admin → Products.
-  // Product images and the featured flag are read from the existing catalogue.
-  const spotlights: SpotlightSlide[] = fruitProducts.length
-    ? fruitProducts.slice(0, 5).map((product) => ({
-        key: product.id,
-        title: product.name,
-        description:
-          product.short_description ||
-          "Explore this fruit in a distinctive format, with the details for this product close at hand.",
-        image: productImage(product) ?? mangoImage,
-        slug: product.slug,
-        category: categoryById.get(product.category_id ?? "")?.name ?? "Fruitly selection",
-      }))
-    : fallbackSpotlights;
+  // A product is included when it is explicitly featured or its category is featured.
+  const spotlights: SpotlightSlide[] = spotlightProducts.slice(0, 8).map((product) => ({
+    key: product.id,
+    title: product.name,
+    description:
+      product.short_description ||
+      "Explore this fruit in a distinctive format, with the details for this product close at hand.",
+    image: productImage(product)!,
+    slug: product.slug,
+    category: categoryById.get(product.category_id ?? "")?.name ?? "Fruitly selection",
+  }));
 
   const [activeSlide, setActiveSlide] = useState(0);
   const testimonialTrack = useRef<HTMLDivElement>(null);
@@ -276,86 +240,89 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
-        <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
-          <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
-            <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
-              <img
-                key={currentSlide.key}
-                src={currentSlide.image}
-                alt={currentSlide.title}
-                loading="lazy"
-                width={1024}
-                height={1536}
-                className="relative mx-auto aspect-[2/3] w-full max-w-[320px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
-              />
-              <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
-                {currentSlide.category}
-              </span>
-            </div>
-
-            <div className="relative flex flex-col justify-center px-6 py-8 sm:px-9 sm:py-10 md:px-12 lg:px-16">
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">
-                The Fruitly spotlight
-              </p>
-              <h2 className="mt-4 max-w-xl text-3xl leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
-                {currentSlide.title}
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 sm:text-base">
-                {currentSlide.description}
-              </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
-                  {currentSlide.slug ? (
-                    <Link to="/product/$slug" params={{ slug: currentSlide.slug }}>
-                      Discover this fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
-                    </Link>
-                  ) : (
-                    <Link to="/products">
-                      Explore fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
-                    </Link>
+      {spotlights.length > 0 && (
+        <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
+          <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
+            <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
+              <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
+                <img
+                  key={currentSlide.key}
+                  src={currentSlide.image}
+                  alt={currentSlide.title}
+                  loading="lazy"
+                  width={1024}
+                  height={1536}
+                  className="relative mx-auto aspect-[2/3] w-full max-w-[320px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+                />
+                <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
+                  {currentSlide.category}
+                </span>
+              </div>
+  
+              <div className="relative flex flex-col justify-center px-6 py-8 sm:px-9 sm:py-10 md:px-12 lg:px-16">
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">
+                  The Fruitly spotlight
+                </p>
+                <h2 className="mt-4 max-w-xl text-3xl leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                  {currentSlide.title}
+                </h2>
+                <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 sm:text-base">
+                  {currentSlide.description}
+                </p>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
+                    {currentSlide.slug ? (
+                      <Link to="/product/$slug" params={{ slug: currentSlide.slug }}>
+                        Discover this fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+                      </Link>
+                    ) : (
+                      <Link to="/products">
+                        Explore fruit <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden />
+                      </Link>
+                    )}
+                  </Button>
+                  {spotlights.length > 1 && (
+                    <div className="ml-auto flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label="Previous spotlight"
+                        onClick={() => setActiveSlide((current) => (current - 1 + spotlights.length) % spotlights.length)}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
+                      >
+                        <ArrowLeft className="h-4 w-4" aria-hidden />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Next spotlight"
+                        onClick={() => setActiveSlide((current) => (current + 1) % spotlights.length)}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
+                      >
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </button>
+                    </div>
                   )}
-                </Button>
+                </div>
                 {spotlights.length > 1 && (
-                  <div className="ml-auto flex items-center gap-2">
-                    <button
-                      type="button"
-                      aria-label="Previous spotlight"
-                      onClick={() => setActiveSlide((current) => (current - 1 + spotlights.length) % spotlights.length)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
-                    >
-                      <ArrowLeft className="h-4 w-4" aria-hidden />
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="Next spotlight"
-                      onClick={() => setActiveSlide((current) => (current + 1) % spotlights.length)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10"
-                    >
-                      <ArrowRight className="h-4 w-4" aria-hidden />
-                    </button>
+                  <div className="mt-7 flex items-center gap-2" aria-label="Choose spotlight slide">
+                    {spotlights.map((spotlight, index) => (
+                      <button
+                        key={spotlight.key}
+                        type="button"
+                        aria-label={`Show spotlight ${index + 1}: ${spotlight.title}`}
+                        aria-current={activeSlide === index ? "true" : undefined}
+                        onClick={() => setActiveSlide(index)}
+                        className={`h-2.5 rounded-full transition-all ${activeSlide === index ? "w-8 bg-white" : "w-2.5 bg-white/40 hover:bg-white/70"}`}
+                      />
+                    ))}
                   </div>
                 )}
               </div>
-              {spotlights.length > 1 && (
-                <div className="mt-7 flex items-center gap-2" aria-label="Choose spotlight slide">
-                  {spotlights.map((spotlight, index) => (
-                    <button
-                      key={spotlight.key}
-                      type="button"
-                      aria-label={`Show spotlight ${index + 1}: ${spotlight.title}`}
-                      aria-current={activeSlide === index ? "true" : undefined}
-                      onClick={() => setActiveSlide(index)}
-                      className={`h-2.5 rounded-full transition-all ${activeSlide === index ? "w-8 bg-white" : "w-2.5 bg-white/40 hover:bg-white/70"}`}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+  
+        )}
 
       <section className="container-page py-16 sm:py-20 md:py-24">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
