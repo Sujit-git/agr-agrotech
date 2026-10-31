@@ -10,7 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { settingsQuery, fallbackSettings, type CustomerReview, type SiteSettings } from "@/lib/site";
+import { productsQuery, productImage } from "@/lib/catalog";
+import {
+  settingsQuery,
+  fallbackSettings,
+  encodeOurStoryProductSelections,
+  type CustomerReview,
+  type SiteSettings,
+} from "@/lib/site";
 
 export const Route = createFileRoute("/admin/settings")({
   ssr: false,
@@ -49,6 +56,7 @@ type ReviewDraft = Pick<CustomerReview, "id" | "name" | "quote" | "product" | "r
 function SettingsAdmin() {
   const qc = useQueryClient();
   const { data } = useQuery(settingsQuery);
+  const { data: products = [] } = useQuery(productsQuery);
   const [form, setForm] = useState<SiteSettings>(fallbackSettings);
   const [busy, setBusy] = useState(false);
   const {
@@ -93,10 +101,18 @@ function SettingsAdmin() {
     }
     const nextForm = { ...form, email };
     setForm(nextForm);
+    const { our_story_product_slugs, ...databaseFields } = nextForm;
+    const payload = {
+      ...databaseFields,
+      business_description: encodeOurStoryProductSelections(
+        databaseFields.business_description,
+        our_story_product_slugs,
+      ),
+    };
     setBusy(true);
     const { error } = await supabase
       .from("site_settings")
-      .update({ ...nextForm })
+      .update(payload)
       .eq("id", true);
     setBusy(false);
     if (error) {
@@ -171,6 +187,72 @@ function SettingsAdmin() {
             {field.hint && <p className="mt-1.5 text-xs text-muted-foreground">{field.hint}</p>}
           </div>
         ))}
+
+        <section className="space-y-4 rounded-2xl border border-border bg-background p-4 sm:p-5" aria-labelledby="our-story-images-heading">
+          <div>
+            <h2 id="our-story-images-heading" className="font-display text-xl">Our Story images</h2>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              Choose an existing product's main image for each position. The Our Story page will use that product's current main image, so replacing it under Products updates this section automatically.
+            </p>
+            <p className="mt-2 text-xs font-medium text-muted-foreground">
+              Recommended artwork: 1024 × 1536 px, portrait 2:3, JPG/PNG/WebP, under 5 MB. Product uploads are validated and optimized to WebP.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { label: "Large hero image", description: "Main image on Our Story" },
+              { label: "Top side image", description: "Upper supporting image" },
+              { label: "Bottom side image", description: "Lower supporting image" },
+            ].map((slot, index) => {
+              const selectedSlug = form.our_story_product_slugs[index] ?? "";
+              const selectedProduct = products.find((product) => product.slug === selectedSlug);
+              const selectedImage = selectedProduct ? productImage(selectedProduct) : null;
+
+              return (
+                <div key={slot.label} className="min-w-0 space-y-2 rounded-xl border border-border p-3">
+                  <div>
+                    <Label htmlFor={`our-story-image-${index}`}>{slot.label}</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">{slot.description}</p>
+                  </div>
+                  <select
+                    id={`our-story-image-${index}`}
+                    value={selectedSlug}
+                    onChange={(e) =>
+                      setForm((current) => ({
+                        ...current,
+                        our_story_product_slugs: current.our_story_product_slugs.map((slug, slotIndex) =>
+                          slotIndex === index ? e.target.value : slug,
+                        ),
+                      }))
+                    }
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                    {products.filter((product) => productImage(product)).map((product) => (
+                      <option key={product.id} value={product.slug}>{product.name}</option>
+                    ))}
+                  </select>
+                  {selectedImage ? (
+                    <img
+                      src={selectedImage}
+                      alt={selectedProduct?.name ?? "Selected Fruitly product"}
+                      width={1024}
+                      height={1536}
+                      loading="lazy"
+                      decoding="async"
+                      className="mx-auto aspect-[2/3] max-h-40 w-full rounded-lg bg-[#f8f4e9] object-contain p-2"
+                    />
+                  ) : (
+                    <div className="flex aspect-[2/3] max-h-40 items-center justify-center rounded-lg bg-muted text-xs text-muted-foreground">
+                      No product image selected
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         <Button type="submit" disabled={busy}>
           {busy ? "Saving\u2026" : "Save changes"}
         </Button>
