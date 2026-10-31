@@ -7,7 +7,8 @@ ALTER TABLE public.categories
 
 ALTER TABLE public.products
   ADD COLUMN IF NOT EXISTS original_price numeric(10,2),
-  ADD COLUMN IF NOT EXISTS tags text[] NOT NULL DEFAULT '{}';
+  ADD COLUMN IF NOT EXISTS tags text[] NOT NULL DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS spotlight_hidden boolean NOT NULL DEFAULT false;
 
 ALTER TABLE public.products
   ADD CONSTRAINT products_original_price_nonnegative
@@ -100,5 +101,7 @@ COMMENT ON COLUMN public.products.featured IS
   'When enabled, this product is eligible for the homepage spotlight.';
 COMMENT ON COLUMN public.products.original_price IS
   'Optional compare-at price. Displayed only when greater than the selling price stored in price.';
+COMMENT ON COLUMN public.products.spotlight_hidden IS
+  'Explicitly excludes this product from the homepage spotlight, including when its category is featured.';
 COMMENT ON COLUMN public.products.tags IS
   'Array of product_tags.slug values assigned to this product.';
