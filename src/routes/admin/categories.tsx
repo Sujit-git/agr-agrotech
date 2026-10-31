@@ -62,7 +62,7 @@ function CategoriesAdmin() {
       slug: category.slug,
       description: category.description ?? "",
       sort_order: String(category.sort_order),
-      featured: category.featured,
+      featured: category.featured === true,
     });
     setOpen(true);
   };
