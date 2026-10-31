@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -54,15 +54,6 @@ function Contact() {
   const s = data ?? fallbackSettings;
 
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
-  const [isTestimonial, setIsTestimonial] = useState(false);
-
-  useEffect(() => {
-    const topic = new URLSearchParams(window.location.search).get("topic");
-    if (topic === "testimonial") {
-      setIsTestimonial(true);
-      setForm((current) => ({ ...current, message: "I would like to share my experience with Fruitly. " }));
-    }
-  }, []);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -154,8 +145,8 @@ function Contact() {
             <div className="relative overflow-hidden rounded-[1.75rem] border border-border/80 bg-card shadow-lift">
               <div className="bg-primary px-6 py-5 text-primary-foreground sm:px-8">
                 <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/70">Fruitly customer care</p>
-                <h2 className="mt-2 text-2xl text-white sm:text-3xl">{isTestimonial ? "Share your Fruitly story." : "Send us a note."}</h2>
-                <p className="mt-2 text-sm leading-6 text-white/75">{isTestimonial ? "Tell us about your experience with Fruitly. Fields marked with * are required." : "Tell us how we can help. Fields marked with * are required."}</p>
+                <h2 className="mt-2 text-2xl text-white sm:text-3xl">Send us a note.</h2>
+                <p className="mt-2 text-sm leading-6 text-white/75">Tell us how we can help. Fields marked with * are required.</p>
               </div>
 
               <div className="p-5 sm:p-8">
@@ -164,9 +155,9 @@ function Contact() {
                     <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent/60 text-primary">
                       <MessageSquareText className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="mt-5 text-2xl">{isTestimonial ? "Thank you for sharing your story." : "Thank you for contacting Fruitly."}</h3>
+                    <h3 className="mt-5 text-2xl">Thank you for contacting Fruitly.</h3>
                     <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
-                      {isTestimonial ? "Thank you for sharing your Fruitly experience. Our team has received your message." : "Your enquiry has been sent successfully. Our team will get back to you as soon as possible."}
+                      Your enquiry has been sent successfully. Our team will get back to you as soon as possible.
                     </p>
                     <Button variant="outline" className="mt-6 rounded-full" onClick={() => setSent(false)}>
                       Prepare another email
@@ -219,11 +210,11 @@ function Contact() {
                     </div>
 
                     <div>
-                      <Label htmlFor="message">{isTestimonial ? "Your testimonial" : "How can we help?"} <span className="text-clay">*</span></Label>
+                      <Label htmlFor="message">How can we help? <span className="text-clay">*</span></Label>
                       <Textarea
                         id="message"
                         rows={5}
-                        placeholder={isTestimonial ? "Share your experience with a Fruitly product..." : "Tell us what you’re interested in..."}
+                        placeholder="Tell us what you’re interested in..."
                         value={form.message}
                         onChange={(e) => update("message", e.target.value)}
                         aria-invalid={Boolean(errors["message"])}
