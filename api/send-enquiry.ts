@@ -58,13 +58,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       error: "Please provide your name, message, and an email or phone number.",
     });
   }
-  if (email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: "The email address you entered is invalid." });
   }
 
   let recipient = "";
   try {
-    const baseUrl = supabaseUrl.replace(/\\/$/, "");
+    const baseUrl = supabaseUrl.replace(/\/$/, "");
     const settingsResponse = await fetch(
       `${baseUrl}/rest/v1/site_settings?id=eq.true&select=email`,
       {
@@ -92,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  if (!recipient || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(recipient)) {
+  if (!recipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
     return res.status(503).json({
       error: "Please configure a valid enquiry email in Admin → Settings.",
     });
@@ -109,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `<p><strong>Customer email:</strong> ${escapeHtml(email || "Not provided")}</p>`,
     `<p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p>`,
     "<p><strong>Message:</strong></p>",
-    `<p>${escapeHtml(message).replace(/\\n/g, "<br>")}</p>`,
+    `<p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
   ].join("");
 
   try {
@@ -119,7 +119,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       secure: true,
       auth: {
         user: smtpUser,
-        pass: smtpPassword.replace(/\\s/g, ""),
+        pass: smtpPassword.replace(/\s/g, ""),
       },
       connectionTimeout: 10000,
       greetingTimeout: 10000,
@@ -139,7 +139,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "",
         "Message:",
         message,
-      ].join("\\n"),
+      ].join("\n"),
       html,
     });
 
