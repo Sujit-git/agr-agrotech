@@ -193,45 +193,6 @@ export type Database = {
         }
         Relationships: []
       }
-      customer_reviews: {
-        Row: {
-          created_at: string
-          id: string
-          is_published: boolean
-          name: string
-          product: string | null
-          quote: string
-          rating: number
-          sort_order: number
-          updated_at: string
-          verified_buyer: boolean
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          is_published?: boolean
-          name: string
-          product?: string | null
-          quote?: string
-          rating?: number
-          sort_order?: number
-          updated_at?: string
-          verified_buyer?: boolean
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          is_published?: boolean
-          name?: string
-          product?: string | null
-          quote?: string
-          rating?: number
-          sort_order?: number
-          updated_at?: string
-          verified_buyer?: boolean
-        }
-        Relationships: []
-      }
       site_settings: {
         Row: {
           address: string | null
