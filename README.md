@@ -120,6 +120,12 @@ Admin → Categories also supports a homepage spotlight toggle. The homepage spo
 
 Product WhatsApp enquiries include a direct URL to the current product page. Set Admin → Settings → Website address to the canonical site origin (for example, `https://fruitly.co.in`) so messages use the production domain.
 
+### Our Story image selection (no schema migration)
+
+Admin → Settings provides three product selectors for the Our Story collage. Each selector references an existing product slug and renders that product's current main image, so changing the image in Admin → Products automatically updates the Our Story page. The selection list and recommended 1024 × 1536 px (2:3 portrait) artwork guidance are shown in the Admin UI.
+
+To avoid altering the Supabase schema, the three slugs are stored as a versioned HTML-comment metadata marker appended to the existing `site_settings.business_description` text. The application strips this marker in `settingsQuery`, so visitors and the business-description editor continue to see only the normal description. No SQL or database migration is needed for this feature.
+
 ### Required database migration
 
 Before testing the new admin fields, apply `drizzle/migrations/0005_product_management_enhancements.sql` in the Supabase SQL Editor (or through your normal migration process). It adds category spotlight, original prices, product tag assignments and the preset/custom `product_tags` table with admin-only write policies. The migration is additive and does not delete existing catalogue content.
