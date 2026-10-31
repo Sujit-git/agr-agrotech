@@ -150,7 +150,7 @@ export function ProductBrowser({ categorySlug }: Props) {
       </div>
 
       {products.isLoading ? (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-80 animate-pulse rounded-2xl bg-secondary" />
           ))}
@@ -163,7 +163,7 @@ export function ProductBrowser({ categorySlug }: Props) {
           </p>
         </div>
       ) : (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((product) => (
             <ProductCard
               key={product.id}
