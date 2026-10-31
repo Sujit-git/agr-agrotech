@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Loader2, Pencil, Plus, Tags as TagsIcon, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -295,7 +295,10 @@ function ProductsAdmin() {
                     src={image}
                     alt=""
                     loading="lazy"
-                    className="h-full w-full object-cover"
+                    decoding="async"
+                    width={1024}
+                    height={1536}
+                    className="h-full w-full object-contain"
                   />
                 )}
               </div>
