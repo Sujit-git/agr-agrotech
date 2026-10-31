@@ -215,12 +215,17 @@ function ProductsAdmin() {
       toast.error("Enter a tag name.");
       return;
     }
+    const slug = slugify(name);
+    if (!editingTag && !slug) {
+      toast.error("Choose a tag name containing letters or numbers.");
+      return;
+    }
     setTagBusy(true);
     const result = editingTag
       ? await supabase.from("product_tags").update({ name }).eq("id", editingTag.id).eq("is_preset", false)
       : await supabase.from("product_tags").insert({
           name,
-          slug: slugify(name),
+          slug,
           is_preset: false,
           is_active: true,
           sort_order: 100,
