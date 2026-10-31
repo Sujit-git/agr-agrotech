@@ -5,22 +5,25 @@ import { toast } from "sonner";
 
 import { AdminShell } from "@/components/admin/AdminShell";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { settingsQuery, fallbackSettings, type CustomerReview, type SiteSettings } from "@/lib/site";
+import {
+  settingsQuery,
+  fallbackSettings,
+  type SiteSettings,
+} from "@/lib/site";
 
 export const Route = createFileRoute("/admin/settings")({
   ssr: false,
   head: () => ({
     meta: [
       { title: "Business Settings | AGR \u2014 Agrotech" },
-      { name: "description", content: "Update Fruitly website settings and customer feedback." },
+      { name: "description", content: "Update Fruitly business settings." },
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "Business Settings | AGR \u2014 Agrotech" },
-      { property: "og:description", content: "Update Fruitly settings and approved customer feedback." },
+      { property: "og:description", content: "Update Fruitly business settings." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -28,7 +31,9 @@ export const Route = createFileRoute("/admin/settings")({
   component: SettingsAdmin,
 });
 
-const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?: boolean }[] = [
+type EditableSiteSettingsKey = keyof SiteSettings;
+
+const fields: { key: EditableSiteSettingsKey; label: string; hint?: string; textarea?: boolean }[] = [
   { key: "brand_name", label: "Brand name" },
   { key: "business_description", label: "Business description", textarea: true },
   { key: "email", label: "Enquiry email", hint: "Email address that receives website contact-form enquiries. You can change it here anytime." },
@@ -44,45 +49,14 @@ const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?
   { key: "site_url", label: "Website address", hint: "e.g. https://fruitly.co.in" },
 ];
 
-type ReviewDraft = Pick<CustomerReview, "id" | "name" | "quote" | "product" | "rating" | "is_published" | "verified_buyer">;
-
 function SettingsAdmin() {
   const qc = useQueryClient();
   const { data } = useQuery(settingsQuery);
   const [form, setForm] = useState<SiteSettings>(fallbackSettings);
   const [busy, setBusy] = useState(false);
-  const {
-    data: reviews = [],
-    isLoading: reviewsLoading,
-    isError: reviewsError,
-  } = useQuery({
-    queryKey: ["customer-reviews-admin"],
-    queryFn: async (): Promise<CustomerReview[]> => {
-      const { data, error } = await supabase
-        .from("customer_reviews")
-        .select("id,name,quote,product,rating,sort_order,is_published,verified_buyer,created_at,updated_at")
-        .order("sort_order", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as CustomerReview[];
-    },
-  });
-  const [reviewDrafts, setReviewDrafts] = useState<ReviewDraft[]>([]);
-  const [reviewBusy, setReviewBusy] = useState<string | null>(null);
-
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
-
-  useEffect(() => {
-    setReviewDrafts(reviews.map((review) => ({
-      id: review.id,
-      name: review.name,
-      quote: review.quote,
-      product: review.product,
-      rating: review.rating,
-      is_published: review.is_published,
-    })));
-  }, [reviews]);
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +70,7 @@ function SettingsAdmin() {
     setBusy(true);
     const { error } = await supabase
       .from("site_settings")
-      .update({ ...nextForm })
+      .update(nextForm)
       .eq("id", true);
     setBusy(false);
     if (error) {
@@ -105,43 +79,6 @@ function SettingsAdmin() {
     }
     toast.success("Business information updated.");
     void qc.invalidateQueries({ queryKey: ["site-settings"] });
-  };
-
-  function updateReviewDraft<K extends keyof ReviewDraft>(
-    id: string,
-    key: K,
-    value: ReviewDraft[K],
-  ) {
-    setReviewDrafts((current) =>
-      current.map((review) => (review.id === id ? { ...review, [key]: value } : review)),
-    );
-  }
-
-  const saveReview = async (review: ReviewDraft) => {
-    const quote = review.quote.trim();
-    if (review.is_published && (quote.length < 8 || review.rating < 1 || review.rating > 5)) {
-      toast.error("To publish a review, add the customer's approved words and actual 1-5 star rating.");
-      return;
-    }
-    setReviewBusy(review.id);
-    const { error } = await supabase
-      .from("customer_reviews")
-      .update({
-        quote,
-        product: review.product?.trim() || null,
-        rating: review.rating,
-        is_published: review.is_published,
-        verified_buyer: review.verified_buyer,
-      })
-      .eq("id", review.id);
-    setReviewBusy(null);
-    if (error) {
-      toast.error("The customer feedback could not be saved. Please try again.");
-      return;
-    }
-    toast.success(review.is_published ? "Customer feedback published." : "Customer feedback saved as a draft.");
-    void qc.invalidateQueries({ queryKey: ["customer-reviews-admin"] });
-    void qc.invalidateQueries({ queryKey: ["customer-reviews"] });
   };
 
   return (
@@ -171,115 +108,11 @@ function SettingsAdmin() {
             {field.hint && <p className="mt-1.5 text-xs text-muted-foreground">{field.hint}</p>}
           </div>
         ))}
+
         <Button type="submit" disabled={busy}>
           {busy ? "Saving\u2026" : "Save changes"}
         </Button>
       </form>
-
-      <section className="mt-8 max-w-4xl space-y-4" aria-labelledby="customer-feedback-heading">
-        <div>
-          <h2 id="customer-feedback-heading" className="font-display text-2xl">Customer feedback</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Edit a review, choose its rating, and select which reviews appear on the homepage. The Verified badge is a simple admin-controlled label.
-          </p>
-        </div>
-
-        {reviewsError ? (
-          <p className="rounded-2xl border border-dashed border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
-            The feedback manager is waiting for the customer_reviews database migration to be applied. Your business settings above remain available.
-          </p>
-        ) : reviewsLoading ? (
-          <p className="rounded-2xl border border-border bg-card p-5 text-sm text-muted-foreground">Loading customer feedback…</p>
-        ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
-            {reviewDrafts.map((review) => (
-              <article key={review.id} className="space-y-4 rounded-2xl border border-border bg-card p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-semibold">{review.name}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground">Homepage review draft</p>
-                  </div>
-                  <span className={`rounded-full px-2.5 py-1 text-[0.68rem] font-semibold ${review.is_published ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}>
-                    {review.is_published ? "Published" : "Draft"}
-                  </span>
-                </div>
-
-                <div>
-                  <Label htmlFor={`review-quote-${review.id}`}>Approved customer feedback</Label>
-                  <Textarea
-                    id={`review-quote-${review.id}`}
-                    rows={3}
-                    maxLength={1000}
-                    value={review.quote}
-                    onChange={(e) => updateReviewDraft(review.id, "quote", e.target.value)}
-                    placeholder="Paste the customer's real feedback here…"
-                    className="mt-2"
-                  />
-                  <p className="mt-1 text-xs text-muted-foreground">{review.quote.length}/1000 characters</p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <Label htmlFor={`review-product-${review.id}`}>Product (optional)</Label>
-                    <Input
-                      id={`review-product-${review.id}`}
-                      value={review.product ?? ""}
-                      onChange={(e) => updateReviewDraft(review.id, "product", e.target.value)}
-                      placeholder="e.g. Jamun Cubes"
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor={`review-rating-${review.id}`}>Customer's rating</Label>
-                    <select
-                      id={`review-rating-${review.id}`}
-                      value={String(review.rating)}
-                      onChange={(e) => updateReviewDraft(review.id, "rating", Number(e.target.value))}
-                      className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    >
-                      <option value="0">Choose actual rating</option>
-                      {[1, 2, 3, 4, 5].map((rating) => (
-                        <option key={rating} value={rating}>{rating} {rating === 1 ? "star" : "stars"}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2 rounded-xl bg-secondary/45 p-3">
-                  <Checkbox
-                    id={`review-verified-${review.id}`}
-                    checked={review.verified_buyer}
-                    onCheckedChange={(checked) => updateReviewDraft(review.id, "verified_buyer", checked === true)}
-                  />
-                  <div>
-                    <Label htmlFor={`review-verified-${review.id}`}>Verified badge</Label>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">Show the Verified badge on this review.</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id={`review-publish-${review.id}`}
-                      checked={review.is_published}
-                      onCheckedChange={(checked) => updateReviewDraft(review.id, "is_published", checked === true)}
-                    />
-                    <Label htmlFor={`review-publish-${review.id}`}>Publish on homepage</Label>
-                  </div>
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={reviewBusy === review.id}
-                    onClick={() => void saveReview(review)}
-                  >
-                    {reviewBusy === review.id ? "Saving…" : "Save feedback"}
-                  </Button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
 
       <ChangePasswordCard />
     </AdminShell>

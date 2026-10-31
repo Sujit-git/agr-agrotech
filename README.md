@@ -108,3 +108,24 @@ which number accepts WhatsApp enquiries.
 Products, categories and settings live in a relational database with clean separation between
 data access (`src/lib`) and UI. Cart, accounts, orders and payments can be added later as new
 tables and routes without rebuilding the catalog.
+
+
+## Product merchandising (admin)
+
+Admin → Products supports product images at exactly 1024 × 1536 px, selling price, optional original price, spotlight inclusion and reusable product tags. Validated uploads are re-encoded to high-quality WebP for smaller page transfers while preserving the portrait master dimensions. Original price is shown with a strike-through and discount percentage only when it is greater than the selling price. Equal prices display as a normal price with no discount badge.
+
+The product tag presets are: New Arrival, Best Seller, Highly Ordered, Customer Favourite, Trending and Limited Edition. Admins can also create, rename and delete custom tags, then assign multiple tags to a product. Empty tag assignments do not render a badge.
+
+Admin → Categories also supports a homepage spotlight toggle. The homepage spotlight includes products explicitly featured on the product record or belonging to a featured category. A product can be explicitly hidden to exclude it even when its category is featured. Turning off both product and category spotlight flags removes the spotlight section when no eligible products remain.
+
+Product WhatsApp enquiries include a direct URL to the current product page. Set Admin → Settings → Website address to the canonical site origin (for example, `https://fruitly.co.in`) so messages use the production domain.
+
+### Our Story imagery
+
+The Our Story page uses the approved static images in `public/our-story`. These images are managed in source control and are not selected through Admin → Settings.
+
+### Required database migration
+
+Before testing the new admin fields, apply `drizzle/migrations/0005_product_management_enhancements.sql` in the Supabase SQL Editor (or through your normal migration process). It adds category spotlight, original prices, product tag assignments and the preset/custom `product_tags` table with admin-only write policies. The migration is additive and does not delete existing catalogue content.
+
+After applying the migration, reload the Admin → Products and Admin → Categories pages so the schema-backed controls can load.

@@ -3,9 +3,9 @@ import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
-const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
-const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
-const pineappleImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
+
+// One editorial fruit-basket image for the Our Story hero.
+const heroStoryImage = "/our-story/Fresh%20Fruit%20Basket%20Held%20by%20Hands.png";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -33,16 +33,22 @@ const approach = [
     icon: Apple,
     title: "Fruit at the centre",
     text: "We build the range around fruit, its familiar flavours and the different textures each format offers.",
+    image: "/our-story/fruit_at_the_centre.png",
+    imageAlt: "Fruitly fruit selected for the Fruitly approach",
   },
   {
     icon: Handshake,
     title: "Partner-led processing",
     text: "We work with manufacturing partners for product processing, while keeping the Fruitly range and brand experience in focus.",
+    image: "/our-story/partner_led_processing.png",
+    imageAlt: "Fruitly partner-led fruit processing",
   },
   {
     icon: PackageCheck,
     title: "Clear product details",
     text: "Product-specific ingredients, pack information and availability belong with each product, so customers can explore with confidence.",
+    image: "/our-story/clear_product_details.png",
+    imageAlt: "Fresh mango selected for a Fruitly product",
   },
 ];
 
@@ -68,39 +74,43 @@ function About() {
               Our idea is simple: celebrate fruit through thoughtful product choices, clear
               information and a premium, easy-to-explore experience.
             </p>
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-primary">Pure. Fresh. Natural.</p>
+            <p className="mt-5 hidden text-xs font-bold uppercase tracking-[0.18em] text-primary md:block">Pure. Fresh. Natural.</p>
+
+            <div className="mt-8 flex items-center gap-3 border-t border-primary/10 pt-5 md:hidden">
+              <div className="min-w-0 flex-1">
+                <p className="text-[0.62rem] font-bold uppercase leading-5 tracking-[0.12em] text-muted-foreground">
+                  Fruit-first brand <span className="mx-1 text-clay">•</span> Dehydrated fruits
+                </p>
+                <p className="mt-1 text-[0.62rem] font-bold uppercase leading-5 tracking-[0.12em] text-muted-foreground">
+                  Thoughtful product choices
+                </p>
+                <p className="mt-2 text-xs font-semibold text-primary">Pure. Fresh. Natural.</p>
+              </div>
+              <div className="relative flex h-[112px] w-[138px] shrink-0 items-center justify-center overflow-hidden rounded-[1.4rem] bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf] p-1">
+                <img
+                  src={heroStoryImage}
+                  alt="Fresh fruit basket held in hands"
+                  width={1536}
+                  height={1024}
+                  loading="eager"
+                  decoding="async"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
+          <div className="mx-auto hidden w-full max-w-[560px] rounded-[2rem] bg-[#f8f4e9] p-3 shadow-lift sm:p-4 md:block md:max-w-none">
             <img
-              src={mangoImage}
-              alt="Golden dried mango pieces in a ceramic bowl"
-              width={1008}
-              height={1008}
+              src={heroStoryImage}
+              alt="Fresh fruit basket held in hands, representing Fruitly's fruit-first approach"
+              width={1536}
+              height={1024}
+              loading="eager"
               fetchPriority="high"
-              className="aspect-[4/5] w-full rounded-[1.75rem] object-cover shadow-lift"
+              decoding="async"
+              className="mx-auto block h-auto max-h-[320px] w-full rounded-[1.4rem] object-contain md:max-h-none"
             />
-            <div className="grid gap-3 sm:gap-4">
-              <img
-                src={strawberryImage}
-                alt="Fruitly dehydrated strawberry pouch"
-                width={1008}
-                height={1008}
-                loading="lazy"
-                className="aspect-square w-full rounded-[1.5rem] object-cover shadow-soft"
-              />
-              <img
-                src={pineappleImage}
-                alt="Fruitly dehydrated papaya pouch"
-                width={1008}
-                height={1008}
-                loading="lazy"
-                className="aspect-square w-full rounded-[1.5rem] object-cover shadow-soft"
-              />
-            </div>
-            <p className="col-span-2 text-right text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-              Different fruits. Distinctive textures. One fruit-first idea.
-            </p>
           </div>
         </div>
       </section>
@@ -134,14 +144,25 @@ function About() {
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {approach.map((item, index) => (
-              <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-6 sm:p-8">
+              <article key={item.title} className="rounded-3xl border border-border/80 bg-background p-5 shadow-soft sm:p-6">
+                <div className="mb-5 flex aspect-[11/10] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#eef3d9] via-[#f8f4e5] to-[#e9efcf]">
+                  <img
+                    src={item.image}
+                    alt={item.imageAlt}
+                    width={420}
+                    height={381}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/60 text-primary">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/60 text-primary">
                     <item.icon className="h-5 w-5" aria-hidden />
                   </span>
                   <span className="font-display text-sm text-clay">0{index + 1}</span>
                 </div>
-                <h3 className="mt-6 text-xl">{item.title}</h3>
+                <h3 className="mt-5 text-xl">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.text}</p>
               </article>
             ))}

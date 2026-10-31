@@ -36,6 +36,13 @@
       "when": 1792330000000,
       "tag": "0004_fruitly_launch_catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793438100000,
+      "tag": "0005_product_management_enhancements",
+      "breakpoints": true
     }
   ]
 }

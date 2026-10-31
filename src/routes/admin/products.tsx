@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Loader2, Pencil, Plus, Tags as TagsIcon, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -25,6 +25,8 @@ import {
   productImage,
   productsQuery,
   type Product,
+  type ProductTag,
+  productTagsQuery,
 } from "@/lib/catalog";
 import { PRODUCT_IMAGE_SIZE_LABEL, slugify, uploadProductImage } from "@/lib/uploads";
 
@@ -51,10 +53,14 @@ type FormState = {
   short_description: string;
   description: string;
   price: string;
+  original_price: string;
+  tags: string[];
   unit: string;
   image_url: string;
+  additional_images: string[];
   availability: string;
   featured: boolean;
+  spotlight_hidden: boolean;
   sort_order: string;
   key_features: string;
   storage_information: string;
@@ -68,10 +74,14 @@ const emptyForm: FormState = {
   short_description: "",
   description: "",
   price: "",
+  original_price: "",
+  tags: [],
   unit: "",
   image_url: "",
+  additional_images: [],
   availability: "available",
   featured: false,
+  spotlight_hidden: false,
   sort_order: "0",
   key_features: "",
   storage_information: "",
@@ -82,6 +92,7 @@ function ProductsAdmin() {
   const qc = useQueryClient();
   const { data: products = [], isLoading, isError } = useQuery(productsQuery);
   const { data: categories = [] } = useQuery(categoriesQuery);
+  const { data: productTags = [] } = useQuery(productTagsQuery);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
@@ -89,6 +100,11 @@ function ProductsAdmin() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingBack, setUploadingBack] = useState(false);
+  const [tagsOpen, setTagsOpen] = useState(false);
+  const [tagName, setTagName] = useState("");
+  const [editingTag, setEditingTag] = useState<ProductTag | null>(null);
+  const [tagBusy, setTagBusy] = useState(false);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -110,10 +126,14 @@ function ProductsAdmin() {
       short_description: product.short_description ?? "",
       description: product.description ?? "",
       price: product.price == null ? "" : String(product.price),
+      original_price: product.original_price == null ? "" : String(product.original_price),
+      tags: product.tags ?? [],
       unit: product.unit ?? "",
       image_url: product.image_url ?? "",
+      additional_images: (product.additional_images ?? []).filter(Boolean).slice(0, 1),
       availability: product.availability,
       featured: product.featured,
+      spotlight_hidden: product.spotlight_hidden === true,
       sort_order: String(product.sort_order),
       key_features: product.key_features.join("\n"),
       storage_information: product.storage_information ?? "",
@@ -128,11 +148,25 @@ function ProductsAdmin() {
     try {
       const url = await uploadProductImage(file);
       set("image_url", url);
-      toast.success("Image uploaded.");
+      toast.success("Main / front image uploaded.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "The image could not be uploaded.");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const pickBackImage = async (file: File | undefined) => {
+    if (!file) return;
+    setUploadingBack(true);
+    try {
+      const url = await uploadProductImage(file);
+      set("additional_images", [url]);
+      toast.success("Back image uploaded.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "The back image could not be uploaded.");
+    } finally {
+      setUploadingBack(false);
     }
   };
 
@@ -141,8 +175,12 @@ function ProductsAdmin() {
     const next: Record<string, string> = {};
     if (!form.name.trim()) next["name"] = "A product name is required.";
     if (!form.category_id) next["category_id"] = "Please choose a category.";
-    if (form.price.trim() && Number.isNaN(Number(form.price)))
-      next["price"] = "Price must be a number.";
+    if (form.price.trim() && (Number.isNaN(Number(form.price)) || Number(form.price) < 0))
+      next["price"] = "Enter a valid selling price.";
+    if (form.original_price.trim() && (Number.isNaN(Number(form.original_price)) || Number(form.original_price) < 0))
+      next["original_price"] = "Enter a valid original price.";
+    if (form.original_price.trim() && form.price.trim() && Number(form.original_price) < Number(form.price))
+      next["original_price"] = "Original price cannot be lower than the selling price.";
     setErrors(next);
     if (Object.keys(next).length) return;
 
@@ -154,10 +192,14 @@ function ProductsAdmin() {
       short_description: form.short_description.trim() || null,
       description: form.description.trim() || null,
       price: form.price.trim() ? Number(form.price) : null,
+      original_price: form.original_price.trim() ? Number(form.original_price) : null,
+      tags: form.tags,
       unit: form.unit.trim() || null,
       image_url: form.image_url.trim() || null,
+      additional_images: form.additional_images.filter(Boolean).slice(0, 1),
       availability: form.availability,
       featured: form.featured,
+      spotlight_hidden: form.spotlight_hidden,
       sort_order: Number(form.sort_order) || 0,
       key_features: form.key_features
         .split("\n")
@@ -185,6 +227,56 @@ function ProductsAdmin() {
     void qc.invalidateQueries({ queryKey: ["products"] });
   };
 
+  const toggleProductTag = (slug: string, checked: boolean) => {
+    set("tags", checked ? [...new Set([...form.tags, slug])] : form.tags.filter((item) => item !== slug));
+  };
+
+  const saveTag = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = tagName.trim();
+    if (!name) {
+      toast.error("Enter a tag name.");
+      return;
+    }
+    const slug = slugify(name);
+    if (!editingTag && !slug) {
+      toast.error("Choose a tag name containing letters or numbers.");
+      return;
+    }
+    setTagBusy(true);
+    const result = editingTag
+      ? await supabase.from("product_tags").update({ name }).eq("id", editingTag.id).eq("is_preset", false)
+      : await supabase.from("product_tags").insert({
+          name,
+          slug,
+          is_preset: false,
+          is_active: true,
+          sort_order: 100,
+        });
+    setTagBusy(false);
+    if (result.error) {
+      toast.error(result.error.code === "23505" ? "A tag with this name already exists." : "The tag could not be saved.");
+      return;
+    }
+    toast.success(editingTag ? "Tag renamed." : "Custom tag created.");
+    setTagName("");
+    setEditingTag(null);
+    void qc.invalidateQueries({ queryKey: ["product-tags"] });
+  };
+
+  const removeTag = async (tag: ProductTag) => {
+    if (tag.is_preset) return;
+    if (!window.confirm(`Delete the “${tag.name}” tag? It will be removed from any products using it.`)) return;
+    const { error } = await supabase.from("product_tags").delete().eq("id", tag.id).eq("is_preset", false);
+    if (error) {
+      toast.error("The tag could not be deleted.");
+      return;
+    }
+    toast.success("Custom tag deleted.");
+    void qc.invalidateQueries({ queryKey: ["product-tags"] });
+    void qc.invalidateQueries({ queryKey: ["products"] });
+  };
+
   const remove = async (product: Product) => {
     if (!window.confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("products").delete().eq("id", product.id);
@@ -198,10 +290,16 @@ function ProductsAdmin() {
 
   return (
     <AdminShell title="Products">
-      <Button onClick={startNew}>
-        <Plus className="mr-2 h-4 w-4" aria-hidden />
-        Add product
-      </Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button onClick={startNew}>
+          <Plus className="mr-2 h-4 w-4" aria-hidden />
+          Add product
+        </Button>
+        <Button variant="outline" onClick={() => { setTagsOpen(true); setEditingTag(null); setTagName(""); }}>
+          <TagsIcon className="mr-2 h-4 w-4" aria-hidden />
+          Manage tags
+        </Button>
+      </div>
 
       {isLoading && <p className="mt-6 text-sm text-muted-foreground">Loading products…</p>}
       {isError && (
@@ -225,7 +323,10 @@ function ProductsAdmin() {
                     src={image}
                     alt=""
                     loading="lazy"
-                    className="h-full w-full object-cover"
+                    decoding="async"
+                    width={1024}
+                    height={1536}
+                    className="h-full w-full object-contain"
                   />
                 )}
               </div>
@@ -234,11 +335,21 @@ function ProductsAdmin() {
                 <p className="text-sm text-muted-foreground">
                   {category?.name ?? "No category"} &middot;{" "}
                   {formatPrice(product.price, product.currency)}
+                  {product.original_price != null && product.price != null && product.original_price > product.price
+                    ? ` (was ${formatPrice(product.original_price, product.currency)})`
+                    : ""}
                   {product.unit ? ` / ${product.unit}` : ""} &middot;{" "}
                   {availabilityLabels[product.availability as keyof typeof availabilityLabels] ??
                     product.availability}
-                  {product.featured ? " \u00b7 Featured" : ""}
+                  {product.featured ? " · Spotlight" : ""}{product.spotlight_hidden ? " · Hidden" : ""}
                 </p>
+                {!!product.tags?.length && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {productTags.filter((tag) => product.tags.includes(tag.slug)).map((tag) => (
+                      <span key={tag.id} className="rounded-full border border-primary/15 bg-secondary/60 px-2 py-0.5 text-[10px] font-semibold text-primary">{tag.name}</span>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => startEdit(product)}>
@@ -300,17 +411,29 @@ function ProductsAdmin() {
                 )}
               </div>
               <div>
-                <Label htmlFor="p-price">Price</Label>
+                <Label htmlFor="p-price">Selling price</Label>
                 <Input
                   id="p-price"
                   inputMode="decimal"
                   value={form.price}
                   onChange={(e) => set("price", e.target.value)}
                   className="mt-2"
+                  placeholder="3590"
                 />
-                {errors["price"] && (
-                  <p className="mt-1.5 text-xs text-destructive">{errors["price"]}</p>
-                )}
+                {errors["price"] && <p className="mt-1.5 text-xs text-destructive">{errors["price"]}</p>}
+              </div>
+              <div>
+                <Label htmlFor="p-original-price">Original price (optional)</Label>
+                <Input
+                  id="p-original-price"
+                  inputMode="decimal"
+                  value={form.original_price}
+                  onChange={(e) => set("original_price", e.target.value)}
+                  className="mt-2"
+                  placeholder="8999"
+                />
+                {errors["original_price"] && <p className="mt-1.5 text-xs text-destructive">{errors["original_price"]}</p>}
+                <p className="mt-1 text-xs text-muted-foreground">Shown with a strike-through only when it is greater than the selling price.</p>
               </div>
               <div>
                 <Label htmlFor="p-unit">Pack size / unit</Label>
@@ -371,6 +494,32 @@ function ProductsAdmin() {
               />
             </div>
 
+            <section className="rounded-2xl border border-border p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <Label>Product tags</Label>
+                  <p className="mt-1 text-xs text-muted-foreground">Choose one or more labels to display on product cards and detail pages.</p>
+                </div>
+                <Button type="button" size="sm" variant="outline" onClick={() => { setTagsOpen(true); setEditingTag(null); setTagName(""); }}>
+                  <TagsIcon className="mr-2 h-3.5 w-3.5" aria-hidden />
+                  Manage tags
+                </Button>
+              </div>
+              {productTags.length ? (
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {productTags.map((tag) => (
+                    <label key={tag.id} className="flex cursor-pointer items-center gap-2 rounded-xl bg-secondary/45 px-3 py-2 text-sm">
+                      <Checkbox checked={form.tags.includes(tag.slug)} onCheckedChange={(checked) => toggleProductTag(tag.slug, checked === true)} />
+                      <span>{tag.name}</span>
+                      {tag.is_preset && <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Preset</span>}
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-sm text-muted-foreground">No active tags yet. Use Manage tags to add a custom tag.</p>
+              )}
+            </section>
+
             <div>
               <Label htmlFor="p-features">Key features (one per line)</Label>
               <Textarea
@@ -405,67 +554,189 @@ function ProductsAdmin() {
               </div>
             </div>
 
-            <div>
-              <div className="flex items-start gap-3 rounded-2xl border border-primary/15 bg-secondary/55 p-4">
+            <section className="space-y-4 rounded-2xl border border-border p-4">
+              <div className="flex items-start gap-3 rounded-xl border border-primary/15 bg-secondary/55 p-3">
                 <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-background text-primary">
                   <Upload className="h-4 w-4" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">Standard image format required</p>
+                  <p className="text-sm font-semibold">Product images — maximum 2</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Keep the fruit or pack centered with a clean background. The same portrait format is used in product cards, product details and the homepage spotlight.
+                    Both images use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Upload a front image and an optional back image. Existing single-image products continue to work.
                   </p>
                 </div>
               </div>
-              <Label htmlFor="p-image">Product image (1024 × 1536 px)</Label>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <Input
-                  id="p-image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={(e) => void pickImage(e.target.files?.[0])}
-                  className="max-w-xs"
-                />
-                {uploading && (
-                  <span className="flex items-center text-sm text-muted-foreground">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
-                    Uploading
-                  </span>
-                )}
-                {form.image_url && !uploading && (
-                  <span className="flex items-center text-sm text-muted-foreground">
-                    <Upload className="mr-2 h-4 w-4" aria-hidden />
-                    Image attached
-                  </span>
-                )}
-              </div>
-              <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                Uploads are checked for the exact 2:3 portrait dimensions before they are saved. Featured fruit products can also appear in the rotating homepage spotlight; change the image here to update it without editing code.
-              </p>
-              {form.image_url && (
-                <img
-                  src={form.image_url}
-                  alt=""
-                  className="mt-3 aspect-[2/3] w-24 rounded-xl object-contain"
-                />
-              )}
-            </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="p-featured"
-                checked={form.featured}
-                onCheckedChange={(v) => set("featured", v === true)}
-              />
-              <Label htmlFor="p-featured">Feature on homepage (also used in the Fruitly spotlight slider)</Label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="min-w-0 space-y-2">
+                  <Label htmlFor="p-image-main">Image 1 — Main / Front image</Label>
+                  <Input
+                    id="p-image-main"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={uploading || uploadingBack}
+                    onChange={(e) => {
+                      void pickImage(e.target.files?.[0]);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                  {uploading && (
+                    <span className="flex items-center text-xs text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+                      Uploading front image…
+                    </span>
+                  )}
+                  {form.image_url ? (
+                    <div className="rounded-xl border border-border bg-muted/30 p-2">
+                      <img
+                        src={form.image_url}
+                        alt="Main / front product preview"
+                        width={1024}
+                        height={1536}
+                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                      />
+                      <p className="mt-2 text-center text-xs font-medium text-muted-foreground">Main / Front</p>
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                      No main image selected
+                    </div>
+                  )}
+                </div>
+
+                <div className="min-w-0 space-y-2">
+                  <Label htmlFor="p-image-back">Image 2 — Back image (optional)</Label>
+                  <Input
+                    id="p-image-back"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={uploading || uploadingBack}
+                    onChange={(e) => {
+                      void pickBackImage(e.target.files?.[0]);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                  {uploadingBack && (
+                    <span className="flex items-center text-xs text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+                      Uploading back image…
+                    </span>
+                  )}
+                  {form.additional_images[0] ? (
+                    <div className="rounded-xl border border-border bg-muted/30 p-2">
+                      <img
+                        src={form.additional_images[0]}
+                        alt="Back product preview"
+                        width={1024}
+                        height={1536}
+                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                      />
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-muted-foreground">Back image attached</p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => set("additional_images", [])}
+                        >
+                          <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                      No back image uploaded. This image is optional.
+                    </div>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs leading-5 text-muted-foreground">
+                Uploads are checked for the exact 2:3 portrait dimensions before saving. Changing either image updates the product details gallery; the main image remains the one used on product cards and the homepage spotlight.
+              </p>
+            </section>
+
+            <div className="space-y-3 rounded-2xl border border-primary/15 bg-secondary/35 p-4">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="p-featured"
+                  checked={form.featured}
+                  onCheckedChange={(v) => set("featured", v === true)}
+                />
+                <div>
+                  <Label htmlFor="p-featured">Show in homepage spotlight</Label>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">Feature this product even when its category is not featured.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="p-spotlight-hidden"
+                  checked={form.spotlight_hidden}
+                  onCheckedChange={(v) => set("spotlight_hidden", v === true)}
+                />
+                <div>
+                  <Label htmlFor="p-spotlight-hidden">Hide from homepage spotlight</Label>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">Overrides product and category spotlight settings for this product.</p>
+                </div>
+              </div>
             </div>
 
             <DialogFooter>
-              <Button type="submit" disabled={busy || uploading}>
+              <Button type="submit" disabled={busy || uploading || uploadingBack}>
                 {busy ? "Saving\u2026" : "Save product"}
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={tagsOpen} onOpenChange={setTagsOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Manage product tags</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={saveTag} className="space-y-3">
+            <div>
+              <Label htmlFor="tag-name">{editingTag ? "Rename custom tag" : "Create custom tag"}</Label>
+              <div className="mt-2 flex gap-2">
+                <Input id="tag-name" value={tagName} onChange={(e) => setTagName(e.target.value)} maxLength={48} placeholder="e.g. Summer Special" />
+                <Button type="submit" disabled={tagBusy}>{tagBusy ? "Saving…" : editingTag ? "Save" : "Create"}</Button>
+              </div>
+            </div>
+            {editingTag && <Button type="button" variant="ghost" size="sm" onClick={() => { setEditingTag(null); setTagName(""); }}>Cancel rename</Button>}
+          </form>
+          <div className="space-y-3 pt-2">
+            <div>
+              <p className="text-sm font-semibold">Preset tags</p>
+              <p className="mt-1 text-xs text-muted-foreground">These standard tags are always available and cannot be removed.</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {productTags.filter((tag) => tag.is_preset).map((tag) => (
+                  <span key={tag.id} className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold">{tag.name}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Custom tags</p>
+              <div className="mt-2 space-y-2">
+                {productTags.filter((tag) => !tag.is_preset).map((tag) => (
+                  <div key={tag.id} className="flex items-center justify-between gap-3 rounded-xl border border-border px-3 py-2">
+                    <span className="text-sm font-medium">{tag.name}</span>
+                    <div className="flex gap-1">
+                      <Button type="button" size="sm" variant="ghost" onClick={() => { setEditingTag(tag); setTagName(tag.name); }}>
+                        <Pencil className="h-3.5 w-3.5" aria-hidden />
+                        <span className="sr-only">Rename {tag.name}</span>
+                      </Button>
+                      <Button type="button" size="sm" variant="ghost" onClick={() => void removeTag(tag)}>
+                        <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                        <span className="sr-only">Delete {tag.name}</span>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {!productTags.some((tag) => !tag.is_preset) && <p className="text-sm text-muted-foreground">No custom tags created yet.</p>}
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </AdminShell>

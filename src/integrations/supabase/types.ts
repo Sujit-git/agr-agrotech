@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          featured: boolean
           id: string
           image_url: string | null
           name: string
@@ -28,6 +29,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           name: string
@@ -38,6 +40,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           name?: string
@@ -87,8 +90,11 @@ export type Database = {
           image_url: string | null
           key_features: string[]
           name: string
+          original_price: number | null
           price: number | null
+          spotlight_hidden: boolean
           short_description: string | null
+          tags: string[]
           slug: string
           sort_order: number
           storage_information: string | null
@@ -108,8 +114,11 @@ export type Database = {
           image_url?: string | null
           key_features?: string[]
           name: string
+          original_price?: number | null
           price?: number | null
+          spotlight_hidden?: boolean
           short_description?: string | null
+          tags?: string[]
           slug: string
           sort_order?: number
           storage_information?: string | null
@@ -129,8 +138,11 @@ export type Database = {
           image_url?: string | null
           key_features?: string[]
           name?: string
+          original_price?: number | null
           price?: number | null
+          spotlight_hidden?: boolean
           short_description?: string | null
+          tags?: string[]
           slug?: string
           sort_order?: number
           storage_information?: string | null
@@ -147,6 +159,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      product_tags: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          is_preset: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_preset?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_preset?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       customer_reviews: {
         Row: {
