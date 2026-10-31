@@ -106,6 +106,7 @@ function Home() {
     publicCategories.filter((category) => category.featured).map((category) => category.id),
   );
   const spotlightProducts = publicProducts
+    .filter((product) => !product.spotlight_hidden)
     .filter((product) =>
       product.featured || (product.category_id && spotlightCategoryIds.has(product.category_id)),
     )
