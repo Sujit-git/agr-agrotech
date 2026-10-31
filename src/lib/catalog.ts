@@ -10,6 +10,7 @@ export type Category = {
   description: string | null;
   image_url: string | null;
   featured: boolean;
+  spotlight_hidden: boolean;
   sort_order: number;
 };
 
