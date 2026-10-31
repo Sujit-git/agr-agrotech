@@ -222,10 +222,10 @@ function Home() {
       </section>
 
       {spotlights.length > 0 && (
-        <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
+        <section className="container-page py-6 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
           <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
-            <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
-              <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
+            <div className="grid min-h-0 md:min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
+              <div className="relative overflow-hidden bg-background/10 p-3 sm:p-6 md:p-8">
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
                 <img
                   key={currentSlide.key}
@@ -234,24 +234,24 @@ function Home() {
                   loading="lazy"
                   width={1024}
                   height={1536}
-                  className="relative mx-auto aspect-[2/3] w-full max-w-[320px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+                  className="relative mx-auto h-[260px] w-full max-w-[320px] rounded-[1.1rem] bg-[#f9f5e9] object-contain shadow-lift sm:h-[320px] sm:rounded-[1.4rem] md:aspect-[2/3] md:h-auto"
                 />
                 <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                   {currentSlide.category}
                 </span>
               </div>
   
-              <div className="relative flex flex-col justify-center px-6 py-8 sm:px-9 sm:py-10 md:px-12 lg:px-16">
+              <div className="relative flex flex-col justify-center px-5 py-5 sm:px-9 sm:py-10 md:px-12 lg:px-16">
                 <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">
                   The Fruitly spotlight
                 </p>
-                <h2 className="mt-4 max-w-xl text-3xl leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                <h2 className="mt-2 max-w-xl text-2xl leading-[1.08] tracking-[-0.035em] text-white sm:mt-4 sm:text-4xl lg:text-5xl">
                   {currentSlide.title}
                 </h2>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 sm:text-base">
+                <p className="mt-2 max-w-lg text-sm leading-6 text-white/80 sm:mt-4 sm:leading-7 sm:text-base">
                   {currentSlide.description}
                 </p>
-                <div className="mt-7 flex flex-wrap items-center gap-3">
+                <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-7">
                   <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
                     {currentSlide.slug ? (
                       <Link to="/product/$slug" params={{ slug: currentSlide.slug }}>
@@ -285,7 +285,7 @@ function Home() {
                   )}
                 </div>
                 {spotlights.length > 1 && (
-                  <div className="mt-7 flex items-center gap-2" aria-label="Choose spotlight slide">
+                  <div className="mt-4 flex items-center gap-2 sm:mt-7" aria-label="Choose spotlight slide">
                     {spotlights.map((spotlight, index) => (
                       <button
                         key={spotlight.key}
@@ -383,7 +383,7 @@ function Home() {
             </Link>
           </div>
 
-          <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-9 sm:grid-cols-2 sm:gap-5 lg:mt-12 lg:grid-cols-4">
             {shown.map((product) => (
               <ProductCard
                 key={product.id}
