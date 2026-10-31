@@ -92,6 +92,7 @@ export type Database = {
           name: string
           original_price: number | null
           price: number | null
+          spotlight_hidden: boolean
           short_description: string | null
           tags: string[]
           slug: string
@@ -115,6 +116,7 @@ export type Database = {
           name: string
           original_price?: number | null
           price?: number | null
+          spotlight_hidden?: boolean
           short_description?: string | null
           tags?: string[]
           slug: string
@@ -138,6 +140,7 @@ export type Database = {
           name?: string
           original_price?: number | null
           price?: number | null
+          spotlight_hidden?: boolean
           short_description?: string | null
           tags?: string[]
           slug?: string
