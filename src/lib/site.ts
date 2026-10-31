@@ -10,6 +10,8 @@ export type SiteSettings = {
   instagram: string | null;
   facebook: string | null;
   site_url: string | null;
+  /** Product slugs selected for the three Our Story image positions. Stored as metadata in the existing business_description field. */
+  our_story_product_slugs: string[];
 };
 
 export type CustomerReview = {
@@ -23,6 +25,80 @@ export type CustomerReview = {
   verified_buyer: boolean;
 };
 
+export const DEFAULT_OUR_STORY_PRODUCT_SLUGS = [
+  "dehydrated-mango-cubes",
+  "dehydrated-strawberry-whole",
+  "dehydrated-papaya-cubes",
+] as const;
+
+const OUR_STORY_SELECTION_MARKER = "<!-- fruitly-our-story-product-slugs:";
+
+function splitOurStorySelection(value: string | null): {
+  businessDescription: string | null;
+  productSlugs: string[];
+} {
+  const raw = value ?? "";
+  const markerIndex = raw.lastIndexOf(OUR_STORY_SELECTION_MARKER);
+  if (markerIndex < 0) {
+    return {
+      businessDescription: value,
+      productSlugs: [...DEFAULT_OUR_STORY_PRODUCT_SLUGS],
+    };
+  }
+
+  const markerTail = raw.slice(markerIndex + OUR_STORY_SELECTION_MARKER.length);
+  const encoded = markerTail.match(/^(.+?)\s*-->/s)?.[1]?.trim();
+  if (!encoded) {
+    return {
+      businessDescription: raw.slice(0, markerIndex).trimEnd() || null,
+      productSlugs: [...DEFAULT_OUR_STORY_PRODUCT_SLUGS],
+    };
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(decodeURIComponent(encoded));
+    const values = Array.isArray(parsed) ? parsed : [];
+    const productSlugs = DEFAULT_OUR_STORY_PRODUCT_SLUGS.map((fallback, index) => {
+      const candidate = values[index];
+      return typeof candidate === "string" && /^[a-z0-9-]{1,80}$/.test(candidate)
+        ? candidate
+        : fallback;
+    });
+    return {
+      businessDescription: raw.slice(0, markerIndex).trimEnd() || null,
+      productSlugs,
+    };
+  } catch {
+    return {
+      businessDescription: raw.slice(0, markerIndex).trimEnd() || null,
+      productSlugs: [...DEFAULT_OUR_STORY_PRODUCT_SLUGS],
+    };
+  }
+}
+
+/**
+ * Persist the three Our Story product selections inside an existing text field.
+ * This deliberately avoids a new table, column, migration or SQL operation.
+ * The marker is hidden from all application readers by settingsQuery.
+ */
+export function encodeOurStoryProductSelections(
+  businessDescription: string | null,
+  productSlugs: string[],
+): string {
+  const cleanDescription = (businessDescription ?? "").replace(
+    /\n*<!-- fruitly-our-story-product-slugs:[^]*? -->\s*$/,
+    "",
+  ).trimEnd();
+  const safeSlugs = DEFAULT_OUR_STORY_PRODUCT_SLUGS.map((fallback, index) => {
+    const candidate = productSlugs[index];
+    return typeof candidate === "string" && /^[a-z0-9-]{1,80}$/.test(candidate)
+      ? candidate
+      : fallback;
+  });
+  const marker = `${OUR_STORY_SELECTION_MARKER}${encodeURIComponent(JSON.stringify(safeSlugs))} -->`;
+  return cleanDescription ? `${cleanDescription}\n\n${marker}` : marker;
+}
+
 /** Single source of truth used before the database settings load. */
 export const fallbackSettings: SiteSettings = {
   brand_name: "Fruitly",
@@ -35,6 +111,7 @@ export const fallbackSettings: SiteSettings = {
   instagram: "",
   facebook: "",
   site_url: "",
+  our_story_product_slugs: [...DEFAULT_OUR_STORY_PRODUCT_SLUGS],
 };
 
 export const settingsQuery = {
@@ -47,7 +124,15 @@ export const settingsQuery = {
       )
       .maybeSingle();
     if (error) throw error;
-    return (data as SiteSettings) ?? fallbackSettings;
+    if (!data) return fallbackSettings;
+
+    const settings = data as Omit<SiteSettings, "our_story_product_slugs">;
+    const storySelection = splitOurStorySelection(settings.business_description);
+    return {
+      ...settings,
+      business_description: storySelection.businessDescription,
+      our_story_product_slugs: storySelection.productSlugs,
+    };
   },
 };
 
