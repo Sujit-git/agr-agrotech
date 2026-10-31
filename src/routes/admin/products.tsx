@@ -158,8 +158,8 @@ function ProductsAdmin() {
       next["price"] = "Enter a valid selling price.";
     if (form.original_price.trim() && (Number.isNaN(Number(form.original_price)) || Number(form.original_price) < 0))
       next["original_price"] = "Enter a valid original price.";
-    if (form.original_price.trim() && form.price.trim() && Number(form.original_price) <= Number(form.price))
-      next["original_price"] = "Original price must be greater than the selling price to show a discount.";
+    if (form.original_price.trim() && form.price.trim() && Number(form.original_price) < Number(form.price))
+      next["original_price"] = "Original price cannot be lower than the selling price.";
     setErrors(next);
     if (Object.keys(next).length) return;
 
