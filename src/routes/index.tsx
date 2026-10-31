@@ -305,12 +305,12 @@ function Home() {
   
         )}
 
-      <section className="container-page py-16 sm:py-20 md:py-24">
+      <section className="container-page py-10 sm:py-20 md:py-24">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <p className="eyebrow">Find your kind of fruit</p>
-            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">A range worth reaching for.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
+            <h2 className="mt-2 text-3xl leading-tight sm:mt-3 sm:text-4xl md:text-5xl">A range worth reaching for.</h2>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:mt-4 sm:text-base sm:leading-7">
               Explore the formats and flavours in the Fruitly collection.
             </p>
           </div>
@@ -319,7 +319,7 @@ function Home() {
           </Link>
         </div>
 
-        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+        <div className="mt-6 grid gap-3 sm:mt-9 sm:grid-cols-2 sm:gap-4 lg:mt-12 lg:grid-cols-3">
           {publicCategories.map((category, i) => {
             const Icon = categoryIcons[i % categoryIcons.length] ?? Apple;
             const count = publicProducts.filter((product) => product.category_id === category.id).length;
@@ -328,35 +328,35 @@ function Home() {
                 key={category.id}
                 to="/products/$category"
                 params={{ category: category.slug }}
-                className="group rounded-3xl border border-border/80 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent/70 hover:shadow-lift sm:p-7"
+                className="group rounded-[1.6rem] border border-border/80 bg-card p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent/70 hover:shadow-lift sm:rounded-3xl sm:p-7"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/60 text-primary transition-colors group-hover:bg-accent">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/60 text-primary transition-colors group-hover:bg-accent sm:h-12 sm:w-12">
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden />
                 </div>
-                <h3 className="mt-6 text-xl">{category.name}</h3>
-                <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
+                <h3 className="mt-5 text-xl sm:mt-6">{category.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground sm:min-h-12">
                   {category.description}
                 </p>
-                <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
+                <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-primary sm:mt-5">
                   {count} {count === 1 ? "product" : "products"}
                 </p>
               </Link>
             );
           })}
-          <article className="rounded-3xl border border-dashed border-primary/25 bg-secondary/45 p-6 shadow-soft sm:p-7">
+          <article className="rounded-[1.6rem] border border-dashed border-primary/25 bg-secondary/45 p-5 shadow-soft sm:rounded-3xl sm:p-7">
             <div className="flex items-start justify-between gap-4">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-background text-primary sm:h-12 sm:w-12">
                 <Snowflake className="h-5 w-5" aria-hidden />
               </span>
               <span className="rounded-full bg-clay/15 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-foreground">
                 Coming soon
               </span>
             </div>
-            <h3 className="mt-6 text-xl">Freeze-dried fruits</h3>
-            <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
+            <h3 className="mt-5 text-xl sm:mt-6">Freeze-dried fruits</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground sm:min-h-12">
               Our freeze-dried fruit range is in development. Check back soon for updates.
             </p>
             <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
