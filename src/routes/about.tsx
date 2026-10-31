@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
-const mangoImage = "/our-story/fruit_at_the_centre.png";
-const strawberryImage = "/our-story/partner_led_processing.png";
-const papayaImage = "/our-story/clear_product_details.png";
+
+// Keep the established Fruitly pouch collage in the Our Story hero.
+const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
+const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
+const papayaImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -85,7 +86,7 @@ function About() {
           <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
             <img
               src={mangoHeroImage}
-              alt="Fruitly product information being reviewed"
+              alt="Fruitly dehydrated mango cubes pouch"
               width={1024}
               height={1536}
               loading="eager"
@@ -96,7 +97,7 @@ function About() {
             <div className="grid gap-3 sm:gap-4">
               <img
                 src={strawberryHeroImage}
-                alt="Fruitly partner-led fruit processing"
+                alt="Fruitly dehydrated strawberry whole pouch"
                 width={1024}
                 height={1536}
                 loading="lazy"
@@ -105,7 +106,7 @@ function About() {
               />
               <img
                 src={papayaHeroImage}
-                alt="Fresh mango selected from the orchard"
+                alt="Fruitly dehydrated papaya cubes pouch"
                 width={1024}
                 height={1536}
                 loading="lazy"
