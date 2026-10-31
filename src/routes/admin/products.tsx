@@ -57,6 +57,7 @@ type FormState = {
   tags: string[];
   unit: string;
   image_url: string;
+  additional_images: string[];
   availability: string;
   featured: boolean;
   spotlight_hidden: boolean;
@@ -77,6 +78,7 @@ const emptyForm: FormState = {
   tags: [],
   unit: "",
   image_url: "",
+  additional_images: [],
   availability: "available",
   featured: false,
   spotlight_hidden: false,
@@ -98,6 +100,7 @@ function ProductsAdmin() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingBack, setUploadingBack] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
   const [tagName, setTagName] = useState("");
   const [editingTag, setEditingTag] = useState<ProductTag | null>(null);
@@ -127,6 +130,7 @@ function ProductsAdmin() {
       tags: product.tags ?? [],
       unit: product.unit ?? "",
       image_url: product.image_url ?? "",
+      additional_images: (product.additional_images ?? []).filter(Boolean).slice(0, 1),
       availability: product.availability,
       featured: product.featured,
       spotlight_hidden: product.spotlight_hidden === true,
@@ -144,11 +148,25 @@ function ProductsAdmin() {
     try {
       const url = await uploadProductImage(file);
       set("image_url", url);
-      toast.success("Image uploaded.");
+      toast.success("Main / front image uploaded.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "The image could not be uploaded.");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const pickBackImage = async (file: File | undefined) => {
+    if (!file) return;
+    setUploadingBack(true);
+    try {
+      const url = await uploadProductImage(file);
+      set("additional_images", [url]);
+      toast.success("Back image uploaded.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "The back image could not be uploaded.");
+    } finally {
+      setUploadingBack(false);
     }
   };
 
@@ -178,6 +196,7 @@ function ProductsAdmin() {
       tags: form.tags,
       unit: form.unit.trim() || null,
       image_url: form.image_url.trim() || null,
+      additional_images: form.additional_images.filter(Boolean).slice(0, 1),
       availability: form.availability,
       featured: form.featured,
       spotlight_hidden: form.spotlight_hidden,
@@ -535,51 +554,107 @@ function ProductsAdmin() {
               </div>
             </div>
 
-            <div>
-              <div className="flex items-start gap-3 rounded-2xl border border-primary/15 bg-secondary/55 p-4">
+            <section className="space-y-4 rounded-2xl border border-border p-4">
+              <div className="flex items-start gap-3 rounded-xl border border-primary/15 bg-secondary/55 p-3">
                 <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-background text-primary">
                   <Upload className="h-4 w-4" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">Standard image format required</p>
+                  <p className="text-sm font-semibold">Product images — maximum 2</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Keep the fruit or pack centered with a clean background. The same portrait format is used in product cards, product details and the homepage spotlight.
+                    Both images use exactly {PRODUCT_IMAGE_SIZE_LABEL}, JPG/PNG/WebP, under 5 MB. Upload a front image and an optional back image. Existing single-image products continue to work.
                   </p>
                 </div>
               </div>
-              <Label htmlFor="p-image">Product image (1024 × 1536 px)</Label>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <Input
-                  id="p-image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={(e) => void pickImage(e.target.files?.[0])}
-                  className="max-w-xs"
-                />
-                {uploading && (
-                  <span className="flex items-center text-sm text-muted-foreground">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
-                    Uploading
-                  </span>
-                )}
-                {form.image_url && !uploading && (
-                  <span className="flex items-center text-sm text-muted-foreground">
-                    <Upload className="mr-2 h-4 w-4" aria-hidden />
-                    Image attached
-                  </span>
-                )}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="min-w-0 space-y-2">
+                  <Label htmlFor="p-image-main">Image 1 — Main / Front image</Label>
+                  <Input
+                    id="p-image-main"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={uploading || uploadingBack}
+                    onChange={(e) => {
+                      void pickImage(e.target.files?.[0]);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                  {uploading && (
+                    <span className="flex items-center text-xs text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+                      Uploading front image…
+                    </span>
+                  )}
+                  {form.image_url ? (
+                    <div className="rounded-xl border border-border bg-muted/30 p-2">
+                      <img
+                        src={form.image_url}
+                        alt="Main / front product preview"
+                        width={1024}
+                        height={1536}
+                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                      />
+                      <p className="mt-2 text-center text-xs font-medium text-muted-foreground">Main / Front</p>
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                      No main image selected
+                    </div>
+                  )}
+                </div>
+
+                <div className="min-w-0 space-y-2">
+                  <Label htmlFor="p-image-back">Image 2 — Back image (optional)</Label>
+                  <Input
+                    id="p-image-back"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={uploading || uploadingBack}
+                    onChange={(e) => {
+                      void pickBackImage(e.target.files?.[0]);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                  {uploadingBack && (
+                    <span className="flex items-center text-xs text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+                      Uploading back image…
+                    </span>
+                  )}
+                  {form.additional_images[0] ? (
+                    <div className="rounded-xl border border-border bg-muted/30 p-2">
+                      <img
+                        src={form.additional_images[0]}
+                        alt="Back product preview"
+                        width={1024}
+                        height={1536}
+                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                      />
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-muted-foreground">Back image attached</p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => set("additional_images", [])}
+                        >
+                          <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                      No back image uploaded. This image is optional.
+                    </div>
+                  )}
+                </div>
               </div>
-              <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                Uploads are checked for the exact 2:3 portrait dimensions before they are saved. Featured fruit products can also appear in the rotating homepage spotlight; change the image here to update it without editing code.
+              <p className="text-xs leading-5 text-muted-foreground">
+                Uploads are checked for the exact 2:3 portrait dimensions before saving. Changing either image updates the product details gallery; the main image remains the one used on product cards and the homepage spotlight.
               </p>
-              {form.image_url && (
-                <img
-                  src={form.image_url}
-                  alt=""
-                  className="mt-3 aspect-[2/3] w-24 rounded-xl object-contain"
-                />
-              )}
-            </div>
+            </section>
 
             <div className="space-y-3 rounded-2xl border border-primary/15 bg-secondary/35 p-4">
               <div className="flex items-start gap-3">
@@ -607,7 +682,7 @@ function ProductsAdmin() {
             </div>
 
             <DialogFooter>
-              <Button type="submit" disabled={busy || uploading}>
+              <Button type="submit" disabled={busy || uploading || uploadingBack}>
                 {busy ? "Saving\u2026" : "Save product"}
               </Button>
             </DialogFooter>
