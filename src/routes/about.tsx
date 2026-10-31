@@ -4,11 +4,9 @@ import { ArrowUpRight, Apple, Handshake, PackageCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
-import { productsQuery, productImage } from "@/lib/catalog";
-import { DEFAULT_OUR_STORY_PRODUCT_SLUGS, settingsQuery } from "@/lib/site";
-const mangoImage = "/fruitly-products/dehydrated-mango-cubes.webp";
-const strawberryImage = "/fruitly-products/dehydrated-strawberry-whole.webp";
-const papayaImage = "/fruitly-products/dehydrated-papaya-cubes.webp";
+const mangoImage = "/our-story/fruit_at_the_centre.png";
+const strawberryImage = "/our-story/partner_led_processing.png";
+const papayaImage = "/our-story/clear_product_details.png";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -56,24 +54,9 @@ const approach = [
 ];
 
 function About() {
-  const { data: products = [] } = useQuery(productsQuery);
-  const { data: settings } = useQuery(settingsQuery);
-  const storyProductSlugs = settings?.our_story_product_slugs ?? [...DEFAULT_OUR_STORY_PRODUCT_SLUGS];
-
-  const storyProduct = (slot: number) =>
-    products.find((product) => product.slug === storyProductSlugs[slot]);
-  const storyImage = (slot: number, fallback: string) => {
-    const product = storyProduct(slot);
-    return product ? productImage(product) ?? fallback : fallback;
-  };
-  const storyAlt = (slot: number, fallback: string) => {
-    const product = storyProduct(slot);
-    return product?.name ? `Fruitly ${product.name} pouch` : fallback;
-  };
-
-  const mangoHeroImage = storyImage(0, mangoImage);
-  const strawberryHeroImage = storyImage(1, strawberryImage);
-  const papayaHeroImage = storyImage(2, papayaImage);
+  const mangoHeroImage = mangoImage;
+  const strawberryHeroImage = strawberryImage;
+  const papayaHeroImage = papayaImage;
 
   return (
     <SiteLayout>
@@ -102,7 +85,7 @@ function About() {
           <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-3 sm:gap-4">
             <img
               src={mangoHeroImage}
-              alt={storyAlt(0, "Fruitly product pouch")}
+              alt="Fruitly product information being reviewed"
               width={1024}
               height={1536}
               loading="eager"
@@ -113,7 +96,7 @@ function About() {
             <div className="grid gap-3 sm:gap-4">
               <img
                 src={strawberryHeroImage}
-                alt={storyAlt(1, "Fruitly product pouch")}
+                alt="Fruitly partner-led fruit processing"
                 width={1024}
                 height={1536}
                 loading="lazy"
@@ -122,7 +105,7 @@ function About() {
               />
               <img
                 src={papayaHeroImage}
-                alt={storyAlt(2, "Fruitly product pouch")}
+                alt="Fresh mango selected from the orchard"
                 width={1024}
                 height={1536}
                 loading="lazy"
