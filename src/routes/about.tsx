@@ -86,7 +86,7 @@ function About() {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="aspect-[4/3] w-full rounded-[2rem] bg-[#f8f4e9] object-cover shadow-lift sm:aspect-[5/4] md:aspect-[4/3]"
+              className="block h-auto w-full rounded-[2rem] bg-[#f8f4e9] object-contain shadow-lift"
             />
           </div>
         </div>
