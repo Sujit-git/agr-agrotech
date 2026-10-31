@@ -59,6 +59,7 @@ type FormState = {
   image_url: string;
   availability: string;
   featured: boolean;
+  spotlight_hidden: boolean;
   sort_order: string;
   key_features: string;
   storage_information: string;
@@ -78,6 +79,7 @@ const emptyForm: FormState = {
   image_url: "",
   availability: "available",
   featured: false,
+  spotlight_hidden: false,
   sort_order: "0",
   key_features: "",
   storage_information: "",
@@ -127,6 +129,7 @@ function ProductsAdmin() {
       image_url: product.image_url ?? "",
       availability: product.availability,
       featured: product.featured,
+      spotlight_hidden: product.spotlight_hidden === true,
       sort_order: String(product.sort_order),
       key_features: product.key_features.join("\n"),
       storage_information: product.storage_information ?? "",
@@ -177,6 +180,7 @@ function ProductsAdmin() {
       image_url: form.image_url.trim() || null,
       availability: form.availability,
       featured: form.featured,
+      spotlight_hidden: form.spotlight_hidden,
       sort_order: Number(form.sort_order) || 0,
       key_features: form.key_features
         .split("\n")
@@ -577,13 +581,29 @@ function ProductsAdmin() {
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="p-featured"
-                checked={form.featured}
-                onCheckedChange={(v) => set("featured", v === true)}
-              />
-              <Label htmlFor="p-featured">Show in homepage spotlight</Label>
+            <div className="space-y-3 rounded-2xl border border-primary/15 bg-secondary/35 p-4">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="p-featured"
+                  checked={form.featured}
+                  onCheckedChange={(v) => set("featured", v === true)}
+                />
+                <div>
+                  <Label htmlFor="p-featured">Show in homepage spotlight</Label>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">Feature this product even when its category is not featured.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="p-spotlight-hidden"
+                  checked={form.spotlight_hidden}
+                  onCheckedChange={(v) => set("spotlight_hidden", v === true)}
+                />
+                <div>
+                  <Label htmlFor="p-spotlight-hidden">Hide from homepage spotlight</Label>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">Overrides product and category spotlight settings for this product.</p>
+                </div>
+              </div>
             </div>
 
             <DialogFooter>
