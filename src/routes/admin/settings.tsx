@@ -35,7 +35,9 @@ export const Route = createFileRoute("/admin/settings")({
   component: SettingsAdmin,
 });
 
-const fields: { key: keyof SiteSettings; label: string; hint?: string; textarea?: boolean }[] = [
+type EditableSiteSettingsKey = Exclude<keyof SiteSettings, "our_story_product_slugs">;
+
+const fields: { key: EditableSiteSettingsKey; label: string; hint?: string; textarea?: boolean }[] = [
   { key: "brand_name", label: "Brand name" },
   { key: "business_description", label: "Business description", textarea: true },
   { key: "email", label: "Enquiry email", hint: "Email address that receives website contact-form enquiries. You can change it here anytime." },
