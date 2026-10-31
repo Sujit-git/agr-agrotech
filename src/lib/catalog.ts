@@ -9,6 +9,7 @@ export type Category = {
   slug: string;
   description: string | null;
   image_url: string | null;
+  featured: boolean;
   sort_order: number;
 };
 
@@ -20,6 +21,8 @@ export type Product = {
   short_description: string | null;
   description: string | null;
   price: number | null;
+  original_price: number | null;
+  tags: string[];
   currency: string;
   unit: string | null;
   image_url: string | null;
@@ -32,6 +35,15 @@ export type Product = {
   usage_information: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type ProductTag = {
+  id: string;
+  name: string;
+  slug: string;
+  is_preset: boolean;
+  is_active: boolean;
+  sort_order: number;
 };
 
 /** Fruitly launch pouch artwork. The display frame controls crop and size consistently. */
@@ -60,7 +72,7 @@ export function isLegacySeedProduct(slug: string): boolean {
 export function productImage(product: Pick<Product, "slug" | "image_url">): string | null {
   // Prefer the approved local Fruitly launch artwork over stale image URLs in the live catalogue.
   // Admin-managed URLs remain available for products without a bundled launch asset.
-  return seedImages[product.slug] || product.image_url || null;
+  return product.image_url || seedImages[product.slug] || null;
 }
 
 export const availabilityLabels: Record<Availability, string> = {
@@ -79,12 +91,33 @@ export function formatPrice(price: number | null, currency = "INR"): string {
   return `${symbol}${Number(price).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 }
 
+export function discountPercentage(originalPrice: number | null, sellingPrice: number | null): number | null {
+  if (originalPrice == null || sellingPrice == null || originalPrice <= sellingPrice || originalPrice <= 0) {
+    return null;
+  }
+  return Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
+}
+
+export const productTagsQuery = {
+  queryKey: ["product-tags"],
+  queryFn: async (): Promise<ProductTag[]> => {
+    const { data, error } = await supabase
+      .from("product_tags")
+      .select("id,name,slug,is_preset,is_active,sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as ProductTag[];
+  },
+};
+
 export const categoriesQuery = {
   queryKey: ["categories"],
   queryFn: async (): Promise<Category[]> => {
     const { data, error } = await supabase
       .from("categories")
-      .select("id,name,slug,description,image_url,sort_order")
+      .select("id,name,slug,description,image_url,sort_order,featured")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return (data ?? []) as Category[];
