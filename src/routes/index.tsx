@@ -222,10 +222,10 @@ function Home() {
       </section>
 
       {spotlights.length > 0 && (
-        <section className="container-page py-12 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
+        <section className="container-page py-6 sm:py-16 md:py-20" aria-label="Fruitly spotlight">
           <div className="fruitly-spotlight-shell relative overflow-hidden rounded-[2rem] text-primary-foreground shadow-lift">
-            <div className="grid min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
-              <div className="relative overflow-hidden bg-background/10 p-4 sm:p-6 md:p-8">
+            <div className="grid min-h-0 md:min-h-[330px] md:grid-cols-[0.92fr_1.08fr]">
+              <div className="relative overflow-hidden bg-background/10 p-3 sm:p-6 md:p-8">
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" aria-hidden />
                 <img
                   key={currentSlide.key}
@@ -234,24 +234,24 @@ function Home() {
                   loading="lazy"
                   width={1024}
                   height={1536}
-                  className="relative mx-auto aspect-[2/3] w-full max-w-[320px] rounded-[1.4rem] bg-[#f9f5e9] object-contain shadow-lift"
+                  className="relative mx-auto h-[260px] w-full max-w-[320px] rounded-[1.1rem] bg-[#f9f5e9] object-contain shadow-lift sm:h-[320px] sm:rounded-[1.4rem] md:aspect-[2/3] md:h-auto"
                 />
                 <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
                   {currentSlide.category}
                 </span>
               </div>
   
-              <div className="relative flex flex-col justify-center px-6 py-8 sm:px-9 sm:py-10 md:px-12 lg:px-16">
+              <div className="relative flex flex-col justify-center px-5 py-5 sm:px-9 sm:py-10 md:px-12 lg:px-16">
                 <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">
                   The Fruitly spotlight
                 </p>
-                <h2 className="mt-4 max-w-xl text-3xl leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                <h2 className="mt-2 max-w-xl text-2xl leading-[1.08] tracking-[-0.035em] text-white sm:mt-4 sm:text-4xl lg:text-5xl">
                   {currentSlide.title}
                 </h2>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 sm:text-base">
+                <p className="mt-2 max-w-lg text-sm leading-6 text-white/80 sm:mt-4 sm:leading-7 sm:text-base">
                   {currentSlide.description}
                 </p>
-                <div className="mt-7 flex flex-wrap items-center gap-3">
+                <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-7">
                   <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
                     {currentSlide.slug ? (
                       <Link to="/product/$slug" params={{ slug: currentSlide.slug }}>
@@ -285,7 +285,7 @@ function Home() {
                   )}
                 </div>
                 {spotlights.length > 1 && (
-                  <div className="mt-7 flex items-center gap-2" aria-label="Choose spotlight slide">
+                  <div className="mt-4 flex items-center gap-2 sm:mt-7" aria-label="Choose spotlight slide">
                     {spotlights.map((spotlight, index) => (
                       <button
                         key={spotlight.key}
@@ -305,12 +305,12 @@ function Home() {
   
         )}
 
-      <section className="container-page py-16 sm:py-20 md:py-24">
+      <section className="container-page py-10 sm:py-20 md:py-24">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <p className="eyebrow">Find your kind of fruit</p>
-            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl md:text-5xl">A range worth reaching for.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
+            <h2 className="mt-2 text-3xl leading-tight sm:mt-3 sm:text-4xl md:text-5xl">A range worth reaching for.</h2>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:mt-4 sm:text-base sm:leading-7">
               Explore the formats and flavours in the Fruitly collection.
             </p>
           </div>
@@ -319,7 +319,7 @@ function Home() {
           </Link>
         </div>
 
-        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+        <div className="mt-6 grid gap-3 sm:mt-9 sm:grid-cols-2 sm:gap-4 lg:mt-12 lg:grid-cols-3">
           {publicCategories.map((category, i) => {
             const Icon = categoryIcons[i % categoryIcons.length] ?? Apple;
             const count = publicProducts.filter((product) => product.category_id === category.id).length;
@@ -328,35 +328,35 @@ function Home() {
                 key={category.id}
                 to="/products/$category"
                 params={{ category: category.slug }}
-                className="group rounded-3xl border border-border/80 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent/70 hover:shadow-lift sm:p-7"
+                className="group rounded-[1.6rem] border border-border/80 bg-card p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent/70 hover:shadow-lift sm:rounded-3xl sm:p-7"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/60 text-primary transition-colors group-hover:bg-accent">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/60 text-primary transition-colors group-hover:bg-accent sm:h-12 sm:w-12">
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden />
                 </div>
-                <h3 className="mt-6 text-xl">{category.name}</h3>
-                <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
+                <h3 className="mt-5 text-xl sm:mt-6">{category.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground sm:min-h-12">
                   {category.description}
                 </p>
-                <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
+                <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-primary sm:mt-5">
                   {count} {count === 1 ? "product" : "products"}
                 </p>
               </Link>
             );
           })}
-          <article className="rounded-3xl border border-dashed border-primary/25 bg-secondary/45 p-6 shadow-soft sm:p-7">
+          <article className="rounded-[1.6rem] border border-dashed border-primary/25 bg-secondary/45 p-5 shadow-soft sm:rounded-3xl sm:p-7">
             <div className="flex items-start justify-between gap-4">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-background text-primary sm:h-12 sm:w-12">
                 <Snowflake className="h-5 w-5" aria-hidden />
               </span>
               <span className="rounded-full bg-clay/15 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-foreground">
                 Coming soon
               </span>
             </div>
-            <h3 className="mt-6 text-xl">Freeze-dried fruits</h3>
-            <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
+            <h3 className="mt-5 text-xl sm:mt-6">Freeze-dried fruits</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground sm:min-h-12">
               Our freeze-dried fruit range is in development. Check back soon for updates.
             </p>
             <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">
@@ -383,7 +383,7 @@ function Home() {
             </Link>
           </div>
 
-          <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-9 sm:grid-cols-2 sm:gap-5 lg:mt-12 lg:grid-cols-4">
             {shown.map((product) => (
               <ProductCard
                 key={product.id}
