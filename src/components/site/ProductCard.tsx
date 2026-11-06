@@ -43,7 +43,7 @@ export function ProductCard({
       <Link
         to="/product/$slug"
         params={{ slug: product.slug }}
-        className="block aspect-square overflow-hidden bg-[#f8f4e9] sm:rounded-t-3xl"
+        className="block aspect-square overflow-hidden bg-[#f8f4e9] sm:aspect-[4/5] sm:rounded-t-3xl"
         tabIndex={-1}
         aria-hidden
       >
