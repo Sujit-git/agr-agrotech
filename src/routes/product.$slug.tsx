@@ -13,6 +13,8 @@ import {
   discountPercentage,
   formatPrice,
   productImage,
+  productVariants,
+  productWeightLabel,
   productTagsQuery,
 } from "@/lib/catalog";
 import { buildProductUrl, settingsQuery, fallbackSettings, whatsappLink } from "@/lib/site";
@@ -54,6 +56,7 @@ function ProductDetails() {
 
   const product = products.find((p) => p.slug === slug && !isLegacySeedProduct(p.slug));
   const category = categories.find((c) => c.id === product?.category_id);
+  const variants = product ? productVariants(products, product) : [];
 
   useEffect(() => {
     setActiveImageIndex(0);
@@ -177,6 +180,28 @@ function ProductDetails() {
           <div>
             {category && <p className="eyebrow">{category.name}</p>}
             <h1 className="mt-2 font-display text-2xl leading-tight sm:mt-3 sm:text-4xl">{product.name}</h1>
+            {variants.length > 1 && (
+              <section className="mt-4" aria-label="Choose pack size">
+                <p className="mb-2 text-sm font-semibold text-foreground">Choose pack size</p>
+                <div className="flex flex-wrap gap-2">
+                  {variants.map((variant) => {
+                    const label = productWeightLabel(variant.unit) ?? variant.unit ?? "Variant";
+                    const selected = variant.id === product.id;
+                    return (
+                      <Link
+                        key={variant.id}
+                        to="/product/$slug"
+                        params={{ slug: variant.slug }}
+                        aria-current={selected ? "page" : undefined}
+                        className={`inline-flex min-h-10 items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${selected ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-secondary"}`}
+                      >
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
             {visibleTags.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
                 {visibleTags.map((tag) => (
