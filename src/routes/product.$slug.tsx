@@ -103,7 +103,7 @@ function ProductDetails() {
 
   return (
     <SiteLayout>
-      <div className="container-page py-8 md:py-12">
+      <div className="container-page py-5 sm:py-8 md:py-12">
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
           <Link to="/products" className="hover:text-foreground">
             Products
@@ -124,8 +124,8 @@ function ProductDetails() {
           <span className="text-foreground">{product.name}</span>
         </nav>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="relative mx-auto aspect-[2/3] w-full max-w-[480px] overflow-hidden rounded-[2rem] border border-border/70 bg-[#f8f4e9] shadow-soft">
+        <div className="mt-5 grid items-start gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12 xl:gap-14">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] max-h-[min(112vw,460px)] overflow-hidden rounded-2xl border border-border/70 bg-[#f8f4e9] shadow-soft sm:rounded-3xl lg:sticky lg:top-24 lg:aspect-[4/5] lg:max-h-[min(68vh,560px)] lg:max-w-[460px]">
             {image ? (
               <>
                 {[image, ...(backImage ? [backImage] : [])].map((src, index) => (
@@ -138,7 +138,7 @@ function ProductDetails() {
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
                     aria-hidden={currentImageIndex !== index}
-                    className={`absolute inset-0 h-full w-full bg-[#f8f4e9] object-contain transition-opacity duration-300 ease-in-out ${currentImageIndex === index ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                    className={`absolute inset-0 h-full w-full bg-[#f8f4e9] object-contain p-2 sm:p-3 lg:p-4 transition-opacity duration-300 ease-in-out ${currentImageIndex === index ? "opacity-100" : "pointer-events-none opacity-0"}`}
                   />
                 ))}
                 {backImage && (
@@ -176,21 +176,21 @@ function ProductDetails() {
 
           <div>
             {category && <p className="eyebrow">{category.name}</p>}
-            <h1 className="mt-3 font-display text-3xl sm:text-4xl">{product.name}</h1>
+            <h1 className="mt-2 font-display text-2xl leading-tight sm:mt-3 sm:text-4xl">{product.name}</h1>
             {visibleTags.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
                 {visibleTags.map((tag) => (
                   <span key={tag.id} className="rounded-full bg-accent/70 px-3 py-1.5 text-xs font-semibold text-accent-foreground">{tag.name}</span>
                 ))}
               </div>
             )}
             {product.short_description && (
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
                 {product.short_description}
               </p>
             )}
 
-            <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 sm:mt-6">
               {discount !== null && (
                 <span className="text-base text-muted-foreground line-through">{formatPrice(product.original_price, product.currency)}</span>
               )}
@@ -213,7 +213,7 @@ function ProductDetails() {
               <span className="font-medium">{availabilityLabel(product.availability)}</span>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
               <Button asChild size="lg">
                 <a href={enquiry} target="_blank" rel="noreferrer">
                   <MessageCircle className="mr-2 h-4 w-4" aria-hidden />
@@ -247,7 +247,7 @@ function ProductDetails() {
           </div>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:mt-14 sm:gap-6 md:grid-cols-3">
           {product.description && (
             <section className="rounded-2xl border border-border bg-card p-6 md:col-span-3">
               <h2 className="flex items-center gap-2 font-display text-lg">
