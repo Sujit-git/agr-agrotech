@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Mail, MessageCircle, Phone, X } from "lucide-react";
 
@@ -33,7 +33,7 @@ export function FruitlyChatbot() {
       {open && (
         <section
           aria-label="Fruitly chat assistant"
-          className="mb-3 flex w-[min( calc(100vw-2rem), 22rem)] max-h-[min(70vh, 34rem)] flex-col overflow-hidden rounded-3xl border border-border/80 bg-card shadow-[0_20px_70px_rgba(18,48,29,0.22)]"
+          className="mb-3 flex w-[min(22rem,calc(100vw-2rem))] max-h-[min(70vh, 34rem)] flex-col overflow-hidden rounded-3xl border border-border/80 bg-card shadow-[0_20px_70px_rgba(18,48,29,0.22)]"
         >
           <header className="flex items-center justify-between gap-3 bg-primary px-4 py-3.5 text-primary-foreground">
             <div className="flex min-w-0 items-center gap-3">
@@ -197,7 +197,7 @@ function QuickReply({
   children,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick: () => void;
 }) {
   return (
