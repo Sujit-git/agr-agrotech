@@ -338,6 +338,10 @@ function ProductsAdmin() {
         {products.map((product) => {
           const image = productImage(product);
           const category = categories.find((c) => c.id === product.category_id);
+          const familyVariants = products.filter(
+            (candidate) =>
+              normalizeProductFamilyName(candidate.name) === normalizeProductFamilyName(product.name),
+          );
           return (
             <div
               key={product.id}
@@ -358,6 +362,11 @@ function ProductsAdmin() {
               </div>
               <div className="min-w-[10rem] flex-1">
                 <p className="font-medium">{product.name}</p>
+                {familyVariants.length > 1 && (
+                  <p className="mt-1 text-xs font-semibold text-primary">
+                    Variant family · {familyVariants.map((variant) => productWeightLabel(variant.unit) ?? variant.unit ?? "Size not set").join(" / ")}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground">
                   {category?.name ?? "No category"} &middot;{" "}
                   {formatPrice(product.price, product.currency)}
