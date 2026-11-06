@@ -421,24 +421,25 @@
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 1.65rem;
-  padding: 1.05rem 0.825rem;
+  gap: 1.35rem;
+  padding: 0.68rem 0.825rem;
   white-space: nowrap;
 }
 
 .fruitly-marquee-item {
   display: inline-flex;
   align-items: center;
-  gap: 1.65rem;
-  font-size: 0.72rem;
+  gap: 1.35rem;
+  font-size: 0.67rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
   text-transform: uppercase;
 }
 
 .fruitly-marquee-star {
   color: oklch(0.76 0.16 132);
-  font-size: 1.05rem;
+  font-size: 0.92rem;
 }
 
 @keyframes fruitly-marquee {
@@ -516,6 +517,21 @@
   .fruitly-wordmark-clip {
     width: 122px;
     height: 49px;
+  }
+
+  .fruitly-marquee-group {
+    gap: 0.9rem;
+    padding: 0.52rem 0.6rem;
+  }
+
+  .fruitly-marquee-item {
+    gap: 0.9rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.11em;
+  }
+
+  .fruitly-marquee-star {
+    font-size: 0.78rem;
   }
 }
 
