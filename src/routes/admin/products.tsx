@@ -23,6 +23,8 @@ import {
   categoriesQuery,
   formatPrice,
   productImage,
+  normalizeProductFamilyName,
+  productWeightLabel,
   productsQuery,
   type Product,
   type ProductTag,
@@ -106,6 +108,14 @@ function ProductsAdmin() {
   const [editingTag, setEditingTag] = useState<ProductTag | null>(null);
   const [tagBusy, setTagBusy] = useState(false);
 
+  const matchingVariants = form.name.trim()
+    ? products.filter(
+        (product) =>
+          product.id !== editing?.id &&
+          normalizeProductFamilyName(product.name) === normalizeProductFamilyName(form.name),
+      )
+    : [];
+
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -175,6 +185,22 @@ function ProductsAdmin() {
     const next: Record<string, string> = {};
     if (!form.name.trim()) next["name"] = "A product name is required.";
     if (!form.category_id) next["category_id"] = "Please choose a category.";
+    const familyProducts = products.filter(
+      (product) =>
+        product.id !== editing?.id &&
+        normalizeProductFamilyName(product.name) === normalizeProductFamilyName(form.name),
+    );
+    const normalizedUnit = productWeightLabel(form.unit) ?? form.unit.trim().toLocaleLowerCase("en");
+    if (familyProducts.length && !form.unit.trim()) {
+      next["unit"] = "Enter a pack size for this product variant.";
+    } else if (
+      familyProducts.some(
+        (product) =>
+          (productWeightLabel(product.unit) ?? product.unit?.trim().toLocaleLowerCase("en")) === normalizedUnit,
+      )
+    ) {
+      next["unit"] = "This product family already has a variant with that pack size.";
+    }
     if (form.price.trim() && (Number.isNaN(Number(form.price)) || Number(form.price) < 0))
       next["price"] = "Enter a valid selling price.";
     if (form.original_price.trim() && (Number.isNaN(Number(form.original_price)) || Number(form.original_price) < 0))
@@ -187,7 +213,7 @@ function ProductsAdmin() {
     setBusy(true);
     const payload = {
       name: form.name.trim(),
-      slug: slugify(form.slug || form.name),
+      slug: editing ? slugify(form.slug || form.name) : familyProducts.length ? `${slugify(form.name)}-${slugify(form.unit)}` : slugify(form.slug || form.name),
       category_id: form.category_id,
       short_description: form.short_description.trim() || null,
       description: form.description.trim() || null,
@@ -312,6 +338,10 @@ function ProductsAdmin() {
         {products.map((product) => {
           const image = productImage(product);
           const category = categories.find((c) => c.id === product.category_id);
+          const familyVariants = products.filter(
+            (candidate) =>
+              normalizeProductFamilyName(candidate.name) === normalizeProductFamilyName(product.name),
+          );
           return (
             <div
               key={product.id}
@@ -332,6 +362,11 @@ function ProductsAdmin() {
               </div>
               <div className="min-w-[10rem] flex-1">
                 <p className="font-medium">{product.name}</p>
+                {familyVariants.length > 1 && (
+                  <p className="mt-1 text-xs font-semibold text-primary">
+                    Variant family · {familyVariants.map((variant) => productWeightLabel(variant.unit) ?? variant.unit ?? "Size not set").join(" / ")}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground">
                   {category?.name ?? "No category"} &middot;{" "}
                   {formatPrice(product.price, product.currency)}
@@ -390,6 +425,21 @@ function ProductsAdmin() {
                 {errors["name"] && (
                   <p className="mt-1.5 text-xs text-destructive">{errors["name"]}</p>
                 )}
+                {matchingVariants.length > 0 && (
+                  <div className="mt-2 rounded-xl border border-primary/20 bg-secondary/40 p-3">
+                    <p className="text-xs font-semibold text-foreground">Existing product family detected</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      Saving with this exact product name creates another independently managed pack variant. Existing pack sizes:
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {matchingVariants.map((variant) => (
+                        <span key={variant.id} className="rounded-full bg-background px-2.5 py-1 text-xs font-semibold text-primary">
+                          {productWeightLabel(variant.unit) ?? variant.unit ?? "Size not set"}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <Label htmlFor="p-category">Category</Label>
@@ -441,9 +491,11 @@ function ProductsAdmin() {
                   id="p-unit"
                   value={form.unit}
                   onChange={(e) => set("unit", e.target.value)}
-                  placeholder="5 kg"
+                  placeholder="50gm"
                   className="mt-2"
                 />
+                {errors["unit"] && <p className="mt-1.5 text-xs text-destructive">{errors["unit"]}</p>}
+                <p className="mt-1 text-xs text-muted-foreground">Use the same product name for related pack sizes (for example, 50gm and 100gm). Each variant keeps its own price, images and details.</p>
               </div>
               <div>
                 <Label htmlFor="p-availability">Availability</Label>
