@@ -9,6 +9,7 @@ import {
   discountPercentage,
   formatPrice,
   productImage,
+  productWeightLabel,
   productTagsQuery,
 } from "@/lib/catalog";
 
@@ -43,7 +44,7 @@ export function ProductCard({
       <Link
         to="/product/$slug"
         params={{ slug: product.slug }}
-        className="block aspect-square overflow-hidden bg-[#f8f4e9] sm:aspect-[4/5] sm:rounded-t-3xl"
+        className="relative block aspect-square overflow-hidden bg-[#f8f4e9] sm:aspect-[4/5] sm:rounded-t-3xl"
         tabIndex={-1}
         aria-hidden
       >
@@ -61,6 +62,11 @@ export function ProductCard({
           <div className="flex h-full w-full items-center justify-center text-muted-foreground">
             <ImageOff className="h-8 w-8" />
           </div>
+        )}
+        {productWeightLabel(product.unit) && (
+          <span className="absolute right-2 top-2 z-10 rounded-full border border-white/80 bg-white/95 px-2.5 py-1 text-[0.65rem] font-bold tracking-wide text-emerald-900 shadow-sm sm:right-3 sm:top-3 sm:px-3 sm:text-xs">
+            {productWeightLabel(product.unit)}
+          </span>
         )}
       </Link>
 
