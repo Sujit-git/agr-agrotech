@@ -38,6 +38,30 @@ export type Product = {
   updated_at: string;
 };
 
+/** Normalize names so products with the same admin-managed name form one variant family. */
+export function normalizeProductFamilyName(name: string): string {
+  return name.trim().replace(/\\s+/g, " ").toLocaleLowerCase("en");
+}
+
+/** Canonicalize common gram pack-size spellings for compact variant badges. */
+export function productWeightLabel(unit: string | null | undefined): string | null {
+  if (!unit) return null;
+  const match = unit.trim().match(/^(\\d+(?:\\.\\d+)?)\\s*(?:g|gm|gms|gram|grams)$/i);
+  return match ? `${match[1]}gm` : null;
+}
+
+/** Products sharing the exact normalized admin name are selectable pack variants. */
+export function productVariants(products: Product[], product: Product): Product[] {
+  const family = normalizeProductFamilyName(product.name);
+  return products
+    .filter((candidate) => normalizeProductFamilyName(candidate.name) === family)
+    .sort((a, b) => {
+      const aWeight = Number(a.unit?.match(/\\d+(?:\\.\\d+)?/)?.[0] ?? Infinity);
+      const bWeight = Number(b.unit?.match(/\\d+(?:\\.\\d+)?/)?.[0] ?? Infinity);
+      return aWeight - bWeight || a.sort_order - b.sort_order;
+    });
+}
+
 export type ProductTag = {
   id: string;
   name: string;
