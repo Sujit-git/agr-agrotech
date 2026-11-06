@@ -150,7 +150,7 @@ export function ProductBrowser({ categorySlug }: Props) {
       </div>
 
       {products.isLoading ? (
-        <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:mt-10 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:mt-10 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-secondary sm:rounded-3xl" />
           ))}
@@ -163,7 +163,7 @@ export function ProductBrowser({ categorySlug }: Props) {
           </p>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 sm:mt-10 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:mt-10 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
           {visible.map((product) => (
             <ProductCard
               key={product.id}
