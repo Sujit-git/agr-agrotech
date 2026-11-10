@@ -56,7 +56,7 @@ export function ProductCard({
             decoding="async"
             width={1024}
             height={1536}
-            className="h-full w-full object-contain p-1 transition-transform duration-500 ease-out group-hover:scale-[1.015] sm:p-2"
+            className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.015]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted-foreground">
