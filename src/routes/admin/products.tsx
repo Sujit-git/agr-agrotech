@@ -643,8 +643,8 @@ function ProductsAdmin() {
                       <img
                         src={form.image_url}
                         alt="Main / front product preview"
-                        width={1024}
-                        height={1536}
+                        width={1200}
+                        height={1500}
                         className="mx-auto aspect-[4/5] max-h-56 w-full object-contain"
                       />
                       <p className="mt-2 text-center text-xs font-medium text-muted-foreground">Main / Front</p>
@@ -679,9 +679,9 @@ function ProductsAdmin() {
                       <img
                         src={form.additional_images[0]}
                         alt="Back product preview"
-                        width={1024}
-                        height={1536}
-                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                        width={1200}
+                        height={1500}
+                        className="mx-auto aspect-[4/5] max-h-56 w-full object-contain"
                       />
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <p className="text-xs font-medium text-muted-foreground">Back image attached</p>
@@ -697,14 +697,14 @@ function ProductsAdmin() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                    <div className="flex aspect-[4/5] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
                       No back image uploaded. This image is optional.
                     </div>
                   )}
                 </div>
               </div>
               <p className="text-xs leading-5 text-muted-foreground">
-                Uploads are checked for the exact 2:3 portrait dimensions before saving. Changing either image updates the product details gallery; the main image remains the one used on product cards and the homepage spotlight.
+                Uploads are checked for the exact 4:5 portrait dimensions before saving. Changing either image updates the product details gallery; the main image remains the one used on product cards and the homepage spotlight.
               </p>
             </section>
 
