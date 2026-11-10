@@ -66,7 +66,7 @@ function ProductDetails() {
     return (
       <SiteLayout>
         <div className="container-page grid gap-10 py-14 md:grid-cols-2">
-          <div className="aspect-[2/3] w-full max-w-[480px] animate-pulse rounded-3xl bg-secondary" />
+          <div className="aspect-[4/5] w-full max-w-[480px] animate-pulse rounded-3xl bg-secondary" />
           <div className="space-y-4">
             <div className="h-8 w-2/3 animate-pulse rounded bg-secondary" />
             <div className="h-4 w-full animate-pulse rounded bg-secondary" />
@@ -136,8 +136,8 @@ function ProductDetails() {
                     key={`${product.id}-image-${index}`}
                     src={src}
                     alt={`${product.name} ${index === 0 ? "front" : "back"} image`}
-                    width={1024}
-                    height={1536}
+                    width={1200}
+                    height={1500}
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
                     aria-hidden={currentImageIndex !== index}
