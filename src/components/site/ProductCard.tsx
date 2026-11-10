@@ -44,7 +44,7 @@ export function ProductCard({
       <Link
         to="/product/$slug"
         params={{ slug: product.slug }}
-        className="relative block aspect-square overflow-hidden bg-[#f8f4e9] sm:aspect-[4/5] sm:rounded-t-3xl"
+        className="relative block aspect-[4/5] w-full overflow-hidden bg-[#f8f4e9] sm:rounded-t-3xl"
         tabIndex={-1}
         aria-hidden
       >
@@ -54,8 +54,8 @@ export function ProductCard({
             alt={product.name}
             loading="lazy"
             decoding="async"
-            width={1024}
-            height={1536}
+            width={1200}
+            height={1500}
             className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.015]"
           />
         ) : (
