@@ -3,10 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 const BUCKET = "product-images";
 const TEN_YEARS = 60 * 60 * 24 * 3650;
 
-/** All catalogue and homepage spotlight images use the same 2:3 portrait master format. */
-export const PRODUCT_IMAGE_WIDTH = 1024;
-export const PRODUCT_IMAGE_HEIGHT = 1536;
-export const PRODUCT_IMAGE_SIZE_LABEL = "1024 × 1536 px (portrait, 2:3)";
+/** Standard portrait artwork for product cards and product detail images. */
+export const PRODUCT_IMAGE_WIDTH = 1200;
+export const PRODUCT_IMAGE_HEIGHT = 1500;
+export const PRODUCT_IMAGE_SIZE_LABEL = "1200 × 1500 px (portrait, 4:5)";
 
 /**
  * Uploads a standardized product image and returns a long-lived URL that can be stored
