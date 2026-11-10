@@ -232,8 +232,8 @@ function Home() {
                   src={currentSlide.image}
                   alt={currentSlide.title}
                   loading="lazy"
-                  width={1024}
-                  height={1536}
+                  width={1200}
+                  height={1500}
                   className="relative mx-auto h-[260px] w-full max-w-[320px] rounded-[1.1rem] bg-[#f9f5e9] object-contain shadow-lift sm:h-[320px] sm:rounded-[1.4rem] md:aspect-[2/3] md:h-auto"
                 />
                 <span className="absolute left-7 top-7 rounded-full bg-background/95 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-primary shadow-soft sm:left-9 sm:top-9">
