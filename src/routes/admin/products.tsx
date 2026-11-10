@@ -347,15 +347,15 @@ function ProductsAdmin() {
               key={product.id}
               className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-4"
             >
-              <div className="aspect-[2/3] w-16 shrink-0 overflow-hidden rounded-xl bg-muted">
+              <div className="aspect-[4/5] w-16 shrink-0 overflow-hidden rounded-xl bg-muted">
                 {image && (
                   <img
                     src={image}
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    width={1024}
-                    height={1536}
+                    width={1200}
+                    height={1500}
                     className="h-full w-full object-contain"
                   />
                 )}
@@ -645,12 +645,12 @@ function ProductsAdmin() {
                         alt="Main / front product preview"
                         width={1024}
                         height={1536}
-                        className="mx-auto aspect-[2/3] max-h-56 w-full object-contain"
+                        className="mx-auto aspect-[4/5] max-h-56 w-full object-contain"
                       />
                       <p className="mt-2 text-center text-xs font-medium text-muted-foreground">Main / Front</p>
                     </div>
                   ) : (
-                    <div className="flex aspect-[2/3] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
+                    <div className="flex aspect-[4/5] max-h-56 items-center justify-center rounded-xl bg-muted/40 p-4 text-center text-xs text-muted-foreground">
                       No main image selected
                     </div>
                   )}
